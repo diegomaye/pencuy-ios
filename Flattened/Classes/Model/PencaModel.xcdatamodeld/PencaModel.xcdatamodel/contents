@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13B42" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Pais" representedClassName="Pais" syncable="YES">
+        <attribute name="idPais" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="nombre" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="usuario" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Usuario" inverseName="pais" inverseEntity="Usuario" syncable="YES"/>
+    </entity>
+    <entity name="Usuario" representedClassName="Usuario" syncable="YES">
+        <attribute name="apellido" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cantidadDiamantes" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fechaNacimiento" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="gcmRegID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="idUsuario" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="imgToken" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastDevAndroid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastDevModelUsed" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locale" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nombre" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="salt" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tokenActivacion" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ultimaActividad" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="pais" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Pais" inverseName="usuario" inverseEntity="Pais" syncable="YES"/>
+    </entity>
+    <entity name="UsuarioLog" representedClassName="UsuarioLog" syncable="YES">
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Usuario" positionX="160" positionY="594" width="128" height="283"/>
+        <element name="Pais" positionX="394" positionY="684" width="128" height="88"/>
+        <element name="UsuarioLog" positionX="-18" positionY="587" width="128" height="73"/>
+    </elements>
+</model>
