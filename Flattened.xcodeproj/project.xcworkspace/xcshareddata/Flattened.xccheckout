@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>25217CB9-85C3-4BAC-BE61-1245127F1083</string>
+	<string>3AA5C09D-326E-4C20-8984-6BA349D1EA12</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Flattened</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>560426F6-81C4-426B-B270-81EAC25D5865</key>
-		<string>https://bitbucket.org/appdesignvault/adv-mail.git</string>
+		<key>A9F5DCD3-33B2-4903-ABF5-1B320FFD223C</key>
+		<string>https://github.com/diegomaye/pencuy-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>sample-project/Flattened.xcodeproj/project.xcworkspace</string>
+	<string>Flattened.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>560426F6-81C4-426B-B270-81EAC25D5865</key>
-		<string>../../..</string>
+		<key>A9F5DCD3-33B2-4903-ABF5-1B320FFD223C</key>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://bitbucket.org/appdesignvault/adv-mail.git</string>
+	<string>https://github.com/diegomaye/pencuy-ios.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>560426F6-81C4-426B-B270-81EAC25D5865</string>
+	<string>A9F5DCD3-33B2-4903-ABF5-1B320FFD223C</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>560426F6-81C4-426B-B270-81EAC25D5865</string>
+			<string>A9F5DCD3-33B2-4903-ABF5-1B320FFD223C</string>
 			<key>IDESourceControlWCCName</key>
-			<string>ADV Mail</string>
+			<string>Pencuy</string>
 		</dict>
 	</array>
 </dict>

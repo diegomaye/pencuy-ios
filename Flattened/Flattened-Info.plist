@@ -78,6 +78,19 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>FacebookAppID</key>
+	<string>295267573944350</string>
+	<key>FacebookDisplayName</key>
+	<string>pencuy</string>
+	<key>URL types </key>
+	<array>
+		<dict>
+			<key>URL Schemes</key>
+			<array>
+				<string>fb295267573944350</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

@@ -44,7 +44,7 @@
     [ADVThemeManager customizeView:self.view];
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"INBOX";
+    titleLabel.text = @"INVITACIONES";
     titleLabel.textColor = [UIColor whiteColor];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:17];

@@ -22,7 +22,22 @@
 + (NSURL *)URLtoActivateUser;
 + (NSURL *)URLtoCreateUser;
 
+
 #pragma mark Api Privada para partidos
 + (NSURL *)URLtoQueryPartido:(NSString *)idPartido;
++ (NSURL *)URLAPIForPencaBrasil;
+#pragma mark Api Privada para fechas
++ (NSURL *)URLtoQueryFechas:(NSString *)nombreCampeonato;
+#pragma mark Api Privada para apuestas
++ (NSURL *)URLtoQueryApuestas:(NSString *)idPenca;
++ (NSURL *)URLtoMakeApuestas;
+
+#pragma mark Mutli Fetcher para creación dinamica de consultas.
++(void)multiFetcher:(NSURL *)url
+           withHTTP:(NSString *)httpMethod
+        withHandler:(void (^)(NSURLResponse *response, NSData *data, NSError *connectionError))callbackBlock;
++(NSDictionary*)multiFetcherSync:(NSURL *)url
+                        withHTTP:(NSString *) httpMethod
+                        withData:(NSData *)requestData;
 
 @end

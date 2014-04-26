@@ -25,8 +25,7 @@
     return @[
                  @{
                      @"title": @"Fixture",
-                     @"image": @"menu-icon1",
-                     @"count": @23
+                     @"image": @"menu-icon1"
                      },
                 @{
                     @"title": @"Invitaciones",

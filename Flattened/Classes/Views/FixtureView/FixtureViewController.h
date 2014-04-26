@@ -13,5 +13,11 @@
 @interface FixtureViewController : MasterViewController <UITableViewDataSource, UITableViewDelegate, ZKRevealingTableViewCellDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
+
 @property (nonatomic, strong) NSArray *partidos;
+@property (nonatomic, strong) NSMutableArray *apuestas;
+@property (nonatomic, strong) NSString *idPenca;
+
+-(void) fechaLabel:(NSString *) titulo;
+
 @end

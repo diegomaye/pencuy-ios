@@ -13,7 +13,8 @@
 #import "DataSource.h"
 #import "AppDelegate.h"
 
-#import "DetailViewController.h"
+#import "DetailFixtureViewController.h"
+#import "ResultadoPartidoViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import "Utils.h"
@@ -70,10 +71,22 @@
     
     self.tableView.tableHeaderView.backgroundColor = [UIColor colorWithRed:0.27f green:0.29f blue:0.31f alpha:1.00f];
     
-    NSString *filterTitle = [NSString stringWithFormat:@"FECHA %@", @1];
+    [self fechaLabel:@"Fases"];
+    
+    UIButton *btnFilter = (UIButton *)[self.tableView.tableHeaderView viewWithTag:2];
+    UIButton *btnFilter2 = (UIButton *)[self.tableView.tableHeaderView viewWithTag:3];
+    [self tipeadorBotones:btnFilter];
+    [self tipeadorBotones:btnFilter2];
+    
+}
+
+-(void) fechaLabel:(NSString *) titulo{
+    
+    NSString *filterTitle = [NSString stringWithFormat:@"%@", titulo];
     UILabel *labelFilter = (UILabel *)[self.tableView.tableHeaderView viewWithTag:1];
     
     const CGFloat fontSize = 14;
+    
     UIFont *boldFont = [UIFont fontWithName:@"ProximaNova-Semibold" size:fontSize];
     UIFont *regularFont = [UIFont fontWithName:@"ProximaNova-Regular" size:fontSize];
     UIColor *regularColor = [UIColor whiteColor];
@@ -84,21 +97,14 @@
     NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:
                               boldFont, NSFontAttributeName,
                               boldColor, NSForegroundColorAttributeName, nil];
-    const NSRange range = NSMakeRange(5, 2);
-    
-        // Create the attributed string (text + attributes)
+    const NSRange range = NSMakeRange(0, [titulo length]);
     NSMutableAttributedString *attributedText =
     [[NSMutableAttributedString alloc] initWithString:filterTitle
                                            attributes:attrs];
     [attributedText setAttributes:subAttrs range:range];
     
     [labelFilter setAttributedText:attributedText];
-    
-    UIButton *btnFilter = (UIButton *)[self.tableView.tableHeaderView viewWithTag:2];
-    UIButton *btnFilter2 = (UIButton *)[self.tableView.tableHeaderView viewWithTag:3];
-    [self tipeadorBotones:btnFilter];
-    [self tipeadorBotones:btnFilter2];
-    
+
 }
 
 - (void)tipeadorBotones:(UIButton*) boton{
@@ -111,6 +117,7 @@
 	[super viewWillAppear:animated];
     
     self.partidos = _partidos;
+    self.apuestas = _apuestas;
     [self.tableView reloadData];
 }
 
@@ -126,10 +133,8 @@
 }
 
 - (void)actionCompose:(id)sender {
-    [self performSegueWithIdentifier:@"showCompose" sender:self];
+    [self performSegueWithIdentifier:@"showDetail" sender:self];
 }
-
-
 
 
 #pragma mark - UITableView datasource
@@ -139,20 +144,47 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.partidos.count;
+    if (self.partidos) {
+        return self.partidos.count;
+    }
+    else if (self.apuestas){
+        return self.apuestas.count;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *CellIdentifier = @"CeldaPartido";
     PartidoCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    NSLog(@"Trajo datos: %@",self.partidos);
-    NSDictionary *partido = self.partidos[indexPath.row];
-    cell.partido = partido;
-    cell.delegate       = self;
-    cell.backView.frame = CGRectMake(0, 0, 190, [self tableView:_tableView heightForRowAtIndexPath:nil]);
-    cell.backView.backgroundColor = [UIColor colorWithRed:0.91f green:0.38f blue:0.39f alpha:1.00f];
-    cell.direction = ZKRevealingTableViewCellDirectionRight;
+    if (self.partidos) {
+        NSDictionary *partido = self.partidos[indexPath.row];
+        cell.partido = partido;
+        cell.delegate       = self;
+        cell.backView.frame = CGRectMake(0, 0, 190, [self tableView:_tableView heightForRowAtIndexPath:nil]);
+        cell.backView.backgroundColor = [UIColor colorWithRed:0.91f green:0.38f blue:0.39f alpha:1.00f];
+        cell.direction = ZKRevealingTableViewCellDirectionRight;
+    }
+    else if(self.apuestas){
+        
+        NSDictionary *apuesta = self.apuestas[indexPath.row];
+        NSLog(@"Listando Celda %d", indexPath.row);
+        NSLog(@"idApuesta%@", [apuesta valueForKey:@"idApuesta"]);
+        
+        NSMutableDictionary *partido = [[NSMutableDictionary alloc] initWithDictionary:[apuesta valueForKey:@"partido"]];
+        if (![[apuesta valueForKey:@"golesLocal"] isKindOfClass : [NSNull class]]) {
+            [partido setValue:[apuesta valueForKey:@"golesLocal"] forKey:@"golesLocal"];
+        }
+        if (![[apuesta valueForKey:@"golesVisitante"] isKindOfClass : [NSNull class]]) {
+            [partido setValue:[apuesta valueForKey:@"golesVisitante"] forKey:@"golesVisitante"];
+        }
+        cell.partido = partido;
+        cell.delegate = self;
+        cell.backView.frame = CGRectMake(0, 0, 190, [self tableView:_tableView heightForRowAtIndexPath:nil]);
+        cell.backView.backgroundColor = [UIColor colorWithRed:0.91f green:0.38f blue:0.39f alpha:1.00f];
+        cell.direction = ZKRevealingTableViewCellDirectionRight;
+
+    }
     
     for(UIView *cellItem in cell.backView.subviews) {
         [cellItem removeFromSuperview];
@@ -199,7 +231,12 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     currentIndex = indexPath;
-    [self performSegueWithIdentifier:@"showDetail" sender:self];
+    if (self.partidos) {
+        [self performSegueWithIdentifier:@"showCompose" sender:self];
+    }
+    else{
+        [self performSegueWithIdentifier:@"showSeleccionApuesta" sender:self];
+    }
 }
 
 #pragma mark - ZKRevealingTableViewCellDelegate
@@ -222,25 +259,28 @@
 #pragma mark - Segue
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"showDetail"]) {
-        DetailViewController *detailVC = segue.destinationViewController;
+    if ([segue.identifier isEqualToString:@"showSeleccionApuesta"]) {
+        UINavigationController *nav = segue.destinationViewController;
+        ResultadoPartidoViewController *detailVC = nav.viewControllers[0];
+            //Mensaje por defecto para el envio de la invitación
+        NSMutableDictionary *apuesta = [[NSMutableDictionary alloc] initWithDictionary:[self.apuestas objectAtIndex:currentIndex.row]];
+        /*
+        NSIndexPath *index= [self.tableView indexPathForSelectedRow];
+        PartidoCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"CeldaPartido" forIndexPath:index];
+        */
+        detailVC.apuesta = apuesta;
+        detailVC.tableView = self.tableView;
+        detailVC.fixture = self;
         
-        NSDictionary *item = self.partidos[currentIndex.row];
-        detailVC.item = item;
     } else if ([segue.identifier isEqualToString:@"showCompose"]) {
         UINavigationController *nav = segue.destinationViewController;
-        DetailViewController *detailVC = nav.viewControllers[0];
+        DetailFixtureViewController *detailVC = nav.viewControllers[0];
             //Mensaje por defecto para el envio de la invitación
-        detailVC.item = @{@"recipients": @[@"Christian Bale", @"Tom Cruise", @"Morgan Freeman"],
-                          @"subject": @"Te pinta sumarte a la penca?",
-                          @"body": @"Estamos armando una penca y me gustaria que formaras parte, te pinta? Si te pinta hace click abajo y agregate.\n\n"
-                          
-                          "www.pencuy.com.uy.\n\n"
-                          
-                          "Vamo y vamo! :D"};
-        detailVC.editable = YES;
+        NSDictionary *partido = self.partidos[currentIndex.row];
+        detailVC.partido = partido;
     }
 }
+
 
 @end
 
