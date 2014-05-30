@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "Usuario.h"
+#import "NSUserDefaults+Usuario.h"
 @interface PencuyFetcher : NSObject
 
 + (NSURL *)URLForQuery:(NSString *)query kindOf:(NSString *)kind;
@@ -16,11 +17,15 @@
 
 + (NSURL *)URLPublicForQuery:(NSString *)query;
 
-#pragma mark Api Publica logueo y creacion de usuario
+#pragma mark API Publica logueo y creacion de usuario UsuarioPublicFacadeREST
 
 + (NSURL *)URLtoCheckUser;
 + (NSURL *)URLtoActivateUser;
 + (NSURL *)URLtoCreateUser;
++ (NSURL *)URLtoCreateFaceUser;
++ (NSURL *)URLtoGetUserByFaceId:(NSString*)faceId;
++ (NSURL *)URLtoLoginUser;
++ (NSURL *)URLtoResetPassword;
 
 
 #pragma mark Api Privada para partidos
@@ -29,8 +34,20 @@
 #pragma mark Api Privada para fechas
 + (NSURL *)URLtoQueryFechas:(NSString *)nombreCampeonato;
 #pragma mark Api Privada para apuestas
-+ (NSURL *)URLtoQueryApuestas:(NSString *)idPenca;
++ (NSURL *)URLtoQueryApuestasIdPenca:(NSString *)idPenca andEstado:(NSString *)estado;
++ (NSURL *)URLtoQueryApuestasIdPenca:(NSString *)idPenca andFecha:(NSString *)fecha;
 + (NSURL *)URLtoMakeApuestas;
+
+#pragma mark Api Privada para pencas
++ (NSURL *)URLtoQueryPencasActivas;
++ (NSURL *)URLtoQueryPencas;
+
+#pragma mark Api Privada para invitaciones
++ (NSURL *)URLtoQueryInvitacionesByIdPenca:(NSString *) idPenca;
++ (NSURL *)URLtoQueryInvitaciones;
+
+#pragma mark Api Privada para alertas
++ (NSURL *)URLtoQueryAlertas;
 
 #pragma mark Mutli Fetcher para creación dinamica de consultas.
 +(void)multiFetcher:(NSURL *)url
@@ -39,5 +56,13 @@
 +(NSDictionary*)multiFetcherSync:(NSURL *)url
                         withHTTP:(NSString *) httpMethod
                         withData:(NSData *)requestData;
+
++(NSDictionary*)multiFetcherSyncPublic:(NSURL *)url
+                              withHTTP:(NSString *) httpMethod
+                              withData:(NSData *)requestData
+                          withUserName:(NSString*) userName
+                          withPassword:(NSString*) password
+                    communicationError:(NSError **) connError
+                jsonSerializationError:(NSError **) jsonError;
 
 @end

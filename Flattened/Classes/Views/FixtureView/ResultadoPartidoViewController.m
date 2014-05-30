@@ -31,9 +31,7 @@
     
     if(![Utils isVersion6AndBelow])
         self.navigationController.navigationBar.translucent = NO;
-    
-    self.title = @"Detail1";
-    
+        
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.textColor = [UIColor whiteColor];
     titleLabel.backgroundColor = [UIColor clearColor];
@@ -54,7 +52,9 @@
     self.txtLocatario.text= self.apuesta[@"partido"][@"local"];
     self.txtVisitante.text= self.apuesta[@"partido"][@"visitante"];
     
+    
     [self.txtLocatario alignTop];
+    [self.txtVisitante alignTop];
     
     NSString* pathLocatario = [[NSBundle mainBundle] pathForResource:[self.apuesta[@"partido"][@"local"] stringByAppendingString:@"-square"] ofType:@"ico"];
     self.imgLocatario.image = [UIImage imageWithContentsOfFile:pathLocatario];
@@ -63,8 +63,6 @@
     
     self.pickerLocatario = [[UIPickerView alloc] initWithFrame:(CGRectMake(0,-20,self.view.bounds.size.width,120))];
     [self.pickerLocatario setBounds:CGRectMake(0,0,self.view.bounds.size.width,120)];
-        //self.pickerLocatario.transform = CGAffineTransformMakeScale(.9, 0.9);
-        //[self.pickerLocatario setBackgroundColor:[UIColor lightGrayColor]];
     [self.view addSubview:self.pickerLocatario];
     
     self.pickerLocatario.dataSource = self;
@@ -88,7 +86,7 @@
 
 -(NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
     if ([pickerView isEqual:self.pickerLocatario]) {
-        return 10;
+        return 20;
     }
     return 0;
 }
@@ -98,7 +96,7 @@
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 44)]; // your frame, so picker gets "colored"
     
     
-    label.backgroundColor = [UIColor orangeColor];
+    label.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.64];
     label.textColor = [UIColor whiteColor];
     label.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18];
     label.text = [NSString stringWithFormat:@"%d",row];
@@ -114,6 +112,24 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    NSNumber* golesLocal = self.apuesta[@"golesLocal"];
+    if ([golesLocal isKindOfClass:NSNull.class]) {
+        [self.pickerLocatario selectRow:0 inComponent:0 animated:YES];
+    }
+    else{
+        [self.pickerLocatario selectRow:[golesLocal integerValue] inComponent:0 animated:YES];
+    }
+    NSNumber* golesVisitante = self.apuesta[@"golesVisitante"];
+    if ([golesVisitante isKindOfClass:NSNull.class]) {
+         [self.pickerLocatario selectRow:0 inComponent:1 animated:YES];
+    }
+    else{
+        [self.pickerLocatario selectRow:[golesVisitante integerValue] inComponent:1 animated:YES];
+    }
+
 }
 
 - (void)viewDidUnload {
@@ -139,29 +155,18 @@
     [diccionario setValue:visitante forKey:@"golesLocal"];
     [diccionario setValue:@"false" forKey:@"tipoFinal"];
     
-    [diccionario setValue:[[NSDictionary alloc]initWithObjectsAndKeys:@"65",@"idEquipo", nil] forKey:@"ganador"];
+        //[diccionario setValue:[[NSDictionary alloc]initWithObjectsAndKeys:@"65",@"idEquipo", nil] forKey:@"ganador"];
     [diccionario setValue:@"INGRESADO" forKey:@"estado"];
+    NSLog(@"Valore enviados: %@", diccionario);
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:diccionario
                                                        options:NSJSONWritingPrettyPrinted
                                                          error:&error];
-    [self.apuesta setValue:locatario forKey:@"golesVisitante"];
-    [self.apuesta setValue:visitante forKey:@"golesLocal"];
-    self.fixture.apuestas=[[NSMutableArray alloc] initWithObjects:self.apuesta, nil];
-        //Cargar las apuestas aca...
-    [self.tableView reloadData];
     [PencuyFetcher multiFetcherSync:[PencuyFetcher URLtoMakeApuestas] withHTTP:@"PUT" withData:jsonData];
-    
+    [(ApuestasDataLoaderTableViewController*)self.fixture fetchApuestas:self.fixture.idPenca andFecha:[self.fixture.idFecha stringValue] ];
+    [self.fixture.tableView reloadData];
     [self dismissViewControllerAnimated:YES completion:^{
     }];
-}
--(NSDictionary*)findApuesa:(NSArray*)array withId:(NSString*)idApuesta{
-    for (int i = 0; i<[array count]; i++) {
-        if ([[(NSDictionary*)array[i] valueForKey:@"idApuesta"] isEqualToString:idApuesta]) {
-            return (NSDictionary*)array[i];
-        }
-    }
-    return nil;
 }
 
 @end

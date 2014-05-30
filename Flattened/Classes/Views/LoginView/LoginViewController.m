@@ -10,21 +10,25 @@
 #import "CustomTabBarViewController.h"
 #import "AppDelegate.h"
 #import "PencuyFetcher.h"
+#import "FileManager.h"
+#import "Utils.h"
+#import "Usuario.h"
+#import "RandomManager.h"
+#import "FacebookImageStorage.h"
+#import "ImageManager.h"
+#import "Validator.h"
 
-@interface LoginViewController () <UITextFieldDelegate>
+@interface LoginViewController ()
 
-@property (weak, nonatomic) IBOutlet UITextField *txtUsuario;
-@property (weak, nonatomic) IBOutlet UITextField *txtPass;
-@property (weak, nonatomic) IBOutlet UIButton *btnLogin;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
+@property (weak, nonatomic) IBOutlet UIImageView *backImage;
+
+@property(strong, nonatomic) Usuario* usuarioFacebook;
 
 @end
 
+
 @implementation LoginViewController
 
-- (IBAction)touchLogin:(id)sender {
-    
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,9 +42,38 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [_txtUsuario setDelegate:self];
-    [_txtPass setDelegate:self];
+    self.FBLoginView.delegate= self;
+    self.FBLoginView.readPermissions = @[@"public_profile", @"email", @"user_friends"];
+    NSString* dimensions= [Utils dimensionesPantalla];
+    if ([dimensions isEqualToString:@"320x568"]) {
+        dimensions = [NSString stringWithFormat:@"640x1136"];
+    }
+    NSString* pathLocatario = [[NSBundle mainBundle] pathForResource:[@"Dawn-" stringByAppendingString:dimensions] ofType:@"jpg"];
+    _backImage.image = [UIImage imageWithContentsOfFile:pathLocatario];
+    
+    [_txtCorreo setDelegate:self];
+    [self agregarEspacioInterno:_txtCorreo];
+    self.toolbarView.hidden=YES;
+
 }
+
+- (void)viewDidUnload {
+    [self setFBLoginView:nil];
+    [super viewDidUnload];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    self.toolbarView.hidden = NO;
+    if (textField == _txtCorreo) {
+        [self upTextField:_txtCorreo focusOn:_txtCorreo];
+    }
+}
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    if (textField == _txtCorreo) {
+        [self downField:_txtCorreo withSpace:[NSNumber numberWithInt:0]];
+    }
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -48,146 +81,239 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark fadeIn fadeOut para los controles cuando el usuario se loguea.
+
+-(void)pedirCorreo{
+    [UIView animateWithDuration:0.5 animations:^{
+        _FBLoginView.alpha = 0;
+        _btnAccessWithAccount.alpha = 0;
+        _lblYouDont.alpha = 0;
+    } completion: ^(BOOL finished) {
+        _FBLoginView.hidden = finished;
+        _btnAccessWithAccount.hidden = finished;
+        _lblYouDont.hidden = finished;
+        
+        _btnAceptar.alpha = 0;
+        _btnAceptar.hidden = NO;
+        _btnVolver.alpha = 0;
+        _btnVolver.hidden = NO;
+        _txtCorreo.alpha = 0;
+        _txtCorreo.hidden = NO;
+        [UIView animateWithDuration:0.8 animations:^{
+            _btnAceptar.alpha = 1;
+            _btnVolver.alpha = 1;
+            _txtCorreo.alpha = 1;
+        }];
+    }];
+}
+
+-(void)volver{
+    [UIView animateWithDuration:0.5 animations:^{
+        _btnAceptar.alpha = 0;
+        _btnVolver.alpha = 0;
+        _txtCorreo.alpha = 0;
+    } completion: ^(BOOL finished) {
+        _btnAceptar.hidden = finished;
+        _btnVolver.hidden = finished;
+        _txtCorreo.hidden = finished;
+        
+        _FBLoginView.alpha = 0;
+        _FBLoginView.hidden = NO;
+        _btnAccessWithAccount.alpha = 0;
+        _btnAccessWithAccount.hidden = NO;
+        _lblYouDont.alpha = 0;
+        _lblYouDont.hidden = NO;
+        [UIView animateWithDuration:0.8 animations:^{
+            _FBLoginView.alpha = 1;
+            _btnAccessWithAccount.alpha = 1;
+            _lblYouDont.alpha = 1;
+        }];
+    }];
+}
+
+#pragma mark evento touch en no tiene cuenta en facebook.
+
+- (BOOL)createUser{
+    return YES;
+}
+#pragma mark Facebook delegates
+- (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
+        //[self performSegueWithIdentifier: @"StartWithFacebook" sender: self];
+        //[NSUserDefaults standardUserDefaults] valueForKey:@"LoggedUser"];
+    if (FBSession.activeSession.isOpen) {
+        [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+            if (!error) {
+                NSString* username = user.name;
+                NSString* email = [user objectForKey:@"email"];
+                NSLog(@"nombre y correo: %@, %@", username, email);
+            }
+        }];
+    }
+}
+
+    // This method will be called when the user information has been fetched
+- (void)loginViewFetchedUserInfo:(FBLoginView *)loginView
+                            user:(id<FBGraphUser>)user {
+    if (FBSession.activeSession.isOpen) {
+        
+        
+        if (![[NSUserDefaults standardUserDefaults] valueForKey:@"USUARIO-PENCA"]) {
+            NSString *randomKey = [RandomManager getRandomAphanumeric:10];
+            Usuario* usuario= [Usuario new];
+            [usuario setNombreCompleto:user.name];
+            [usuario setNombre:user.first_name];
+            [usuario setApellido:user.last_name];
+            
+            [usuario setMasculino:[user objectForKey:@"gender"]];
+            [usuario setFaceID:user.id];
+            NSString *token =  [[[FBSession activeSession] accessTokenData] accessToken];
+            [usuario setPassword:randomKey];
+            [usuario setRePassword:randomKey];
+            [usuario setApnsDeviceToken:[[NSUserDefaults standardUserDefaults] valueForKey:@"DEVICE-TOKEN" ]];
+            [usuario setLastDevAppleModelUsed:[Utils machineName]];
+            [usuario setLastDevApple:[Utils isVersion6AndBelow]?@"IOS6orLess":@"IOS7.X"];
+            [usuario setFacebookToken:token];
+            [usuario setCuentaFacebook:YES];
+            NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+            [usuario setLocale:language];
+            
+            _usuarioFacebook = usuario;
+            if ([user objectForKey:@"email"]) {
+                [usuario setEmail:[user objectForKey:@"email"]];
+                [self shootLoginFacebook:usuario];
+            }
+            else{
+                [self pedirCorreo];
+            }
+        }
+        else{
+            [self performSegueWithIdentifier: @"StartWithFacebook" sender:self];
+        }
+    }
+}
+
+- (void)loginView:(FBLoginView *)loginView
+      handleError:(NSError *)error {
+    NSString *alertMessage, *alertTitle;
+    
+        // Facebook SDK * error handling *
+        // Error handling is an important part of providing a good user experience.
+        // Since this sample uses the FBLoginView, this delegate will respond to
+        // login failures, or other failures that have closed the session (such
+        // as a token becoming invalid). Please see the [- postOpenGraphAction:]
+        // and [- requestPermissionAndPost] on `SCViewController` for further
+        // error handling on other operations.
+    FBErrorCategory errorCategory = [FBErrorUtility errorCategoryForError:error];
+    if ([FBErrorUtility shouldNotifyUserForError:error]) {
+            // If the SDK has a message for the user, surface it. This conveniently
+            // handles cases like password change or iOS6 app slider state.
+        alertTitle = @"Something Went Wrong";
+        alertMessage = [FBErrorUtility userMessageForError:error];
+    } else if (errorCategory == FBErrorCategoryAuthenticationReopenSession) {
+            // It is important to handle session closures as mentioned. You can inspect
+            // the error for more context but this sample generically notifies the user.
+        alertTitle = @"Session Error";
+        alertMessage = @"Your current session is no longer valid. Please log in again.";
+    } else if (errorCategory == FBErrorCategoryUserCancelled) {
+            // The user has cancelled a login. You can inspect the error
+            // for more context. For this sample, we will simply ignore it.
+        NSLog(@"user cancelled login");
+    } else {
+            // For simplicity, this sample treats other errors blindly, but you should
+            // refer to https://developers.facebook.com/docs/technical-guides/iossdk/errors/ for more information.
+        alertTitle  = @"Unknown Error";
+        alertMessage = @"Error. Please try again later.";
+        NSLog(@"Unexpected error:%@", error);
+    }
+    
+    if (alertMessage) {
+        [self showAlert:alertTitle andMessage:alertMessage];
+    }
+}
+
+-(void) shootLoginFacebook:(Usuario*)usuario{
+    
+    NSUserDefaults * userDefaults =[NSUserDefaults standardUserDefaults];
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[usuario toDictionary]
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    NSData *myEncodedObject = [NSKeyedArchiver archivedDataWithRootObject:[usuario toDictionary]];
+    
+        //NSDictionary * val = [NSDictionary new];//[usuario toDictionary];
+    
+    [userDefaults setObject:myEncodedObject forKey:@"USUARIO-PENCA"];
+    [userDefaults synchronize];
+    NSError *conError = nil;
+    NSError *jsonError = nil;
+    NSLog(@"valores: %@", jsonData);
+    [PencuyFetcher multiFetcherSyncPublic:[PencuyFetcher URLtoCreateFaceUser]
+                                 withHTTP:@"POST"
+                                 withData:jsonData
+                             withUserName:usuario.email
+                             withPassword:usuario.password
+                       communicationError:&conError
+                   jsonSerializationError:&jsonError];
+    NSLog(@"Connection error: %@", conError);
+    NSLog(@"JsonError : %@", jsonData);
+    
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LoggedUser"];
+    [self performSegueWithIdentifier: @"StartWithFacebook" sender: self];
+}
+
+#warning Revisar esto que no lo probe.
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    BOOL valid = [Validator validateEmail:_txtCorreo.text];
+    if (valid) {
+        [_usuarioFacebook setEmail:_txtCorreo.text];
+        [self shootLoginFacebook:_usuarioFacebook];
+    }
+    else{
+        
+        [self showAlert:@"Correo Invalido!" andMessage:@"Debe de ingresar un correo en un formato valido."];
+    }
+    return YES;
+}
+
+- (IBAction)btnAceptarTouch:(id)sender {
+    BOOL valid = [Validator validateEmail:_txtCorreo.text];
+    if (valid) {
+        [_usuarioFacebook setEmail:_txtCorreo.text];
+        [self shootLoginFacebook:_usuarioFacebook];
+    }
+    else{
+        
+        [self showAlert:@"Correo Invalido!" andMessage:@"Debe de ingresar un correo en un formato valido."];
+    }
+}
+
+- (IBAction)btnVoverTouch:(id)sender {
+    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"USUARIO-PENCA"];
+    [FBSession.activeSession closeAndClearTokenInformation];
+    [self volver];
+}
+
+#pragma mark Configuracion de Segues
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
-    if([identifier isEqualToString:@"GoToTheApp"]){
-        return [self validateUserAndPassword];
+    if([identifier isEqualToString:@"StartWithFacebook"]){
+        return YES;
     }
     return YES;
 }
 
 -(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if([segue.identifier isEqualToString:@"GoToTheApp"]){
+    if([segue.identifier isEqualToString:@"StartWithFacebook"]){
         
         if ([segue.destinationViewController isKindOfClass:[CustomTabBarViewController class]]) {
-            
             AppDelegate *delegate= [AppDelegate sharedDelegate];
             [delegate selectWhatKindOfSetup];
-            [self.spinner stopAnimating];
         }
     }
-}
-
--(BOOL) textFieldShouldReturn:(UITextField *)textField{
-    if (textField == _txtUsuario) {
-        [_txtPass becomeFirstResponder];
-    }
-    else if (textField == _txtPass){
-        if ([_txtUsuario.text isEqualToString:@""]) {
-            [_btnLogin becomeFirstResponder];
-        }
-        else{
-            //Ver de hacer logueo automatico cuando el usuario tiene los datos completos.
-            //[self performSegueWithIdentifier:@"GoToTheApp" sender:self];
-            [_btnLogin becomeFirstResponder];
-        }
-    }
-    [textField resignFirstResponder];
-    return YES;
-}
-
-#pragma mark validacion de usuario
-
--(BOOL)validateUserAndPassword{
     
-    if (![self validateUserAndPasswordRequest]) {
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Perdón!"
-                                                            message:@"Has ingresado mal tu usuario o tu contraseña, intenta nuevamente"
-                                                           delegate:nil cancelButtonTitle:nil
-                                                  otherButtonTitles:@"Ok", nil];
-        [alertView show];
-        [self.spinner stopAnimating];
-        return NO;
-    }
-    [self.spinner stopAnimating];
-    return YES;
 }
 
--(BOOL)validateUserAndPasswordRequest{
 
-    [self.spinner startAnimating];
-    NSMutableURLRequest *request= [NSMutableURLRequest requestWithURL:[PencuyFetcher URLtoCheckUser]];
-    NSURLResponse *response= nil;
-    NSError *error= nil;
-    NSLog(@"Disparando llamada sincronico");
-    NSDictionary *eventLocation = [NSDictionary dictionaryWithObjectsAndKeys:self.txtUsuario.text,@"email",self.txtPass.text,@"password", nil];
-    NSData *requestData = [NSJSONSerialization dataWithJSONObject:eventLocation
-                                                       options:NSJSONWritingPrettyPrinted
-                                                         error:&error];
-    NSLog(@"jsonRequest is %@", requestData);
-    [request setHTTPMethod:@"PUT"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [requestData length]] forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPBody: requestData];
-    NSData *jsonResults= [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    NSDictionary *propertyListResults= [NSJSONSerialization JSONObjectWithData:jsonResults options:0 error:NULL];
-    
-    if ([propertyListResults valueForKey:@"password"]) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LoggedUser"];
-        [[NSUserDefaults standardUserDefaults] setValue:self.txtUsuario.text forKey:@"username"];
-        [[NSUserDefaults standardUserDefaults] setValue:self.txtPass.text forKey:@"password"];
-        return YES;
-    }
-    return NO;
-}
-
-#pragma mark Animación de los textFields
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    if (textField == _txtUsuario) {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDuration:0.5];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        _txtUsuario.frame = CGRectMake(_txtUsuario.frame.origin.x, (_txtUsuario.frame.origin.y - 100.0), _txtUsuario.frame.size.width, _txtUsuario.frame.size.height);
-        [UIView commitAnimations];
-    } else if (textField == _txtPass) {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDuration:0.5];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        _txtPass.frame = CGRectMake(_txtPass.frame.origin.x, (_txtUsuario.frame.origin.y - 100.0), _txtPass.frame.size.width, _txtPass.frame.size.height);
-        [UIView commitAnimations];
-    }
-}
-- (void)textFieldDidEndEditing:(UITextField *)textField {
-    if (textField == _txtUsuario) {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDuration:0.5];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        _txtUsuario.frame = CGRectMake(_txtUsuario.frame.origin.x, (_txtUsuario.frame.origin.y + 100.0), _txtUsuario.frame.size.width, _txtUsuario.frame.size.height);
-        [UIView commitAnimations];
-    } else if (textField == _txtPass) {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDuration:0.5];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        _txtPass.frame = CGRectMake(_txtPass.frame.origin.x, (_txtPass.frame.origin.y + (50) + 100.0), _txtPass.frame.size.width, _txtPass.frame.size.height);
-        [UIView commitAnimations];
-    }
-}
-
-/*
-- (void)actionHideKeys:(id)sender {
-    [_textBody resignFirstResponder];
-    if (_fullScreen) {
-        _fullScreen = NO;
-        [((UIButton *)[_toolbarView viewWithTag:123]) setImage:[UIImage imageNamed:@"list-item-detail-max"] forState:UIControlStateNormal];
-        
-        CGRect frameHeader = _headerView.frame;
-        frameHeader.origin.y = 0;
-        _headerView.frame = frameHeader;
-        
-        CGRect frameBody = _textBody.frame;
-        frameBody.origin.y = frameHeader.size.height + 5;
-        frameBody.size.height = frameBody.size.height - frameHeader.size.height;
-        _textBody.frame = frameBody;
-        [self.navigationController setNavigationBarHidden:NO animated:YES];
-    }
-}
-*/
 @end

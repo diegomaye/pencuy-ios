@@ -13,7 +13,6 @@
 #import "SSTextField.h"
 #import "AppDelegate.h"
 
-#import "EmailCell.h"
 #import "DataSource.h"
 #import "UISearchBar+TextColor.h"
 #import "Utils.h"

@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FixtureViewController.h"
+#import "ApuestasTVController.h"
 
 @interface ResultadoPartidoViewController : UIViewController <UISplitViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (strong, nonatomic) NSMutableDictionary *apuesta;
-@property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) FixtureViewController *fixture;
+@property (strong, nonatomic) ApuestasTVController *fixture;
+
 
 @property (strong, nonatomic) IBOutlet UILabel *txtLocatario;
 @property (strong, nonatomic) IBOutlet UIImageView *imgLocatario;

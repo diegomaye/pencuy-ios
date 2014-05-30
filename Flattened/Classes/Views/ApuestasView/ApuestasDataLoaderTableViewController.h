@@ -6,12 +6,13 @@
 //  Copyright (c) 2014 AppDesignVault. All rights reserved.
 //
 
-#import "FixtureViewController.h"
+#import "ApuestasTVController.h"
 
-@interface ApuestasDataLoaderTableViewController : FixtureViewController
+@interface ApuestasDataLoaderTableViewController : ApuestasTVController
 
 @property(nonatomic,strong) NSString* idPenca;
+@property(nonatomic,strong) NSNumber* idFecha;
 
--(void)fetchApuestas:(NSString *) idPenca;
+-(void)fetchApuestas:(NSString *) idPenca andFecha:(NSString*)fecha;
 
 @end

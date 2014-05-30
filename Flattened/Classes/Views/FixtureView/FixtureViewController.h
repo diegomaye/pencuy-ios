@@ -17,6 +17,8 @@
 @property (nonatomic, strong) NSArray *partidos;
 @property (nonatomic, strong) NSMutableArray *apuestas;
 @property (nonatomic, strong) NSString *idPenca;
+@property (nonatomic, strong) NSNumber *idFecha;
+
 
 -(void) fechaLabel:(NSString *) titulo;
 

@@ -9,16 +9,74 @@
 
 #import "ADVTheme.h"
 
-#import "MailViewController.h"
 #import "PaperFoldNavigationController.h"
 
 static AppDelegate *sharedDelegate;
+static Usuario *usuario;
 
 @implementation AppDelegate
 
++ (Usuario*) getUsuario {
+    if (usuario==nil) {
+        NSUserDefaults * userDefaults =[NSUserDefaults standardUserDefaults];
+        NSData* userDefaultData = [userDefaults valueForKey:@"USUARIO-PENCA"];
+        NSDictionary* userDefaultDictionary = (NSDictionary*) [NSKeyedUnarchiver unarchiveObjectWithData:userDefaultData];
+        NSError* error;
+        usuario = [[Usuario alloc] initWithDictionary:userDefaultDictionary error:&error];
+    }
+    return usuario;
+}
+
+- (void) closeSession {
+    [FBSession.activeSession closeAndClearTokenInformation];
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    
+        // Facebook SDK * login flow *
+        // Attempt to handle URLs to complete any auth (e.g., SSO) flow.
+    return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication fallbackHandler:^(FBAppCall *call) {
+            // Facebook SDK * App Linking *
+            // For simplicity, this sample will ignore the link if the session is already
+            // open but a more advanced app could support features like user switching.
+        if (call.accessTokenData) {
+            if ([FBSession activeSession].isOpen) {
+                NSLog(@"INFO: Ignoring app link because current session is open.");
+            }
+            else {
+                [self handleAppLink:call.accessTokenData];
+            }
+        }
+    }];
+}
+
+    // Helper method to wrap logic for handling app links.
+- (void)handleAppLink:(FBAccessTokenData *)appLinkToken {
+        // Initialize a new blank session instance...
+    FBSession *appLinkSession = [[FBSession alloc] initWithAppID:nil
+                                                     permissions:nil
+                                                 defaultAudience:FBSessionDefaultAudienceNone
+                                                 urlSchemeSuffix:nil
+                                              tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance] ];
+    [FBSession setActiveSession:appLinkSession];
+        // ... and open it from the App Link's Token.
+    [appLinkSession openFromAccessTokenData:appLinkToken
+                          completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                  // Forward any errors to the FBLoginView delegate.
+                              if (error) {
+                                  NSLog(@"Error pidiendo el token");
+                                      //[self.loginViewController loginView:nil handleError:error];
+                              }
+                          }];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
+    [FBLoginView class];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge |UIRemoteNotificationTypeSound)];
     [ADVThemeManager customizeAppAppearance];
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -48,7 +106,7 @@ static AppDelegate *sharedDelegate;
             self.loginVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
             self.mainVC= _loginVC;
             self.window.rootViewController = self.mainVC;
-            self.window.backgroundColor = [UIColor blackColor];
+                //self.window.backgroundColor = [UIColor blackColor];
             [self.window makeKeyAndVisible];
         }
     }
@@ -99,7 +157,7 @@ static AppDelegate *sharedDelegate;
         self.foldVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"PaperFoldController"];
     }
     
-    UINavigationController *navMag1 = [mainStoryboard instantiateViewControllerWithIdentifier:@"FixtureNav"];
+    UINavigationController *navMag1 = [mainStoryboard instantiateViewControllerWithIdentifier:@"CoverNav"];
     if (!_menuVC) {
         _menuVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"SideViewController"];
         _menuVC.delegate = self;
@@ -141,7 +199,7 @@ static AppDelegate *sharedDelegate;
             case 0:
                 switch (indexPath.row) {
                     case 0:
-                        controllerIdentifier = @"PropertiesNav";
+                        controllerIdentifier = @"InvitationsNav";
                         break;
                     case 1:
                         title = @"INVITAR AMIGO";
@@ -176,19 +234,19 @@ static AppDelegate *sharedDelegate;
             case 0:
                 switch (indexPath.row) {
                     case 0:
-                        controllerIdentifier = @"FixtureNav";
+                        controllerIdentifier = @"CoverNav";
                         break;
                     case 1:
-                        controllerIdentifier = @"PropertiesNav";
+                        controllerIdentifier = @"PencasNav";
                         break;
                     case 2:
-                        controllerIdentifier = @"MapNav";
+                        controllerIdentifier = @"InvitationsNav";
                         break;
                     case 3:
-                        controllerIdentifier = @"ElementsNav";
+                        controllerIdentifier = @"GroupNav";
                         break;
                     case 4:
-                        controllerIdentifier = @"AccountNav";
+                        controllerIdentifier = @"OtherNav";
                         break;
                     case 5:
                         controllerIdentifier = @"SettingsNav";
@@ -265,6 +323,15 @@ static AppDelegate *sharedDelegate;
 }
 
 
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [[NSUserDefaults standardUserDefaults] setValue:[[NSString alloc] initWithData:deviceToken encoding:NSUTF8StringEncoding] forKey:@"DEVICE-TOKEN"];
+    NSLog(@"devToken=%@",deviceToken);
+}
+
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    NSLog(@"Error in registration. Error: %@", err);
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -285,10 +352,17 @@ static AppDelegate *sharedDelegate;
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [FBAppEvents activateApp];
+    
+        // Facebook SDK * login flow *
+        // We need to properly handle activation of the application with regards to SSO
+        //  (e.g., returning from iOS 6.0 authorization dialog or from fast app switching).
+    [FBAppCall handleDidBecomeActive];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+    [FBSession.activeSession close];
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 

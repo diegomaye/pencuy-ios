@@ -24,30 +24,30 @@
 + (NSArray *)menu {
     return @[
                  @{
-                     @"title": @"Fixture",
-                     @"image": @"menu-icon1"
+                     @"title": NSLocalizedString(@"Cover",nil),
+                     @"image": @"874-newspaper-g"
                      },
                 @{
-                    @"title": @"Invitaciones",
-                    @"image": @"menu-icon1",
+                    @"title": NSLocalizedString(@"Bets",nil),
+                    @"image": @"838-dice-g",
                     @"count": @23
                     },
                 @{
-                    @"title": @"Invitar Amigo",
-                    @"image": @"menu-icon2"
+                    @"title": NSLocalizedString(@"Invitations",nil),
+                    @"image": @"730-envelope-g"
                     },
                 @{
-                    @"title": @"Pencas",
-                    @"image": @"menu-icon3",
+                    @"title": NSLocalizedString(@"Groups",nil),
+                    @"image": @"1056-org-chart-g",
                     @"count": @6
                     },
                 @{
-                    @"title": @"Basura",
-                    @"image": @"menu-icon4"
+                    @"title": NSLocalizedString(@"Statics",nil),
+                    @"image": @"990-presentation-g"
                     },
                 @{
-                    @"title": @"Configuracion",
-                    @"image": @"menu-icon5"
+                    @"title": NSLocalizedString(@"Rules",nil),
+                    @"image": @"138-scales-g"
                     }
              ];
 }

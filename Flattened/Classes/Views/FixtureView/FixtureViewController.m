@@ -35,6 +35,10 @@
 
 #pragma mark - View lifecycle
 
+-(void)setPartidos:(NSArray *)partidos{
+    _partidos= partidos;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -119,6 +123,10 @@
     self.partidos = _partidos;
     self.apuestas = _apuestas;
     [self.tableView reloadData];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillAppear:animated];
 }
 
 - (void)viewDidUnload {
@@ -259,20 +267,7 @@
 #pragma mark - Segue
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"showSeleccionApuesta"]) {
-        UINavigationController *nav = segue.destinationViewController;
-        ResultadoPartidoViewController *detailVC = nav.viewControllers[0];
-            //Mensaje por defecto para el envio de la invitación
-        NSMutableDictionary *apuesta = [[NSMutableDictionary alloc] initWithDictionary:[self.apuestas objectAtIndex:currentIndex.row]];
-        /*
-        NSIndexPath *index= [self.tableView indexPathForSelectedRow];
-        PartidoCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"CeldaPartido" forIndexPath:index];
-        */
-        detailVC.apuesta = apuesta;
-        detailVC.tableView = self.tableView;
-        detailVC.fixture = self;
-        
-    } else if ([segue.identifier isEqualToString:@"showCompose"]) {
+    if ([segue.identifier isEqualToString:@"showCompose"]) {
         UINavigationController *nav = segue.destinationViewController;
         DetailFixtureViewController *detailVC = nav.viewControllers[0];
             //Mensaje por defecto para el envio de la invitación

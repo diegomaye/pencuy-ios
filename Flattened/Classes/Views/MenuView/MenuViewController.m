@@ -10,6 +10,9 @@
 #import "DataSource.h"
 #import "AppDelegate.h"
 #import "Utils.h"
+#import "Usuario.h"
+#import "FacebookImageStorage.h"
+#import "ImageManager.h"
 
 @interface MenuViewController ()
 
@@ -33,7 +36,18 @@
     
     self.menu = [DataSource menu];
     [self.tableView reloadData];
-    
+    /*
+     Sacando usuario por defecto
+     */
+    NSUserDefaults * userDefaults =[NSUserDefaults standardUserDefaults];
+    NSData* userDefaultData = [userDefaults valueForKey:@"USUARIO-PENCA"];
+    NSDictionary* userDefaultDictionary = (NSDictionary*) [NSKeyedUnarchiver unarchiveObjectWithData:userDefaultData];
+    NSError* error;
+    Usuario* usuarioPenca = [[Usuario alloc] initWithDictionary:userDefaultDictionary error:&error];
+    NSLog(@"Error tratando de sacar el usuario por defecto: %@", error);
+    /*
+     Sacando usuario por defecto
+     */
     UIImage *imgBkg = [[UIImage imageNamed:@"menu-background.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(100, 0, 150, 0)];
     UIImageView *imgVBkg = [[UIImageView alloc] initWithFrame:self.view.bounds];
     imgVBkg.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -43,18 +57,28 @@
     self.tableView.backgroundColor = [UIColor clearColor];
     self.profileView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"menu-profile-background.png"]];
     
-    
-    NSDictionary *account = [DataSource userAccount];
     UIImageView *profileImageView = (UIImageView *)[_profileView viewWithTag:1];
-    profileImageView.image = [UIImage imageNamed:account[@"avatar"]];
+    
+    if (usuarioPenca.faceID && ![usuarioPenca.faceID isEqualToString:@""]) {
+        profileImageView.hidden=YES;
+        self.facebookImageView.hidden=NO;
+        self.facebookImageView.profileID = usuarioPenca.faceID;
+        self.facebookImageView.pictureCropping = FBProfilePictureCroppingOriginal;
+    }
+    else{
+        profileImageView.hidden=NO;
+        self.facebookImageView.hidden=YES;
+        profileImageView.image = [UIImage imageNamed:@"icon-avatar-60x60"];
+    }
     
     UILabel *nameLabel = (UILabel *)[_profileView viewWithTag:2];
-    nameLabel.text = account[@"name"];
+    nameLabel.text = usuarioPenca.nombreCompleto;
     nameLabel.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:19];
     nameLabel.textColor = [UIColor whiteColor];
     
     UILabel *emailLabel = (UILabel *)[_profileView viewWithTag:3];
-    emailLabel.text = account[@"email"];
+    
+    emailLabel.text = usuarioPenca.email;
     emailLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:12];
     emailLabel.textColor = [UIColor colorWithRed:0.56f green:0.59f blue:0.64f alpha:1.00f];
     
@@ -80,6 +104,60 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.menu count] + 1;
+}
+
+- (UIImage *)scaleImage:(UIImage *)image toSize:(CGSize)newSize {
+    
+    float width = newSize.width;
+    float height = newSize.height;
+    
+    UIGraphicsBeginImageContext(newSize);
+    CGRect rect = CGRectMake(0, 0, width, height);
+    
+    float widthRatio = image.size.width / width;
+    float heightRatio = image.size.height / height;
+    float divisor = widthRatio > heightRatio ? widthRatio : heightRatio;
+    
+    width = image.size.width / divisor;
+    height = image.size.height / divisor;
+    
+    rect.size.width  = width;
+    rect.size.height = height;
+    
+        //indent in case of width or height difference
+    float offset = (width - height) / 2;
+    if (offset > 0) {
+        rect.origin.y = offset;
+    }
+    else {
+        rect.origin.x = -offset;
+    }
+    
+    [image drawInRect: rect];
+    
+    UIImage *smallImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return smallImage;
+    
+}
+
+- (UIImage *)colorImage:(UIImage *)origImage withColor:(UIColor *)color
+{
+    UIGraphicsBeginImageContextWithOptions(origImage.size, YES, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, (CGRect){ {0,0}, origImage.size} );
+    
+    CGAffineTransform flipVertical = CGAffineTransformMake(1, 0, 0, -1, 0, origImage.size.height);
+    CGContextConcatCTM(context, flipVertical);
+    CGContextDrawImage(context, (CGRect){ {0,0}, origImage.size }, [origImage CGImage]);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -109,8 +187,13 @@
     UIImage *imgRowImage = nil;
     if (item[@"image"]) {
         imgRowImage = [UIImage imageNamed:item[@"image"]];
+        
+            //imgRow.image = imgRowImage;
+        imgRow.image = [self scaleImage:imgRowImage toSize:CGSizeMake(22, 22)];
     }
-    imgRow.image = imgRowImage;
+    else{
+        imgRow.image = imgRowImage;
+    }
     UILabel *lblText = (UILabel *)[cell viewWithTag:2];
     lblText.text = item[@"title"];
     lblText.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:16];

@@ -12,5 +12,10 @@
 
 +(BOOL)isVersion6AndBelow;
 
++(NSString*)machineName;
+
++(NSString*)dimensionesPantalla;
+
 +(UIImage*)createSolidColorImageWithColor:(UIColor*)color andSize:(CGSize)size;
+
 @end

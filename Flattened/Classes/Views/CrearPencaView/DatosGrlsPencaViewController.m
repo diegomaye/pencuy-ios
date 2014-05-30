@@ -9,43 +9,58 @@
 #import "DatosGrlsPencaViewController.h"
 #import "DateUtility.h"
 #import "PencuyFetcher.h"
-#import "ApuestasDataLoaderTableViewController.h"
+#import "HostViewController.h"
+#import "Utils.h"
 
 @interface DatosGrlsPencaViewController (){
-    NSDate *fechaInicio;
     NSString *idPenca;
 }
 @end
 
 @implementation DatosGrlsPencaViewController
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self.view endEditing:YES];
-}
-
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    if(![Utils isVersion6AndBelow])
+        self.navigationController.navigationBar.translucent = NO;
+    
+    self.title = NSLocalizedString(@"CREAR PENCA",nil);
+    
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.textColor = [UIColor whiteColor];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:17];
+
+    
     [self.spinner setAlpha:0.0];
     [self.spinner startAnimating];
     
-    [self customizationUITextField:_txtNombre withDescription:@"Nombre para la penca"];
-    [self customizationUITextField:_txtDescripcion withDescription:@"Descripcion para tus amigos"];
-    [self customizationUITextField:_txtFecha withDescription:@"Fecha de comienzo"];
-    [self customizationUITextField:_txtCosto withDescription:@"Precio unitario penca"];
-    [self addAccessoryButtonToNumberPad:_txtCosto];
-    _signoMoneda.text= NSLocalizedString(@"$U",nil);
+    UIButton *btnCancel = [UIButton buttonWithType:UIButtonTypeCustom];
+    btnCancel.frame = CGRectMake(0, 0, 40, 30);
+    [btnCancel setImage:[UIImage imageNamed:@"navigation-btn-cancel"] forState:UIControlStateNormal];
+    [btnCancel addTarget:self action:@selector(actionCancel:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnCancel];
     
-    [self customizationUIDatePickerUITextView:_txtFecha withButtonDescription:@"Listo"];
-     
+    _txtNombre.placeholder = NSLocalizedString(@"Nombre para la penca",nil);
+    _txtDescripcion.placeholder = NSLocalizedString(@"Descripcion para tus amigos",nil);
+    _txtCosto.placeholder = NSLocalizedString(@"Monto unitario penca", @"");
+    [self agregarEspacioInterno:_txtNombre];
+    [self agregarEspacioInterno:_txtDescripcion];
+    [self agregarEspacioInterno:_txtCosto];
+    
+    _txtNombre.delegate=self;
+    _txtDescripcion.delegate=self;
+    _txtCosto.delegate=self;
+    
+    [self addAccessoryButtonToNumberPad:_txtCosto];
+}
+
+- (void)actionCancel:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
 }
 
 #pragma mark Animacion del spinner
@@ -66,7 +81,7 @@
 #pragma mark Agregar botones de aceptar al Decimal Pad
 
 -(void)addAccessoryButtonToNumberPad:(UITextField *)text{
-    UIToolbar* numberToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 30)];
+    UIToolbar* numberToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 38)];
     [numberToolbar setBarStyle:UIBarStyleBlackTranslucent];
     numberToolbar.items = [NSArray arrayWithObjects:
                            [[UIBarButtonItem alloc]initWithTitle:@"Cancelar" style:UIBarButtonItemStyleBordered target:self action:@selector(cancelNumberPad)],
@@ -75,6 +90,7 @@
                            nil];
     
     text.inputAccessoryView = numberToolbar;
+    self.toolbarView.hidden = YES;
 }
 
 -(void)cancelNumberPad{
@@ -86,60 +102,7 @@
     [_txtCosto resignFirstResponder];
 }
 #pragma mark Agregado de UIDatePicker customizado.
--(void) customizationUIDatePickerUITextView:(UITextField*)text withButtonDescription:(NSString*) buttonDescription{
-    
-    
-    UIToolbar *keyboardToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 30)];
-    [keyboardToolbar setBarStyle:UIBarStyleBlackTranslucent];
-    
-    UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    
-    UIBarButtonItem *done = [[UIBarButtonItem alloc] initWithTitle:buttonDescription style:UIBarButtonItemStyleDone target:self action:@selector(changeDate:)];
-    
-    [keyboardToolbar setItems:[[NSArray alloc] initWithObjects: flexSpace, done, nil]];
-    
-    text.inputAccessoryView = keyboardToolbar;
-    
-    UIDatePicker *datePicker = [[UIDatePicker alloc]init];
-    [datePicker setDatePickerMode:UIDatePickerModeDateAndTime];
-    [datePicker setBounds:CGRectMake(0,0,self.view.bounds.size.width,100)];
-    [datePicker setDate:[NSDate date]];
-    [datePicker addTarget:self action:@selector(updateTextField:) forControlEvents:UIControlEventValueChanged];
-    [text setInputView:datePicker];
-}
 
--(void)changeDate:(id)sender{
-    [self modifyUITextField];
-    [self.view endEditing:YES];
-}
-
--(void)updateTextField:(id)sender
-{
-    [self modifyUITextField];
-}
-
--(void)modifyUITextField{
-    UIDatePicker *picker = (UIDatePicker*)_txtFecha.inputView;
-    
-    if (!fechaInicio) {
-        fechaInicio = [NSDate new];
-    }
-    
-    fechaInicio=picker.date;
-    NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    dateFormatter.dateFormat = NSLocalizedString(@"dd/MM/yyyy",nil);
-    NSString *fecha = [dateFormatter stringFromDate:picker.date];
-    dateFormatter.dateFormat = NSLocalizedString(@"HH:mm",nil);
-    NSString *hora = [dateFormatter stringFromDate:picker.date];
-    NSString *resultado= [NSString stringWithFormat:@"%@ %@ %@ %@",
-                          NSLocalizedString(@"Comienza el",nil),
-                          fecha,
-                          NSLocalizedString(@"a las",nil),
-                          hora];
-    
-    _txtFecha.text = [NSString stringWithFormat:@"%@",resultado];
-
-}
 
 #pragma mark Customizacion de componentes de texto.
 
@@ -173,116 +136,78 @@
 #pragma mark evento touch de crear penca
 
 - (IBAction)touchCrearPenca:(id)sender {
-}
-
-#pragma mark - Segue
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if ([segue.identifier isEqualToString:@"showApuestas"]) {
-        ApuestasDataLoaderTableViewController *apuestaView = segue.destinationViewController;
-        
-        if (!idPenca) {
-            idPenca = [NSString new];
-        }
-        apuestaView.idPenca = idPenca;
+    [self.view endEditing:YES];
+    [self appear];
+    NSMutableDictionary *diccionario= [NSMutableDictionary new];
+    NSMutableString *errores= [NSMutableString new];
+    if ([[_txtNombre text] length]) {
+        [diccionario setValue:(NSString*)_txtNombre.text forKey:@"nombre"];
     }
-}
-
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    if ([identifier isEqualToString:@"showApuestas"]) {
-        
-        [self.view endEditing:YES];
-        [self appear];
-        NSMutableDictionary *diccionario= [NSMutableDictionary new];
-        NSMutableString *errores= [NSMutableString new];
-        if ([[_txtNombre text] length]) {
-            [diccionario setValue:(NSString*)_txtNombre.text forKey:@"nombre"];
-        }
-        else{
-            [errores appendString:NSLocalizedString(@"El nombre de la penca.\r",nil)];
-        }
-        if ([[_txtDescripcion text] length]) {
-            [diccionario setValue:_txtDescripcion.text forKey:@"descripcion"];
-        }
-        else{
-            [errores appendString:NSLocalizedString(@"Descripcion de la penca.\r",nil)];
-        }
-        if (fechaInicio) {
-            [diccionario setValue:[DateUtility serealizadorJsonDateToString:fechaInicio] forKey:@"fechaHoraInicio"];
-        }
-        else{
-            [errores appendString:NSLocalizedString(@"Fecha en la que inicia.\r",nil)];
-        }
-        if ([[_txtCosto text] length]) {
-            [diccionario setValue:_txtCosto.text forKey:@"costoUnitario"];
-        }
-        else{
-            [errores appendString:NSLocalizedString(@"Costo unitario.\r",nil)];
-        }
-        if ([errores length]) {
-            UIAlertView* alerta=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Te falto ingresar:",nil)
-                                                           message:errores
-                                                          delegate:self
-                                                 cancelButtonTitle:NSLocalizedString(@"Ok",nil)
-                                                 otherButtonTitles: nil];
-            
-            [alerta show];
+    else{
+        [errores appendString:NSLocalizedString(@"El nombre de la penca.\r",nil)];
+    }
+    if ([[_txtDescripcion text] length]) {
+        [diccionario setValue:_txtDescripcion.text forKey:@"descripcion"];
+    }
+    else{
+        [errores appendString:NSLocalizedString(@"Descripcion de la penca.\r",nil)];
+    }
+    if ([[_txtCosto text] length]) {
+        [diccionario setValue:_txtCosto.text forKey:@"costoUnitario"];
+    }
+    else{
+        [errores appendString:NSLocalizedString(@"Costo unitario.\r",nil)];
+    }
+    if ([errores length]) {
+        [self showAlert:NSLocalizedString(@"Te falto ingresar:",nil)
+             andMessage:errores];
+        [self disappear];
+    }
+    else{
+        [diccionario setValue:[DateUtility dateNow] forKey:@"fechaHoraGeneracion"];
+        [diccionario setValue:[DateUtility dateNow] forKey:@"fechaHoraInicio"];
+        [diccionario setValue:@"false" forKey:@"mostrarApuestas"];
+        NSArray *porcentajes = [NSArray arrayWithObjects: [NSNumber numberWithInt:100], nil];
+        [diccionario setValue:porcentajes forKey:@"porcentajesGanadores"];
+        [diccionario setValue:_txtCosto.text forKey:@"pozoTotal"];
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:diccionario
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&error];
+        if (!jsonData) {
+            NSLog(@"Error al convertir el diccionario en json: %@", error);
+            [self showAlert:NSLocalizedString(@"Ups!, hubo un error",nil)
+                 andMessage:NSLocalizedString(@"No puedes crear la penca en este momento, espera e intentalo mas tarde",nil)];
             [self disappear];
-            return NO;
-        }
-        else{
-            [diccionario setValue:[DateUtility dateNow] forKey:@"fechaHoraGeneracion"];
-            [diccionario setValue:@"false" forKey:@"mostrarApuestas"];
-            NSArray *porcentajes = [NSArray arrayWithObjects: [NSNumber numberWithInt:100], nil];
-            [diccionario setValue:porcentajes forKey:@"porcentajesGanadores"];
-            [diccionario setValue:_txtCosto.text forKey:@"pozoTotal"];
-            NSError *error;
-            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:diccionario
-                                                               options:NSJSONWritingPrettyPrinted
-                                                                 error:&error];
-            if (!jsonData) {
-                NSLog(@"Error al convertir el diccionario en json: %@", error);
-                UIAlertView* alerta=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Ups!, hubo un error",nil)
-                                                               message:NSLocalizedString(@"No puedes crear la penca en este momento, espera e intentalo mas tarde",nil)
-                                                              delegate:self
-                                                     cancelButtonTitle:NSLocalizedString(@"Ok",nil)
-                                                     otherButtonTitles: nil];
-                
-                [alerta show];
+        } else {
+            NSDictionary *devolucion = [PencuyFetcher multiFetcherSync:[PencuyFetcher URLAPIForPencaBrasil]
+                                                              withHTTP:@"POST"
+                                                              withData:jsonData];
+            
+            if ([devolucion valueForKeyPath:@"idPenca"]) {
+
                 [self disappear];
-                return NO;
-            } else {
-                NSDictionary *devolucion = [PencuyFetcher multiFetcherSync:[PencuyFetcher URLAPIForPencaBrasil] withHTTP:@"POST" withData:jsonData];
-                if ([devolucion valueForKeyPath:@"idPenca"]) {
-                    UIAlertView* alerta=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Nueva penca",nil)
-                                                                   message:[NSString stringWithFormat:@"%@ %@ %@",NSLocalizedString(@"La penca",nil), _txtNombre.text, NSLocalizedString(@"se ha creado exitosamente, ahora debes de apostar",nil)]
-                                                                  delegate:self
-                                                         cancelButtonTitle:NSLocalizedString(@"Ok",nil)
-                                                         otherButtonTitles: nil];
-                    if (!idPenca) {
-                        idPenca = [NSString new];
-                    }
-                    idPenca= [devolucion valueForKey:@"idPenca"];
+                [(PencasDataLoaderTableViewController*)self.pencas fetchPencas];
+                [self.pencas.tableView reloadData];
+                
+                [self dismissViewControllerAnimated:YES completion:^{
                     
-                    [alerta show];
-                    [self disappear];
-                    return YES;
-                }
-                else if ([devolucion valueForKeyPath:@"message"]) {
-                    UIAlertView* alerta=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Ocurrió un error",nil)
-                                                                   message:[devolucion valueForKeyPath:@"message"]
-                                                                  delegate:self
-                                                         cancelButtonTitle:NSLocalizedString(@"Ok",nil)
-                                                         otherButtonTitles: nil];
-                    
-                    [alerta show];
-                    [self disappear];
-                    return NO;
-                }
+                }];
+
+            }
+            else if ([devolucion valueForKeyPath:@"message"]) {
+                [self showAlert:NSLocalizedString(@"Ocurrió un error",nil)
+                     andMessage:[devolucion valueForKeyPath:@"message"]];
+                [self disappear];
             }
         }
     }
-    return YES;
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+        // Dispose of any resources that can be recreated.
 }
 
 @end

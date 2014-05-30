@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 @protocol MenuViewControllerDelegate;
 
@@ -15,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (assign, nonatomic) id<MenuViewControllerDelegate> delegate;
 @property (strong, nonatomic) IBOutlet UIView *profileView;
+@property (strong, nonatomic) IBOutlet FBProfilePictureView *facebookImageView;
 
 @end
 

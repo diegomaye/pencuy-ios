@@ -6,12 +6,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FacebookSDK/FacebookSDK.h>
 #import "MenuViewController.h"
 #import "LoginViewController.h"
 #import "Enums.h"
+#import "Usuario.h"
 @class PaperFoldNavigationController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, MenuViewControllerDelegate>
+
+- (void) closeSession;
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UITabBarController *tabbarVC;
@@ -28,9 +32,10 @@
 
 + (AppDelegate *)sharedDelegate;
 + (void)customizeTabsForController:(UITabBarController *)tabVC;
++ (Usuario *) getUsuario;
 - (void)togglePaperFold:(id)sender;
 - (void)resetAfterTypeChange:(BOOL)cancel;
 - (void)showMenuiPad:(id)sender;
--(void)selectWhatKindOfSetup;
+- (void)selectWhatKindOfSetup;
 
 @end
