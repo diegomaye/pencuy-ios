@@ -14,6 +14,10 @@
 @interface THContactPickerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, THContactPickerDelegate, ABPersonViewControllerDelegate>
 
 @property (nonatomic, strong) THContactPickerView *contactPickerView;
+
+@property (nonatomic, strong) UILabel* lblDescripcionInvitarFacebook;
+@property (nonatomic, strong) UIButton* btnInvitarAmigosFacebook;
+@property (nonatomic, strong) NSString* idPenca;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *contacts;
 @property (nonatomic, strong) NSMutableArray *selectedContacts;

@@ -7,20 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZKRevealingTableViewCell.h"
+#import <FacebookSDK/FacebookSDK.h>
 
-
-@protocol StoreCellDelegate;
-
-
-@interface UsuariosCell : ZKRevealingTableViewCell
+@interface UsuariosCell : UITableViewCell
 
 @property (strong, nonatomic) NSDictionary *data;
-@property (strong, nonatomic) IBOutlet UILabel *lblTitle;
-@property (strong, nonatomic) IBOutlet UILabel *lblDate;
-@property (strong, nonatomic) IBOutlet UILabel *lblSender;
-@property (strong, nonatomic) IBOutlet UILabel *lblDescription;
+
+@property (strong, nonatomic) IBOutlet UILabel *lblUserName;
+@property (strong, nonatomic) IBOutlet UILabel *lblPosition;
+@property (strong, nonatomic) IBOutlet UILabel *lblPuntos;
+@property (strong, nonatomic) IBOutlet UILabel *lblCompletado;
+@property (strong, nonatomic) IBOutlet UILabel *lblAcierto;
+
 @property (strong, nonatomic) IBOutlet UIImageView *imageVAvatar;
+@property (strong, nonatomic) IBOutlet FBProfilePictureView *imageFacebook;
 @property (strong, nonatomic) IBOutlet UIImageView *imageVBkg;
 
 

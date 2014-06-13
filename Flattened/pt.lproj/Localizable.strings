@@ -1,0 +1,218 @@
+/* 
+  Localizable.strings
+  Flattened
+
+  Created by Diego Maye on 31/05/14.
+  Copyright (c) 2014 AppDesignVault. All rights reserved.
+*/
+//TABS DEL SISTEMA
+
+/*Tabs*/
+"Cover"="Portada";
+"Bets"="Apostas";
+"Invitations"="Convites";
+"Groups"="Grupos";
+"Statics"="Estatísticas";
+"Rules"="Regras";
+
+/*Pantallas*/
+"COVER"="PORTADA";
+"BETS"="APOSTAS";
+"INVITATIONS"="CONVITES";
+"GROUPS"="GRUPOS";
+"STATICS"="ESTATÍSTICAS";
+"RULES"="REGRAS";
+"UPDATE BET"="MUDAR APOSTA";
+"INVITE FRIENDS"="CONVITE AMIGOS";
+"CREATE A BET"="CRIAR APOSTA";
+
+//SWIPE PENCA
+
+/*TABS*/
+"Ranking" = "Ranking";
+"Group A" = "Groupo A";
+"Group B" = "Groupo B";
+"Group C" = "Groupo C";
+"Group D" = "Groupo D";
+"Group E" = "Groupo E";
+"Group F" = "Groupo F";
+"Group G" = "Groupo G";
+"Group H" = "Groupo H";
+"Second Round" = "Segunda Ronda";
+"Quarter - finals" = "Quartos";
+"Semifinal" = "Semifinal";
+"Third/Fourth place match" = "Quarto Lugar";
+"Final" = "Final";
+"Invitations"="Convites";
+/*Titulos de penca*/
+"PENDINGS"="PENDENTES";
+"ENDED"="FINALIZADOS";
+"PARTICIPANTS"="PARTICIPANTES";
+/*Usuarios*/
+"Success"="Sucesso";
+/*Fase de Grupos*/
+"Not Started"="Não Iniciado";
+"Started"="Iniciado";
+"Blocked"="Bloqueado";
+"Ended"="Finalizado";
+/*Paises*/
+"Algeria"="Argélia";
+"Cameroon"="Camarões";
+"Ivory Coast"="Costa do Marfim";
+"Ghana"="Gana";
+"Nigeria"="Nigeria";
+"Australia"="Australia";
+"Iran"="Irán";
+"Japan"="Japão";
+"Republic of Korea"="Coreia";
+"Germany"="Alemanha";
+"Belgium"="Bélgica";
+"Bosnia and Herzegovina"="Bósnia e Herzegovina";
+"Croatia"="Croácia";
+"Spain"="Espanha";
+"France"="França";
+"Greece"="Grécia";
+"England"="Inglaterra";
+"Italy"="Itália";
+"Netherlands"="Países Baixos";
+"Portugal"="Portugal";
+"Russia"="Rússia";
+"Switzerland"="Suíça";
+"Costa Rica"="Costa Rica";
+"USA"="Estados Unidos";
+"Honduras"="Honduras";
+"Mexico"="México";
+"Argentina"="Argentina";
+"Brazil"="Brasil";
+"Chile"="Chile";
+"Colombia"="Colômbia";
+"Ecuador"="Equador";
+"Uruguay"="Uruguai";
+/*LISTA VACIA*/
+"There is no information \n to display at the moment!"="Não há informações de \n para exibir no momento!";
+
+"reglasTitModalidad"="Modo de Jogo";
+"reglasModalidad1"="Modo Campeonato: Previsões que não determinam corretamente as equipes não somam pontos.";
+"reglasModalidad2"="Modo fase a fase: Se uma fase no sistema concluiu, todos os jogadores podem entrar resultados dos jogos";
+
+
+"reglasTitulo"="Regras do aplicativo";
+"reglasTitPuntos"="Sistema de pontos";
+"reglasTitResultados"="Sistema do resultados";
+"reglasResultados1"="Pode digitar as previsões até 30 minutos antes do jogo começar.";
+"reglasResultados2"="As previsões da fase de grupos determina os times que avançam de rodada.";
+"reglasResultados3"="As previsões que não determinam corretamente as equipes não adicionar pontos.";
+"reglasResultados4"="Criar uma nova previsão uma vez a fase estei terminando, permite que você jogue a fase";
+"reglasResultados5"="A previsão só são visíveis para os outros na fase de grupos.";
+"reglasPuntos0"="Resultado do Jogo acumula 2 pontos.";
+"reglasPuntos1"="Gols do mandante acumula 1 ponto.";
+"reglasPuntos2"="Golos do visitante acumula 1 ponto.";
+"reglasPuntos3"="Saldo de gols acumula 1 ponto.";
+"reglasPuntos4"="Um total de 5 pontos podem se acumular em cada jogo.";
+
+/*tiempo*/
+"%d days ago"="%d dias atrás";
+"%d minutes ago"="%d minutos atrás";
+"%d hours ago"="%d horas atrás";
+
+"There is not invitation \n to display at the moment!"="Não há convite \n para exibir no momento!";
+
+"Invitation"="Convite";
+"Would you like to accept the inviation?"="Você gostaria de aceitar o convite?";
+"Yes"="Sim";
+"No"="Não";
+
+"Sorry!"="Desculpe!";
+"First complete the matchs in the group stage"="Primeiro preencha as partidas na fase de grupos";
+
+"Loading"="Carregando";
+"Finishing Processing"="Processamento Finalizado";
+//Estadisticas
+"Select a country"="Selecione um país";
+"WC won"="Copas do Mundo ganhadas";
+"Cups"="Copas";
+"Points"="Pontos";
+"Matchs played"="Partidas jugadas";
+"Matchs won"="Partidas Ganhadas";
+"Lost Points"="Pontos Perdidos";
+"Goals Scored"="Golos Marcados";
+"Goals Against"="Golos em Contra";
+"Please select the team"="Por favor seleccione a team";
+
+"Name for the bet"="Nome para a aposta";
+"Description to your friend"="Descrição para o seus amigos";
+"Unit cost for bet"="O custo unitário de aposta";
+"The name of the bet.\r"="O nome da aposta..\r";
+"Description for the bet.\r"="Descrição para a aposta.\r";
+"Unit price for bet.\r"="Preço unitário de aposta.\r";
+"You need to insert:"="Você precisa inserir:";
+"You cannot create the bet at the moment, please try again late"="Você não pode criar a aposta no momento, tente novamente mais tarde";
+
+"invited by"="convidado pelo/a";
+"Invited by"="Convidado pelo/a";
+
+/*Tipos*/
+"MM/dd/yyyy"="MM/dd/yyyy";
+
+/*Palabras*/
+"Success"="Sucesso";
+//ProfileView
+"USER PROFILE"="PERFIL DO USUÁRIO";
+"Total Points Granted"="Total de Pontos Ganhados";
+"Exact Result"="Resultado Exato";
+"Parcial Result"="Resultado parcial";
+"Total Bets"="Total de apostas";
+"Maked by me"="Feitas por mim";
+"Pending"="Pendentes";
+//THContacts
+"Type your buddy name"="Digite o nome do seu amigo";
+"FACEBOOK FRIENDS"="AMIGOS DO FACEBOOK";
+"Your buddy "="Seu Amigo ";
+" was invited successfully"=" foi convidado com êxito";
+"If you not found your friends in the list you can invite them play My Prediction with facebook with our web app ;)"="Se você não encontrou seus amigos na lista, você pode convidá-los para decarregar o aplicativo. ;)";
+
+"Points Earned"="Pontos Ganhados";
+"Bets"="Apostas";
+
+//Login 1
+"Email not valid!"="E-mail não é válido!";
+"Please insert a valid email."="Por favor insira um e-mail válido.";
+"You don't have a Facebook account?"="Você não tem uma conta no Facebook?";
+"You can access here!"="Você pode acessar aqui!";
+"ACCEPT"="ACEITAR";
+"RETURN"="VOLTAR";
+"E-Mail"="E-Mail";
+//Login 2
+"Password"="Senha";
+"If you have an account then press the button \"Login\" otherwise you can press \"Create Account\""="Se você tem uma conta, em seguida, pressione o botão \" Login \"caso contrário você pode pressionar \" Criar Conta \"";
+"Login"="Login";
+"Create Account"="Criar Conta";
+"You already have an account!"="Você já tem uma conta!";
+"You're already logged into the system with an account of fecebook try login with that account. Go back and sign in with facebook."="Você já está logado no sistema com uma conta de fecebook tentar entrar com essa conta.";
+"Password error!"="Error na senha!";
+"The password is not correct try again."="A senha não e correta intente novamente.";
+"E-mail invalid!"="E-mail não e valido!";
+"This e-mail does not exist in the system, if you want to create a new user selects \"Create Account\"."="Este endereço de e-mail não existe no sistema, se você quiser criar um novo usuário seleciona \" Criar Conta \".";
+"Name"="Nome";
+"Enter the password again"="Inserir a senha novamente";
+"%@ \n Deve inserir a sua senha";
+
+//Alertas en Registro Usuario
+"That email already exist"="O email já existe";
+"This email address is already entered in the system press GO BACK and try to login with your account."="Este endereço de e-mail já está inserido na imprensa sistema volte e tente fazer o login com a sua conta.";
+"Already have an account!"="Já tem uma conta!";
+"You're already logged into the system with an account of fecebook try login with that account. Go back and log in with facebook."="Você já está logado no sistema com uma conta de fecebook tentar entrar com essa conta. Volte e faça login com o Facebook.";
+"Ups! This email is already in the system"="Ups! Este e-mail já está no sistema";
+"This email address is already entered in the system press GO BACK and try to login with your account."="Este endereço de e-mail já está inserido no sistema volte e tente fazer o login com sua conta.";
+"The password lenght must be more than 5 digits"="O comprimento senha deve ter mais de 5 dígitos";
+"Passwords do not match"="Senhas não conferem";
+"The two passwords you entered must match"="As duas senhas que você digitou devem corresponder";
+"Invalid E-Mail"="E-mail inválido";
+"The format of email is not correct"="O formato de e-mail não é correto";
+"You must enter a name"="Você deve digitar um nome";
+"%@ \n You must enter an email address"="%@ \n Você deve digitar um endereço de e-mail";
+"%@ \n You must enter a password"="%@ \n Você deve digitar uma senha";
+"%@ \n You must re enter a password"="%@ \n Você deve re digite uma senha";
+
+"A connection error happened apology"="Um erro de conexão ocorreu, desculpas";
+

@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtPass;
 @property (weak, nonatomic) IBOutlet UITextField *txtRePass;
 @property (weak, nonatomic) IBOutlet UIButton *btnRegistrar;
+@property (weak, nonatomic) IBOutlet UIButton *btnVolver;
 
 @end
 
@@ -48,7 +49,12 @@
     [self agregarEspacioInterno:_txtCorreo];
     [self agregarEspacioInterno:_txtPass];
     [self agregarEspacioInterno:_txtRePass];
-    
+    self.txtCorreo.placeholder = NSLocalizedString(@"E-Mail", nil);
+    self.txtNombre.placeholder = NSLocalizedString(@"Name", nil);
+    self.txtPass.placeholder = NSLocalizedString(@"Password", nil);
+    self.txtRePass.placeholder = NSLocalizedString(@"Enter the password again", nil);
+    [self.btnRegistrar setTitle:NSLocalizedString(@"Login", nil) forState:UIControlStateNormal];
+    [self.btnVolver setTitle:NSLocalizedString(@"RETURN", nil) forState:UIControlStateNormal];
     self.toolbarView.hidden=YES;
 }
 
@@ -118,7 +124,7 @@
     [request setHTTPMethod:@"PUT"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [requestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody: requestData];
     NSData *jsonResults= [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     NSDictionary *propertyListResults= [NSJSONSerialization JSONObjectWithData:jsonResults options:0 error:NULL];
@@ -131,16 +137,16 @@
     }
     else if (cuentaFacebook){
         if (valida) {
-            [self showAlert:@"Este correo ya existe" andMessage:@"Esta direccion de correo ya esta ingresada en el sistema presiona VOLVER e intenta loguearte con tu cuenta."];
+            [self showAlert:NSLocalizedString(@"That email already exist", nil) andMessage:NSLocalizedString(@"This email address is already entered in the system press GO BACK and try to login with your account.",nil)];
         }
         else{
                 //ACA ENTRA CUANDO TIENE YA UNA CUENTA EN EL SISTEMA CON FACEBOOK
-            [self showAlert:@"Ya tienes una cuenta!" andMessage:@"Ya estas ingresado en el sistema con una cuenta de fecebook, intenta ingresar con esa cuenta. Vuelve atras y accede con facebook."];
+            [self showAlert:NSLocalizedString(@"Already have an account!", nil) andMessage:NSLocalizedString(@"You're already logged into the system with an account of fecebook try login with that account. Go back and log in with facebook.", nil)];
         }
     }
     else if (correoExiste){
             //EL CORREO QUE INGRESO EXISTE PERO NO LE PEGO A LA CLAVE.
-        [self showAlert:@"Ups! este correo ya esta en el sistema" andMessage:@"Esta direccion de correo ya esta ingresada en el sistema presiona VOLVER e intenta loguearte con tu cuenta."];
+        [self showAlert:NSLocalizedString(@"Ups! This email is already in the system", nil) andMessage:NSLocalizedString(@"This email address is already entered in the system press GO BACK and try to login with your account.", nil)];
     }
     else{
         if ([self varificacionVacios]) {
@@ -151,14 +157,14 @@
                         [self shootUserLoggin];
                         return YES;
                     }
-                    [self showAlert:@"Ups!" andMessage:@"La contraseña debe ser de mas de 5 digitos :D"];
+                    [self showAlert:@"Ups!" andMessage:NSLocalizedString(@"The password lenght must be more than 5 digits", nil)];
                 }
                 else{
-                    [self showAlert:@"Las contraseñas no coinciden!" andMessage:@"Las dos contraseñas que ingresaste deben de conincidir"];
+                    [self showAlert:NSLocalizedString(@"Passwords do not match", nil) andMessage:NSLocalizedString(@"The two passwords you entered must match",nil)];
                 }
             }
             else{
-                [self showAlert:@"Correo invalido!" andMessage:@"El formato de correo no es correcto"];
+                [self showAlert:NSLocalizedString(@"Invalid E-Mail", nil) andMessage:NSLocalizedString(@"The format of email is not correct", nil) ];
             }
         }
         return NO;
@@ -169,16 +175,16 @@
 -(BOOL)varificacionVacios{
     NSString* error = @"";
     if ([_txtNombre.text isEqualToString:@""]) {
-        error = @"Debes ingresar un nombre";
+        error = NSLocalizedString(@"You must enter a name", nil);
     }
     if([_txtCorreo.text isEqualToString:@""]){
-        error = [NSString stringWithFormat:@"%@ \n Debes ingresar una direccion de correo",error ];
+        error = [NSString stringWithFormat:NSLocalizedString(@"%@ \n You must enter an email address",nil),error ];
     }
     if([_txtPass.text isEqualToString:@""]){
-        error = [NSString stringWithFormat:@"%@ \n Debes ingresar una contraseña",error ];
+        error = [NSString stringWithFormat:NSLocalizedString(@"%@ \n You must enter a password",nil),error ];
     }
     if([_txtRePass.text isEqualToString:@""]){
-        error = [NSString stringWithFormat:@"%@ \n Debes re ingresar tu contraseña",error ];
+        error = [NSString stringWithFormat:NSLocalizedString(@"%@ \n You must re enter a password",nil),error ];
     }
     if ([error isEqualToString:@""]) {
         return YES;
@@ -224,7 +230,6 @@
      status = ERROR;
      }
      */
-#warning Cachear eventuales errores que se produscan del lado del servidor, ver arriba comentado esta un ejemplo de error del servidor.
     NSDictionary* retorno = [PencuyFetcher multiFetcherSyncPublic:[PencuyFetcher URLtoCreateUser]
                                                          withHTTP:@"POST"
                                                          withData:jsonData

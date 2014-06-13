@@ -12,7 +12,7 @@
 @interface ApuestaCell : UITableViewCell
 
 @property (strong, nonatomic) NSDictionary *data;
-@property (strong, nonatomic) NSDictionary *partido;
+@property (strong, nonatomic) NSDictionary *apuesta;
 @property (strong, nonatomic) IBOutlet UIImageView *imageVBkg;
 
 @property (strong, nonatomic) IBOutlet UIImageView *imageVisitante;
@@ -20,8 +20,13 @@
 @property (strong, nonatomic) IBOutlet UIImageView *imageLocatario;
 @property (strong, nonatomic) IBOutlet UILabel *lblResultadoLocatario;
 
+@property (strong, nonatomic) IBOutlet UIImageView *imgEstado;
+@property (strong, nonatomic) IBOutlet UIImageView *imgResultado;
+
+
 @property (strong, nonatomic) IBOutlet UILabel *lblNombreLocatario;
 @property (strong, nonatomic) IBOutlet UILabel *lblNombreVisitante;
 @property (strong, nonatomic) IBOutlet UILabel *lblFechaPartido;
+@property (strong, nonatomic) IBOutlet UILabel *lblEstado;
 
 @end

@@ -11,6 +11,7 @@
 #import "LoginViewController.h"
 #import "Enums.h"
 #import "Usuario.h"
+
 @class PaperFoldNavigationController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, MenuViewControllerDelegate>
@@ -33,9 +34,11 @@
 + (AppDelegate *)sharedDelegate;
 + (void)customizeTabsForController:(UITabBarController *)tabVC;
 + (Usuario *) getUsuario;
++ (void) setUsuarioNil;
 - (void)togglePaperFold:(id)sender;
 - (void)resetAfterTypeChange:(BOOL)cancel;
 - (void)showMenuiPad:(id)sender;
 - (void)selectWhatKindOfSetup;
-
+- (void) setFoldVCWithNavBar: (UINavigationController*) nav;
+- (void) navigateToLogin;
 @end

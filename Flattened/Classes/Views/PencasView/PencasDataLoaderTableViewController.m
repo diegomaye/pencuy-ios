@@ -31,17 +31,25 @@
             NSLog(@"Trajo las siguientes pencas: %@",pencas);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
+                [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
             });
         }
         else if([data length]==0 && connectionError==nil){
-            NSLog(@"No trajo nada");
+            NSLog(@"No hay info");
+            [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
         }
         else if(connectionError!=nil){
-            NSLog(@"Dio error: %@",connectionError);
+            NSLog(@"Sucedio un error: %@",connectionError);
+            [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
+        }
+        else {
+            NSLog(@"Error de conexion");
+            [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
         }
     }];
 }
 -(void)fetchFechas{
+    [self showProgressBar];
     if (!self.fechas) {
         [PencuyFetcher multiFetcher:[PencuyFetcher URLtoQueryFechas:@"Brazil 2014"] withHTTP:@"GET" withHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
             if ([data length] > 0 && connectionError==nil) {
@@ -54,10 +62,16 @@
 
             }
             else if([data length]==0 && connectionError==nil){
-                NSLog(@"No trajo nada");
+                NSLog(@"No hay info");
+                [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
             }
             else if(connectionError!=nil){
-                NSLog(@"Dio error: %@",connectionError);
+                NSLog(@"Sucedio un error: %@",connectionError);
+                [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
+            }
+            else {
+                NSLog(@"Error de conexion");
+                [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
             }
         }];
     }

@@ -17,7 +17,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "Utils.h"
-
+#import "SIAlertView.h"
 
 @interface ApuestasTVController (){
     NSIndexPath *currentIndex;
@@ -101,26 +101,9 @@
         ApuestaCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
         NSDictionary *apuesta = self.apuestas[indexPath.row];
-        NSLog(@"Listando Celda %d", indexPath.row);
+        NSLog(@"Listando Celda %lu", (long)indexPath.row);
         NSLog(@"idApuesta%@", [apuesta valueForKey:@"idApuesta"]);
-            //localDesc
-            //visitanteDesc
-        NSMutableDictionary *partido = [[NSMutableDictionary alloc] initWithDictionary:[apuesta valueForKey:@"partido"]];
-        [partido setValue:[apuesta valueForKey:@"localDesc"] forKey:@"local"];
-        [partido setValue:[apuesta valueForKey:@"visitanteDesc"] forKey:@"visitante"];
-        if (![[apuesta valueForKey:@"golesLocal"] isKindOfClass : [NSNull class]]) {
-            [partido setValue:[apuesta valueForKey:@"golesLocal"] forKey:@"golesLocal"];
-        }
-        else{
-            [partido setValue:[NSNumber numberWithInt:-1] forKey:@"golesLocal"];
-        }
-        if (![[apuesta valueForKey:@"golesVisitante"] isKindOfClass : [NSNull class]]) {
-            [partido setValue:[apuesta valueForKey:@"golesVisitante"] forKey:@"golesVisitante"];
-        }
-        else{
-            [partido setValue:[NSNumber numberWithInt:-1] forKey:@"golesVisitante"];
-        }
-        cell.partido = partido;        
+        cell.apuesta = apuesta;
         return cell;
     }
     else{
@@ -137,11 +120,28 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     currentIndex = indexPath;
-    [self performSegueWithIdentifier:@"showSeleccionApuesta" sender:self];
+    NSDictionary *apuesta = [[NSMutableDictionary alloc] initWithDictionary:[self.apuestas objectAtIndex:currentIndex.row]];
+    if ([[apuesta valueForKey:@"tipo"] isEqualToString:@"A_DEFINIR"]) {
+        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:NSLocalizedString(@"Sorry!", nil) andMessage:NSLocalizedString(@"First complete the matchs in the group stage", nil)];
+        
+        [alertView addButtonWithTitle:@"Ok"
+                                 type:SIAlertViewButtonTypeDestructive
+                              handler:^(SIAlertView *alert) {
+                              }];
+        
+        alertView.transitionStyle = SIAlertViewTransitionStyleBounce;
+        [alertView show];
+    }
+    else{
+        [self performSegueWithIdentifier:@"showSeleccionApuesta" sender:self];
+    }
+
+    
 }
 
 
 #pragma mark - Segue
+// In a storyboard-based application, you will often want to do a little preparation before navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showSeleccionApuesta"]) {

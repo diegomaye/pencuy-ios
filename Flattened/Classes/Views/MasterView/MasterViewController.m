@@ -8,8 +8,14 @@
 
 #import "MasterViewController.h"
 #import "AppDelegate.h"
+#import "M13ProgressHUD.h"
+#import "M13ProgressViewRing.h"
 
-@interface MasterViewController ()
+@interface MasterViewController (){
+    M13ProgressHUD *HUD;
+}
+
+
 
 @end
 
@@ -22,7 +28,64 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    if (self) {
+        [self setProgressBar];
+    }
+}
+
+-(void) showProgressBar{
+    [self.menuButton setEnabled:NO];
+    [HUD setIndeterminate:YES];
+    HUD.status = NSLocalizedString(@"Loading",nil);
+    [HUD show:YES];
+}
+
+-(void) setProgressBar{
+    HUD = [[M13ProgressHUD alloc] initWithProgressView:[[M13ProgressViewRing alloc] init]];
+    HUD.layer.zPosition = 3;
+    HUD.progressViewSize = CGSizeMake(60.0, 60.0);
+    HUD.animationPoint = CGPointMake([UIScreen mainScreen].bounds.size.width / 2, [UIScreen mainScreen].bounds.size.height / 2);
+    UIWindow *window = ((AppDelegate *)[UIApplication sharedApplication].delegate).window;
+    [window addSubview:HUD];
+    [HUD setShouldAutorotate:NO];
+    [HUD setApplyBlurToBackground:YES];
+    [HUD setMaskType:M13ProgressHUDMaskTypeGradient];
+}
+
+- (void)setComplete
+{
+    HUD.status = NSLocalizedString(@"Finishing Processing",nil);
+    //[HUD setStatusPosition:M13ProgressHUDStatusPositionRightOfProgress];
+    [HUD setIndeterminate:NO];
+    [HUD performAction:M13ProgressViewActionSuccess animated:YES];
+    [self performSelector:@selector(reset) withObject:nil afterDelay:1];
+}
+
+- (void)setCompleteError
+{
+    HUD.status = NSLocalizedString(@"A connection error happened apology",nil);
+    //[HUD setStatusPosition:M13ProgressHUDStatusPositionRightOfProgress];
+    [HUD setIndeterminate:NO];
+    [HUD performAction:M13ProgressViewActionFailure animated:YES];
+    [self performSelector:@selector(reset) withObject:nil afterDelay:1.5];
+}
+
+- (void)setCompleteErrorSorry
+{
+    HUD.status = NSLocalizedString(@"Sorry, something wrong happened, try again",nil);
+    //[HUD setStatusPosition:M13ProgressHUDStatusPositionRightOfProgress];
+    [HUD setIndeterminate:NO];
+    [HUD performAction:M13ProgressViewActionFailure animated:YES];
+    [self performSelector:@selector(reset) withObject:nil afterDelay:2];
+}
+
+- (void)reset
+{
+    [HUD hide:YES];
+    [HUD performAction:M13ProgressViewActionNone animated:NO];
+    [self.menuButton setEnabled:YES];
+    //UIWindow *window = ((AppDelegate *)[UIApplication sharedApplication].delegate).window;
+    //[HUD removeFromSuperview];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

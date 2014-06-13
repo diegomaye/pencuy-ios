@@ -11,7 +11,7 @@
 
 #import "MasterViewController.h"
 
-@interface PencasTVController : MasterViewController <UITableViewDataSource, UITableViewDelegate, ZKRevealingTableViewCellDelegate>
+@interface PencasTVController : MasterViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 

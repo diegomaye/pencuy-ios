@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PencuyFetcher.h"
 #import "InvitacionesCell.h"
 #import "MasterViewController.h"
 
-@interface InvitacionesTVController : MasterViewController <UITableViewDataSource, UITableViewDelegate, ZKRevealingTableViewCellDelegate>
+@interface InvitacionesTVController : MasterViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 

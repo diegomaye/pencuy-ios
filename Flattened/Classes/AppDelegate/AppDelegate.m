@@ -6,9 +6,7 @@
 //
 
 #import "AppDelegate.h"
-
 #import "ADVTheme.h"
-
 #import "PaperFoldNavigationController.h"
 
 static AppDelegate *sharedDelegate;
@@ -25,6 +23,10 @@ static Usuario *usuario;
         usuario = [[Usuario alloc] initWithDictionary:userDefaultDictionary error:&error];
     }
     return usuario;
+}
+
++ (void) setUsuarioNil{
+    usuario = nil;
 }
 
 - (void) closeSession {
@@ -90,8 +92,17 @@ static Usuario *usuario;
     } else {
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        
-        if (![[NSUserDefaults standardUserDefaults] valueForKey:@"LoggedUser"]) {
+//        if (!usuarioPenca) {
+//            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"LoggedUser"];
+//            [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"USUARIO-PENCA"];
+//            [AppDelegate setUsuarioNil];
+//            UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone"
+//                                                                     bundle: nil];
+//            LoginViewController* loginVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+//            [self.view.window setRootViewController:loginVC];
+//        }
+        Usuario* usuarioPenca = [AppDelegate getUsuario];
+        if (![[NSUserDefaults standardUserDefaults] valueForKey:@"LoggedUser"]||![[NSUserDefaults standardUserDefaults] valueForKey:@"USUARIO-PENCA"]||!usuarioPenca) {
             self.userLogged= NO;
         }
         else{
@@ -101,13 +112,7 @@ static Usuario *usuario;
             [self selectWhatKindOfSetup];
         }
         else{
-            UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone"
-                                                                     bundle: nil];
-            self.loginVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
-            self.mainVC= _loginVC;
-            self.window.rootViewController = self.mainVC;
-                //self.window.backgroundColor = [UIColor blackColor];
-            [self.window makeKeyAndVisible];
+            [self navigateToLogin];
         }
     }
     
@@ -117,6 +122,16 @@ static Usuario *usuario;
     pageControl.backgroundColor = [UIColor whiteColor];
     
     return YES;
+}
+
+-(void) navigateToLogin{
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone"
+                                                             bundle: nil];
+    self.loginVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+    self.mainVC= _loginVC;
+    self.window.rootViewController = self.mainVC;
+    //self.window.backgroundColor = [UIColor blackColor];
+    [self.window makeKeyAndVisible];
 }
 
 -(void)selectWhatKindOfSetup {
@@ -160,11 +175,13 @@ static Usuario *usuario;
     UINavigationController *navMag1 = [mainStoryboard instantiateViewControllerWithIdentifier:@"CoverNav"];
     if (!_menuVC) {
         _menuVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"SideViewController"];
+        
         _menuVC.delegate = self;
     }
+    [_menuVC viewDidLoad];
+    //[_menuVC.tableView reloadData];
     [_foldVC setRootViewController:navMag1];
     [_foldVC setLeftViewController:_menuVC width:275];
-    
     self.mainVC = _foldVC;
 }
 
@@ -179,6 +196,7 @@ static Usuario *usuario;
 
 
 - (void)togglePaperFold:(id)sender {
+    [self.menuVC.tableView reloadData];
     if (_foldVC.paperFoldView.state == PaperFoldStateLeftUnfolded) {
         [_foldVC.paperFoldView setPaperFoldState:PaperFoldStateDefault animated:YES];
     } else {
@@ -267,6 +285,11 @@ static Usuario *usuario;
     }
 }
 
+-(void) setFoldVCWithNavBar: (UINavigationController*) nav{
+    [_foldVC setRootViewController:nav];
+    [_foldVC.paperFoldView setPaperFoldState:PaperFoldStateDefault animated:YES];
+}
+
 - (void)resetAfterTypeChange:(BOOL)cancel {
     UINavigationController *settingsNav;
     if ([[NSUserDefaults standardUserDefaults] integerForKey:@"NavigationType"] == ADVNavigationTypeTab) {
@@ -310,22 +333,23 @@ static Usuario *usuario;
     
     [[UITabBarItem appearance] setTitleTextAttributes:
      [NSDictionary dictionaryWithObjectsAndKeys:
-      [UIColor colorWithRed:0.55f green:0.56f blue:0.58f alpha:1.00f], UITextAttributeTextColor,
-      [UIFont fontWithName:@"OpenSans-Semibold" size:9], UITextAttributeFont,
+      [UIColor colorWithRed:0.55f green:0.56f blue:0.58f alpha:1.00f], NSForegroundColorAttributeName,
+      [UIFont fontWithName:@"OpenSans-Semibold" size:9], NSFontAttributeName,
       nil]
                                              forState:UIControlStateNormal];
     [[UITabBarItem appearance] setTitleTextAttributes:
      [NSDictionary dictionaryWithObjectsAndKeys:
-      [UIColor whiteColor], UITextAttributeTextColor,
-      [UIFont fontWithName:@"OpenSans-Semibold" size:9], UITextAttributeFont,
+      [UIColor whiteColor], NSForegroundColorAttributeName,
+      [UIFont fontWithName:@"OpenSans-Semibold" size:9], NSFontAttributeName,
       nil]
                                              forState:UIControlStateSelected];
 }
 
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    [[NSUserDefaults standardUserDefaults] setValue:[[NSString alloc] initWithData:deviceToken encoding:NSUTF8StringEncoding] forKey:@"DEVICE-TOKEN"];
-    NSLog(@"devToken=%@",deviceToken);
+    NSString* token = [NSString stringWithFormat:@"%@", deviceToken];
+    [[NSUserDefaults standardUserDefaults] setValue:token forKey:@"DEVICE-TOKEN"];
+    NSLog(@"devToken=%@",token);
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {

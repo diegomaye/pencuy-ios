@@ -14,4 +14,5 @@
 +(NSDate *)deserializeJsonDateString: (NSString *)jsonDateString;
 +(NSString *)serealizadorJsonDateToString:(NSDate *) date;
 +(NSString *)dateNow;
++ (NSString*)getTimeAsString:(NSDate *)lastDate;
 @end

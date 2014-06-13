@@ -22,6 +22,7 @@
 
 
 + (NSArray *)menu {
+    
     return @[
                  @{
                      @"title": NSLocalizedString(@"Cover",nil),
@@ -30,16 +31,14 @@
                 @{
                     @"title": NSLocalizedString(@"Bets",nil),
                     @"image": @"838-dice-g",
-                    @"count": @23
                     },
                 @{
                     @"title": NSLocalizedString(@"Invitations",nil),
-                    @"image": @"730-envelope-g"
+                    @"image": @"730-envelope-g",
                     },
                 @{
                     @"title": NSLocalizedString(@"Groups",nil),
                     @"image": @"1056-org-chart-g",
-                    @"count": @6
                     },
                 @{
                     @"title": NSLocalizedString(@"Statics",nil),

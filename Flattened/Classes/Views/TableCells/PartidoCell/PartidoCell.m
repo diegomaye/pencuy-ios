@@ -8,7 +8,7 @@
 
 #import "PartidoCell.h"
 #import "DateUtility.h"
-#import "DataSource.h"
+#import "GraphicUtils.h"
 
 @implementation PartidoCell
 
@@ -51,28 +51,40 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.imageVBkg.image = [[UIImage imageNamed:@"list-item-background"] resizableImageWithCapInsets:UIEdgeInsetsMake(50, 50, 30, 30)];
-    
     self.imageLocatario.image = [UIImage imageNamed:_partido[@"local"]];
     self.imageVisitante.image = [UIImage imageNamed:_partido[@"visitante"]];
     
-    
-    _lblNombreLocatario.text= _partido[@"local"];
-    _lblNombreVisitante.text= _partido[@"visitante"];
-    _lblResultadoLocatario.text = [_partido[@"golesLocal"] stringValue];
-    _lblResultadoVisitante.text = [_partido[@"golesVisitante"] stringValue];
+    self.lblLocatario.text = _partido[@"local"];
+    self.lblLocatario.textColor = [GraphicUtils colorMidnightBlue];
+    self.lblLocatario.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:9];
+    self.lblVisitante.text = _partido[@"visitante"];
+    self.lblVisitante.textColor = [GraphicUtils colorMidnightBlue];
+    self.lblVisitante.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:9];
+
     NSDate *date = [DateUtility deserializeJsonDateString:[_partido[@"fecha"] stringValue]];
-    /*
-    NSString *dateString = [NSDateFormatter localizedStringFromDate:date
-                                                          dateStyle:NSDateFormatterShortStyle
-                                                          timeStyle:NSDateFormatterFullStyle];
-    */
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"dd/MM/yyyy - HH:mm"];
-    [formatter setTimeZone:[NSTimeZone systemTimeZone]];
+   
+    NSString *dateStringFormatter = [NSDateFormatter dateFormatFromTemplate:@"EdMMM" options:0
+                                                              locale:[NSLocale currentLocale]];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:dateStringFormatter];
+    [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
     
-    NSString *stringFromDate = [formatter stringFromDate:date];
+    NSString *stringFromDate = [dateFormatter stringFromDate:date];
+   
     _lblFechaPartido.text = stringFromDate;
+    _lblFechaPartido.font = [UIFont fontWithName:@"ProximaNova-Bold" size:14];
+    _lblFechaPartido.textColor = [GraphicUtils colorDefault];
+    
+    NSString * timeStringFormatter = [NSDateFormatter dateFormatFromTemplate:@"HH:mm" options:0 locale:[NSLocale currentLocale]];
+    
+    [dateFormatter setDateFormat:timeStringFormatter];
+    [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
+    
+    NSString *stringFromTime = [dateFormatter stringFromDate:date];
+    
+    _lblHoraPartido.text = stringFromTime;
+    _lblHoraPartido.font = [UIFont fontWithName:@"ProximaNova-Bold" size:15];
+    _lblHoraPartido.textColor = [GraphicUtils colorMidnightBlue];
 }
 
 @end

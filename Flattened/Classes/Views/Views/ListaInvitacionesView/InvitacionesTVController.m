@@ -10,25 +10,21 @@
 #import "InvitacionesTVController.h"
 #import "ADVTheme.h"
 
-#import "DataSource.h"
 #import "AppDelegate.h"
-
-#import "ResultadoPartidoViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import "Utils.h"
 
+#import "SIAlertView.h"
+#import "InvitacionesDLTVController.h"
 
 @interface InvitacionesTVController () {
     NSIndexPath *currentIndex;
 }
 
-@property (strong, nonatomic) ZKRevealingTableViewCell *currentlyRevealedCell;
+@property(nonatomic,strong) UILabel* lblNoRowSelected;
 
 @end
-
-
-
 
 @implementation InvitacionesTVController
 
@@ -36,6 +32,7 @@
 
 -(void)setInvitaciones:(NSArray *)invitaciones{
     _invitaciones = invitaciones;
+    [self.tableView reloadData];
 }
 
 - (void)viewDidLoad {
@@ -65,16 +62,11 @@
             self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 5)];
         }
     }
-    
+    self.tableView.delegate = self;
+    [self addNotInformationMessage:NSLocalizedString(@"There is not invitation \n to display at the moment!",nil)];
+    //[self setProgressBar];
     self.tableView.tableHeaderView.backgroundColor = [UIColor colorWithRed:0.27f green:0.29f blue:0.31f alpha:1.00f];
     
-}
-
-
-- (void)tipeadorBotones:(UIButton*) boton{
-    boton.layer.cornerRadius = 3;
-    boton.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:10];
-    boton.backgroundColor = [UIColor colorWithRed:0.17f green:0.18f blue:0.20f alpha:1.00f];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -84,14 +76,9 @@
     [self.tableView reloadData];
 }
 
--(void)viewWillDisappear:(BOOL)animated{
-    [super viewWillAppear:animated];
-}
-
 - (void)viewDidUnload {
     [super viewDidUnload];
 }
-
 
 #pragma mark - Actions
 
@@ -99,115 +86,81 @@
     [[AppDelegate sharedDelegate] togglePaperFold:sender];
 }
 
-- (void)actionCompose:(id)sender {
-    [self performSegueWithIdentifier:@"showDetail" sender:self];
-}
-
-
 #pragma mark - UITableView datasource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.invitaciones) {
-        return self.invitaciones.count;
-    }
-
-    return 1;
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *CellIdentifier = @"CeldaPartido";
-    InvitacionesCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    if (cell == nil) {
-        cell = [[InvitacionesCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-    }
+    InvitacionesCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CeldaPartido"];
 
-    if (self.invitaciones) {
-        
-        NSDictionary *invitacion = self.invitaciones[indexPath.row];
-        cell.data = invitacion;
-        cell.delegate = self;
-        cell.backView.frame = CGRectMake(0, 0, 190, [self tableView:_tableView heightForRowAtIndexPath:nil]);
-        cell.backView.backgroundColor = [UIColor colorWithRed:0.91f green:0.38f blue:0.39f alpha:1.00f];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.direction = ZKRevealingTableViewCellDirectionRight;
-        
-        for(UIView *cellItem in cell.backView.subviews) {
-            [cellItem removeFromSuperview];
-        }
-        
-        UIButton *btnManage = [UIButton buttonWithType:UIButtonTypeCustom];
-        btnManage.frame = CGRectMake(10, 20, 36, 37);
-        btnManage.contentMode = UIViewContentModeCenter;
-        [btnManage setImage:[UIImage imageNamed:@"email_actions_reply"]
-                   forState:UIControlStateNormal];
-        [cell.backView addSubview:btnManage];
-        
-        UIButton *btnMess = [UIButton buttonWithType:UIButtonTypeCustom];
-        btnMess.frame = CGRectMake(55, 20, 39, 37);
-        btnMess.contentMode = UIViewContentModeCenter;
-        [btnMess setImage:[UIImage imageNamed:@"email_actions_forward"]
-                 forState:UIControlStateNormal];
-        [cell.backView addSubview:btnMess];
-        
-        UIButton *btnLeave = [UIButton buttonWithType:UIButtonTypeCustom];
-        btnLeave.frame = CGRectMake(105, 20, 36, 37);
-        btnLeave.contentMode = UIViewContentModeCenter;
-        [btnLeave setImage:[UIImage imageNamed:@"email_actions_move"]
-                  forState:UIControlStateNormal];
-        [cell.backView addSubview:btnLeave];
-        
-        UIButton *btnDelete = [UIButton buttonWithType:UIButtonTypeCustom];
-        btnDelete.frame = CGRectMake(140, 15, 56, 47);
-        btnDelete.contentMode = UIViewContentModeCenter;
-        [btnDelete setImage:[UIImage imageNamed:@"email_actions_delete"]
-                   forState:UIControlStateNormal];
-        [cell.backView addSubview:btnDelete];
-        
-        
-    } else { // the datasource is empty - print a message
-             //UIImageView* view= [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"715-globe-selected"]];
-            //
-        UILabel* view = [[UILabel alloc] init];
-        view.text = NSLocalizedString(@"There is no information \n to display at the moment!",nil);
-        view.textAlignment = NSTextAlignmentCenter;
-        view.numberOfLines = 2;
-        view.shadowColor = [UIColor blackColor];
-        view.shadowOffset = CGSizeMake(0, 0.5);
-        view.alpha = 0.5;
-        view.frame= tableView.frame;
-        [tableView removeFromSuperview];
-        [self.view addSubview: view];
-
-    }
+    NSDictionary *invitacion = self.invitaciones[indexPath.row];
+    cell.data = invitacion;
+    //cell.selectionStyle = UITableViewCellSelectionStyleGray;
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    currentIndex = indexPath;
+    NSDictionary* invitacion = self.invitaciones[currentIndex.row];
+    NSString* idInvitacion= [invitacion valueForKey:@"idInvitacion"];
+    SIAlertView* alertView = [[SIAlertView alloc]initWithTitle:NSLocalizedString(@"Invitation", nil) andMessage:NSLocalizedString(@"Would you like to accept the inviation?", nil)];
+    
+    [alertView addButtonWithTitle:NSLocalizedString(@"No",nil)
+                             type:SIAlertViewButtonTypeDefault
+                          handler:^(SIAlertView *alert) {
+                              [PencuyFetcher multiFetcherSync:[PencuyFetcher URLtoAceptRevocarInvitacion:idInvitacion withBooleanSting:@"false"] withHTTP:@"PUT" withData:nil];
+                              [((InvitacionesDLTVController*)self) fetchInvitaciones];
+                          }];
+    [alertView addButtonWithTitle:NSLocalizedString(@"Yes",nil)
+                             type:SIAlertViewButtonTypeDestructive
+                          handler:^(SIAlertView *alert) {
+                              [PencuyFetcher multiFetcherSync:[PencuyFetcher URLtoAceptRevocarInvitacion:idInvitacion withBooleanSting:@"true"] withHTTP:@"PUT" withData:nil];
+                              if ([self isKindOfClass:InvitacionesDLTVController.class]) {
+                                  [((InvitacionesDLTVController*)self) fetchInvitaciones];
+                              }
+                          }];
+    
+    alertView.transitionStyle = SIAlertViewTransitionStyleBounce;
+    [alertView show];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    //If there is no table data, unhide the "No matches" view
+    if([self.invitaciones count] == 0 ){
+        _lblNoRowSelected.hidden = NO;
+    } else {
+        _lblNoRowSelected.hidden = YES;
+    }
+    return [self.invitaciones count];
+}
+
+- (void) addNotInformationMessage:(NSString*) message{
+    _lblNoRowSelected = [[UILabel alloc] init];
+    _lblNoRowSelected.text = message;
+    _lblNoRowSelected.textAlignment = NSTextAlignmentCenter;
+    _lblNoRowSelected.numberOfLines = 4;
+    _lblNoRowSelected.shadowColor = [UIColor blackColor];
+    _lblNoRowSelected.shadowOffset = CGSizeMake(0, 0.5);
+    _lblNoRowSelected.alpha = 0.5;
+    _lblNoRowSelected.frame= CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y-50, self.tableView.frame.size.width,self.tableView.frame.size.height);//self.tableView.frame;
+    //[_lblNoRowSelected sizeToFit ];
+    _lblNoRowSelected.layer.zPosition=1;
+    self.tableView.layer.zPosition=2;
+    _lblNoRowSelected.hidden = YES;
+    [self.view addSubview: _lblNoRowSelected];
 }
 
 #pragma mark - Table view delegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 90;
-}
-
-#pragma mark - ZKRevealingTableViewCellDelegate
-
-- (BOOL)cellShouldReveal:(ZKRevealingTableViewCell *)cell {
-	return YES;
-}
-
-- (void)cellDidReveal:(InvitacionesCell *)cell {
-        //NSLog(@"Revealed Cell with name: %@", cell.lblTitle.text);
-	self.currentlyRevealedCell = cell;
-}
-
-- (void)cellDidBeginPan:(ZKRevealingTableViewCell *)cell {
-	if (cell != self.currentlyRevealedCell)
-		self.currentlyRevealedCell = nil;
 }
 
 @end

@@ -26,7 +26,7 @@
     if(![Utils isVersion6AndBelow])
         self.navigationController.navigationBar.translucent = NO;
     
-    self.title = NSLocalizedString(@"CREAR PENCA",nil);
+    self.title = NSLocalizedString(@"CREATE A BET",nil);
     
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.textColor = [UIColor whiteColor];
@@ -43,9 +43,9 @@
     [btnCancel addTarget:self action:@selector(actionCancel:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnCancel];
     
-    _txtNombre.placeholder = NSLocalizedString(@"Nombre para la penca",nil);
-    _txtDescripcion.placeholder = NSLocalizedString(@"Descripcion para tus amigos",nil);
-    _txtCosto.placeholder = NSLocalizedString(@"Monto unitario penca", @"");
+    _txtNombre.placeholder = NSLocalizedString(@"Name for the bet",nil);
+    _txtDescripcion.placeholder = NSLocalizedString(@"Description to your friend",nil);
+    _txtCosto.placeholder = NSLocalizedString(@"Unit cost for bet", @"");
     [self agregarEspacioInterno:_txtNombre];
     [self agregarEspacioInterno:_txtDescripcion];
     [self agregarEspacioInterno:_txtCosto];
@@ -84,9 +84,9 @@
     UIToolbar* numberToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 38)];
     [numberToolbar setBarStyle:UIBarStyleBlackTranslucent];
     numberToolbar.items = [NSArray arrayWithObjects:
-                           [[UIBarButtonItem alloc]initWithTitle:@"Cancelar" style:UIBarButtonItemStyleBordered target:self action:@selector(cancelNumberPad)],
+                           [[UIBarButtonItem alloc]initWithTitle:@"Cancel" style:UIBarButtonItemStyleBordered target:self action:@selector(cancelNumberPad)],
                            [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
-                           [[UIBarButtonItem alloc]initWithTitle:@"Aceptar" style:UIBarButtonItemStyleDone target:self action:@selector(doneWithNumberPad)],
+                           [[UIBarButtonItem alloc]initWithTitle:@"Accept" style:UIBarButtonItemStyleDone target:self action:@selector(doneWithNumberPad)],
                            nil];
     
     text.inputAccessoryView = numberToolbar;
@@ -144,22 +144,22 @@
         [diccionario setValue:(NSString*)_txtNombre.text forKey:@"nombre"];
     }
     else{
-        [errores appendString:NSLocalizedString(@"El nombre de la penca.\r",nil)];
+        [errores appendString:NSLocalizedString(@"The name of the bet.\r",nil)];
     }
     if ([[_txtDescripcion text] length]) {
         [diccionario setValue:_txtDescripcion.text forKey:@"descripcion"];
     }
     else{
-        [errores appendString:NSLocalizedString(@"Descripcion de la penca.\r",nil)];
+        [errores appendString:NSLocalizedString(@"Description for the bet.\r",nil)];
     }
     if ([[_txtCosto text] length]) {
         [diccionario setValue:_txtCosto.text forKey:@"costoUnitario"];
     }
     else{
-        [errores appendString:NSLocalizedString(@"Costo unitario.\r",nil)];
+        [errores appendString:NSLocalizedString(@"Unit price for bet.\r",nil)];
     }
     if ([errores length]) {
-        [self showAlert:NSLocalizedString(@"Te falto ingresar:",nil)
+        [self showAlert:NSLocalizedString(@"You need to insert:",nil)
              andMessage:errores];
         [self disappear];
     }
@@ -176,8 +176,8 @@
                                                              error:&error];
         if (!jsonData) {
             NSLog(@"Error al convertir el diccionario en json: %@", error);
-            [self showAlert:NSLocalizedString(@"Ups!, hubo un error",nil)
-                 andMessage:NSLocalizedString(@"No puedes crear la penca en este momento, espera e intentalo mas tarde",nil)];
+            [self showAlert:NSLocalizedString(@"Ups!",nil)
+                 andMessage:NSLocalizedString(@"You cannot create the bet at the moment, please try again late",nil)];
             [self disappear];
         } else {
             NSDictionary *devolucion = [PencuyFetcher multiFetcherSync:[PencuyFetcher URLAPIForPencaBrasil]
@@ -196,7 +196,7 @@
 
             }
             else if ([devolucion valueForKeyPath:@"message"]) {
-                [self showAlert:NSLocalizedString(@"Ocurrió un error",nil)
+                [self showAlert:NSLocalizedString(@"Sorry!",nil)
                      andMessage:[devolucion valueForKeyPath:@"message"]];
                 [self disappear];
             }

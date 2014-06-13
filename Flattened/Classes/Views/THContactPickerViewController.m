@@ -10,7 +10,9 @@
 #import <AddressBook/AddressBook.h>
 #import "THContact.h"
 #import "Utils.h"
-
+#import "PencuyFetcher.h"
+#import "GraphicUtils.h"
+#import "SIAlertView.h"
 
 UIBarButtonItem *barButton;
 
@@ -24,18 +26,6 @@ UIBarButtonItem *barButton;
 #define kKeyboardHeight 0.0
 
 @implementation THContactPickerViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        self.title = @"Select Contacts (0)";
-        
-        CFErrorRef error;
-        _addressBookRef = ABAddressBookCreateWithOptions(NULL, &error);
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -63,7 +53,7 @@ UIBarButtonItem *barButton;
     [btnSend addTarget:self action:@selector(actionSend:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnSend];
     
-    titleLabel.text = @"INVITAR AMIGOS";
+    titleLabel.text = NSLocalizedString(@"INVITE FRIENDS",nil);
     
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
@@ -71,192 +61,39 @@ UIBarButtonItem *barButton;
     // Initialize and add Contact Picker View
     self.contactPickerView = [[THContactPickerView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 100)];
     self.contactPickerView.delegate = self;
-    [self.contactPickerView setPlaceholderString:@"Type contact name"];
+    [self.contactPickerView setPlaceholderString:NSLocalizedString(@"Type your buddy name",nil)];
     [self.view addSubview:self.contactPickerView];
+    self.lblDescripcionInvitarFacebook = [[UILabel alloc] initWithFrame:CGRectMake(20, 100, self.view.frame.size.width - 40, 100)];
+    self.lblDescripcionInvitarFacebook.layer.zPosition = 1;
+    self.lblDescripcionInvitarFacebook.lineBreakMode = NSLineBreakByWordWrapping;
+    self.lblDescripcionInvitarFacebook.numberOfLines = 3;
+    self.lblDescripcionInvitarFacebook.text = NSLocalizedString(@"If you not found your friends in the list you can invite them play My Prediction with facebook with our web app ;)", nil);
+    self.lblDescripcionInvitarFacebook.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:14];
+    self.lblDescripcionInvitarFacebook.textAlignment = NSTextAlignmentCenter;
+    self.lblDescripcionInvitarFacebook.textColor = [GraphicUtils colorPumpkin];
+    [self.view addSubview:self.lblDescripcionInvitarFacebook];
+    
+    self.btnInvitarAmigosFacebook = [[UIButton alloc] initWithFrame:CGRectMake(20, 300, self.view.frame.size.width-40, 50)];
+    self.btnInvitarAmigosFacebook.layer.zPosition = 1;
+    [self.btnInvitarAmigosFacebook setBackgroundImage:[UIImage imageNamed:@"button-green"] forState:UIControlStateNormal] ;
+    [self.btnInvitarAmigosFacebook setTitle:NSLocalizedString(@"FACEBOOK FRIENDS",nil) forState:UIControlStateNormal];
+    self.btnInvitarAmigosFacebook.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:14];
+    self.btnInvitarAmigosFacebook.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.btnInvitarAmigosFacebook.hidden=YES;
+    [self.view addSubview:self.btnInvitarAmigosFacebook];
+    
     
     // Fill the rest of the view with the table view
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.contactPickerView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height - self.contactPickerView.frame.size.height - kKeyboardHeight) style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
+    self.tableView.layer.zPosition = 2;
+    self.contactPickerView.layer.zPosition = 3;
     [self.tableView registerNib:[UINib nibWithNibName:@"THContactPickerTableViewCell" bundle:nil] forCellReuseIdentifier:@"ContactCell"];
-    
+    self.tableView.hidden = YES;
     [self.view insertSubview:self.tableView belowSubview:self.contactPickerView];
-    
-    ABAddressBookRequestAccessWithCompletion(self.addressBookRef, ^(bool granted, CFErrorRef error) {
-        if (granted) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self getContactsFromAddressBook];
-            });
-        } else {
-            // TODO: Show alert
-        }
-    });
 }
 
--(void)getContactsFromAddressBook
-{
-    CFErrorRef error = NULL;
-    self.contacts = [[NSMutableArray alloc]init];
-    
-    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &error);
-    if (addressBook) {
-        NSArray *allContacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(addressBook);
-        NSMutableArray *mutableContacts = [NSMutableArray arrayWithCapacity:allContacts.count];
-        
-//        THContact *contact = [[THContact alloc] init];
-//        contact.firstName=@"Juancito";
-//        contact.lastName=@"Perez";
-//        [mutableContacts addObject:contact];
-        
-        
-        /* COMENTO TODO LO DEL ADRESS BOOK SOLO VOY A USAR EL SUGGEST DE LA PENCA.*/
-        NSUInteger i = 0;
-        for (i = 0; i<[allContacts count]; i++)
-        {
-            THContact *contact = [[THContact alloc] init];
-            ABRecordRef contactPerson = (__bridge ABRecordRef)allContacts[i];
-            contact.recordId = ABRecordGetRecordID(contactPerson);
-
-            // Get first and last names
-            NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(contactPerson, kABPersonFirstNameProperty);
-            NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(contactPerson, kABPersonLastNameProperty);
-            
-            // Set Contact properties
-            contact.firstName = firstName;
-            contact.lastName = lastName;
-            
-            // Get mobile number
-            ABMultiValueRef phonesRef = ABRecordCopyValue(contactPerson, kABPersonPhoneProperty);
-            contact.phone = [self getMobilePhoneProperty:phonesRef];
-            if(phonesRef) {
-                CFRelease(phonesRef);
-            }
-        
-            // Get email number MIRAR ESTO QUE LO DEJO POR LA MITAD!
-//            ABMultiValueRef emailRef = ABRecordCopyValue(contactPerson, kABPersonEmailProperty);
-//            contact.phone = [self getEmailProperty:emailRef];
-//            if(emailRef) {
-//                CFRelease(emailRef);
-//            }
-        
-            // Get image if it exists
-            NSData  *imgData = (__bridge_transfer NSData *)ABPersonCopyImageData(contactPerson);
-            contact.image = [UIImage imageWithData:imgData];
-            if (!contact.image) {
-                contact.image = [UIImage imageNamed:@"icon-avatar-60x60"];
-            }
-            if(contact.phone){
-                [mutableContacts addObject:contact];
-            }
-        }
-        
-        if(addressBook) {
-            CFRelease(addressBook);
-        }
-        
-        self.contacts = [NSArray arrayWithArray:mutableContacts];
-        self.selectedContacts = [NSMutableArray array];
-        self.filteredContacts = self.contacts;
-        
-        [self.tableView reloadData];
-    }
-    else
-    {
-        NSLog(@"Error");
-        
-    }
-}
-
-- (void) refreshContacts
-{
-    for (THContact* contact in self.contacts)
-    {
-        [self refreshContact: contact];
-    }
-    [self.tableView reloadData];
-}
-
-- (void) refreshContact:(THContact*)contact
-{
-    
-    ABRecordRef contactPerson = ABAddressBookGetPersonWithRecordID(self.addressBookRef, (ABRecordID)contact.recordId);
-    contact.recordId = ABRecordGetRecordID(contactPerson);
-    
-    // Get first and last names
-    NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(contactPerson, kABPersonFirstNameProperty);
-    NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(contactPerson, kABPersonLastNameProperty);
-    
-    // Set Contact properties
-    contact.firstName = firstName;
-    contact.lastName = lastName;
-    
-    // Get mobile number
-    ABMultiValueRef phonesRef = ABRecordCopyValue(contactPerson, kABPersonPhoneProperty);
-    contact.phone = [self getMobilePhoneProperty:phonesRef];
-    if(phonesRef) {
-        CFRelease(phonesRef);
-    }
-    
-    // Get image if it exists
-    NSData  *imgData = (__bridge_transfer NSData *)ABPersonCopyImageData(contactPerson);
-    contact.image = [UIImage imageWithData:imgData];
-    if (!contact.image) {
-        contact.image = [UIImage imageNamed:@"icon-avatar-60x60"];
-    }
-}
-
-- (NSString *)getMobilePhoneProperty:(ABMultiValueRef)phonesRef
-{
-    for (int i=0; i < ABMultiValueGetCount(phonesRef); i++) {
-        CFStringRef currentPhoneLabel = ABMultiValueCopyLabelAtIndex(phonesRef, i);
-        CFStringRef currentPhoneValue = ABMultiValueCopyValueAtIndex(phonesRef, i);
-        
-        if(currentPhoneLabel) {
-            if (CFStringCompare(currentPhoneLabel, kABPersonPhoneMobileLabel, 0) == kCFCompareEqualTo) {
-                return (__bridge NSString *)currentPhoneValue;
-            }
-            
-            if (CFStringCompare(currentPhoneLabel, kABHomeLabel, 0) == kCFCompareEqualTo) {
-                return (__bridge NSString *)currentPhoneValue;
-            }
-        }
-        if(currentPhoneLabel) {
-            CFRelease(currentPhoneLabel);
-        }
-        if(currentPhoneValue) {
-            CFRelease(currentPhoneValue);
-        }
-    }
-    
-    return nil;
-}
-
-- (NSString *)getEmailProperty:(ABMultiValueRef)emailRef
-{
-    for (int i=0; i < ABMultiValueGetCount(emailRef); i++) {
-        CFStringRef currentEmailLabel = ABMultiValueCopyLabelAtIndex(emailRef, i);
-        CFStringRef currentEmailValue = ABMultiValueCopyValueAtIndex(emailRef, i);
-        
-        if(currentEmailLabel) {
-            if (CFStringCompare(currentEmailLabel, kABPersonPhoneMobileLabel, 0) == kCFCompareEqualTo) {
-                return (__bridge NSString *)currentEmailValue;
-            }
-            
-            if (CFStringCompare(currentEmailLabel, kABHomeLabel, 0) == kCFCompareEqualTo) {
-                return (__bridge NSString *)currentEmailValue;
-            }
-        }
-        if(currentEmailLabel) {
-            CFRelease(currentEmailLabel);
-        }
-        if(currentEmailValue) {
-            CFRelease(currentEmailValue);
-        }
-    }
-    
-    return nil;
-}
 
 - (void)actionCancel:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^{
@@ -265,14 +102,41 @@ UIBarButtonItem *barButton;
 }
 
 - (void)actionSend:(id)sender {
-    [self actionCancel:sender];
+ 
+    NSMutableString* errorMessage = [NSMutableString string];
+    NSMutableString* successMessage = [NSMutableString string];
+    for (THContact* contact in self.selectedContacts) {
+        NSError *error;
+        NSMutableDictionary *diccionario= [NSMutableDictionary new];
+        [diccionario setValue:[NSNumber numberWithInt:[self.idPenca intValue]] forKey:@"idPenca"];
+        [diccionario setValue:contact.idUsuario forKey:@"invitado"];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:diccionario
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&error];
+        NSDictionary *devolucion = [PencuyFetcher multiFetcherSync:[PencuyFetcher URLtoCreateInvitacion]
+                                                          withHTTP:@"POST"
+                                                          withData:jsonData];
+        if ([devolucion valueForKey:@"status"] && [[devolucion valueForKey:@"status"] isEqualToString:@"ERROR"]) {
+            [errorMessage appendString:[NSString stringWithFormat:@"%@%@\n",NSLocalizedString([devolucion valueForKey:@"message"], nil),contact.firstName]];
+        }
+        else{
+            [successMessage appendString:[NSString stringWithFormat:@"%@%@%@\n",NSLocalizedString(@"Your buddy ", nil),contact.firstName, NSLocalizedString(@" was invited successfully", nil)]];
+        }
+    }
+    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:NSLocalizedString(@"Invitations", nil) andMessage:[NSString stringWithFormat:@"%@%@",successMessage, errorMessage]];
+    
+    [alertView addButtonWithTitle:@"Ok"
+                             type:SIAlertViewButtonTypeDestructive
+                          handler:^(SIAlertView *alert) {
+                              [self actionCancel:sender];
+                          }];
+    
+    alertView.transitionStyle = SIAlertViewTransitionStyleBounce;
+    [alertView show];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self refreshContacts];
-    });
 }
 
 - (void)viewDidLayoutSubviews {
@@ -290,7 +154,6 @@ UIBarButtonItem *barButton;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)adjustTableViewFrame:(BOOL)animated {
@@ -351,7 +214,7 @@ UIBarButtonItem *barButton;
     
     // Assign values to to US elements
     contactNameLabel.text = [contact fullName];
-    mobilePhoneNumberLabel.text = contact.phone;
+    mobilePhoneNumberLabel.text = contact.email;
     if(contact.image) {
         contactImage.image = contact.image;
     }
@@ -368,25 +231,6 @@ UIBarButtonItem *barButton;
         image = [UIImage imageNamed:@"icon-checkbox-unselected-25x25"];
     }
     checkboxImageView.image = image;
-    
-    // Assign a UIButton to the accessoryView cell property
-    cell.accessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    // Set a target and selector for the accessoryView UIControlEventTouchUpInside
-    [(UIButton *)cell.accessoryView addTarget:self action:@selector(viewContactDetail:) forControlEvents:UIControlEventTouchUpInside];
-    cell.accessoryView.tag = contact.recordId; //so we know which ABRecord in the IBAction method
-    
-    // // For custom accessory view button use this.
-    //    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    //    button.frame = CGRectMake(0.0f, 0.0f, 150.0f, 25.0f);
-    //
-    //    [button setTitle:@"Expand"
-    //            forState:UIControlStateNormal];
-    //
-    //    [button addTarget:self
-    //               action:@selector(viewContactDetail:)
-    //     forControlEvents:UIControlEventTouchUpInside];
-    //
-    //    cell.accessoryView = button;
     
     return cell;
 }
@@ -435,7 +279,8 @@ UIBarButtonItem *barButton;
     // Set checkbox image
     checkboxImageView.image = image;
     // Reset the filtered contacts
-    self.filteredContacts = self.contacts;
+    self.filteredContacts = [NSArray new];
+    self.tableView.hidden = YES;
     // Refresh the tableview
     [self.tableView reloadData];
 }
@@ -444,12 +289,41 @@ UIBarButtonItem *barButton;
 
 - (void)contactPickerTextViewDidChange:(NSString *)textViewText {
     if ([textViewText isEqualToString:@""]){
+        self.tableView.hidden = YES;
+        self.contacts = [NSArray new];
         self.filteredContacts = self.contacts;
     } else {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.%@ contains[cd] %@ OR self.%@ contains[cd] %@", @"firstName", textViewText, @"lastName", textViewText];
-        self.filteredContacts = [self.contacts filteredArrayUsingPredicate:predicate];
+        //PencuyFetcher
+        [PencuyFetcher multiFetcher:[PencuyFetcher URLtoQuerySystemUsers:self.idPenca withSuggest:textViewText] withHTTP:@"GET" withHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+            if ([data length] > 0 && connectionError==nil) {
+                NSArray *users= [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+                NSMutableArray *mutableContacts = [NSMutableArray arrayWithCapacity:users.count];
+                for (NSDictionary* usuario in users) {
+                    THContact *contact = [[THContact alloc] init];
+                    NSString* firstName = [usuario valueForKeyPath:@"nombreCompleto"];
+                    NSString* email = [usuario valueForKeyPath:@"email"];
+                    NSNumber* idUsuario = [usuario valueForKeyPath:@"idUsuario"];
+                    
+                    contact.firstName = firstName;
+                    contact.email = email;
+                    contact.idUsuario = idUsuario;
+                    [mutableContacts addObject:contact];
+                }
+                self.contacts = [NSArray arrayWithArray:mutableContacts];
+                self.selectedContacts = [NSMutableArray array];
+                self.filteredContacts = self.contacts;
+                self.tableView.hidden = NO;
+                [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+            }
+            else if([data length]==0 && connectionError==nil){
+                NSLog(@"No hay info");
+            }
+            else if(connectionError!=nil){
+                NSLog(@"Sucedio un error: %@",connectionError);
+            }
+        }];
+        
     }
-    [self.tableView reloadData];
 }
 
 - (void)contactPickerDidResize:(THContactPickerView *)contactPickerView {
@@ -496,29 +370,5 @@ UIBarButtonItem *barButton;
     return YES;
 }
 
-
-// This opens the apple contact details view: ABPersonViewController
-//TODO: make a THContactPickerDetailViewController
-- (IBAction)viewContactDetail:(UIButton*)sender {
-    ABRecordID personId = (ABRecordID)sender.tag;
-    ABPersonViewController *view = [[ABPersonViewController alloc] init];
-    view.addressBook = self.addressBookRef;
-    view.personViewDelegate = self;
-    view.displayedPerson = ABAddressBookGetPersonWithRecordID(self.addressBookRef, personId);
-
-    
-    [self.navigationController pushViewController:view animated:YES];
-}
-
-// TODO: send contact object
-- (void)done:(id)sender
-{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Done!"
-                                                        message:@"Now do whatevet you want!"
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
-    [alertView show];
-}
 
 @end

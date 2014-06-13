@@ -7,8 +7,7 @@
 //
 
 #import "UsuariosCell.h"
-
-#import "DataSource.h"
+#import "GraphicUtils.h"
 
 @implementation UsuariosCell
 
@@ -51,92 +50,68 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.imageVBkg.image = [[UIImage imageNamed:@"list-item-background"] resizableImageWithCapInsets:UIEdgeInsetsMake(50, 50, 30, 30)];
+       /*
+        apellido = Maye;
+        email = "diegomaye@gmail.com";
+        estado = ACTIVO;
+        faceID = 10203009223044888;
+        idUsuario = 1426;
+        imgtoken = "<null>";
+        nombre = "Diego Maye";
+        pais = "<null>";
+        posicion = 1;
+        puntosGanados = 0;
+        puntosPerdidos = 0;
+        tipo = CREADOR;
+        totApGanExa = 0;
+        totApGanNoExa = 0;
+        totApIngresada = 0;
+        totApuesta = 64;
+        */
     
-    self.imageVAvatar.image = [UIImage imageNamed:_data[@"person"][@"avatar"]];
-    
-    NSString *name = _data[@"person"][@"name"];
-    NSString *email = _data[@"person"][@"email"];
-    
-    NSString *text = [NSString stringWithFormat:@"%@ <%@>", name, email];
-    // Create the attributes
-    
-    const CGFloat fontSize = 10;
-    UIFont *boldFont = [UIFont fontWithName:@"ProximaNova-Semibold" size:fontSize];
-    UIFont *regularFont = [UIFont fontWithName:@"ProximaNova-Regular" size:fontSize];
-    UIColor *regularColor = [UIColor colorWithRed:0.45f green:0.45f blue:0.45f alpha:1.00f];
-    UIColor *boldColor = [UIColor colorWithRed:0.91f green:0.38f blue:0.39f alpha:1.00f];
-    NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:
-                           regularFont, NSFontAttributeName,
-                           regularColor, NSForegroundColorAttributeName, nil];
-    NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:
-                              boldFont, NSFontAttributeName,
-                              boldColor, NSForegroundColorAttributeName, nil];
-    const NSRange range = NSMakeRange(0, name.length);
-    
-    // Create the attributed string (text + attributes)
-    NSMutableAttributedString *attributedText =
-    [[NSMutableAttributedString alloc] initWithString:text
-                                           attributes:attrs];
-    [attributedText setAttributes:subAttrs range:range];
-    
-    [_lblSender setAttributedText:attributedText];
-    
-    _lblTitle.text = _data[@"subject"];
-    _lblTitle.textColor = [UIColor colorWithRed:0.22f green:0.22f blue:0.22f alpha:1.00f];
-    _lblTitle.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:14];
-    
-    _lblDescription.text = _data[@"description"];
-    _lblDescription.textColor = [UIColor colorWithRed:0.45f green:0.45f blue:0.45f alpha:1.00f];
-    _lblDescription.font = [UIFont fontWithName:@"ProximaNova-Regular" size:fontSize];
-    
-    _lblDate.text = [self getTimeAsString:_data[@"date"]];
-    _lblDate.textColor = [UIColor colorWithRed:0.67f green:0.67f blue:0.67f alpha:1.00f];
-    _lblDate.font = [UIFont fontWithName:@"ProximaNova-SemiboldIt" size:8];
-}
-
-
-- (NSString*)getTimeAsString:(NSDate *)lastDate {
-    NSTimeInterval dateDiff =  [[NSDate date] timeIntervalSinceDate:lastDate];
-    
-    int nrSeconds = dateDiff;//components.second;
-    int nrMinutes = nrSeconds / 60;
-    int nrHours = nrSeconds / 3600;
-    int nrDays = dateDiff / 86400; //components.day;
-    
-    NSString *time;
-    if (nrDays > 5){
-        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-        [dateFormat setDateStyle:NSDateFormatterShortStyle];
-        [dateFormat setTimeStyle:NSDateFormatterNoStyle];
+    if(_data[@"faceID"] && ![[_data valueForKey:@"faceID"] isKindOfClass : [NSNull class]]){
+        self.imageFacebook.hidden = NO;
+        [GraphicUtils makeSquadViewRounded:self.imageFacebook];
+        self.imageVAvatar.hidden = YES;
+        NSString* face = _data[@"faceID"];
+        self.imageFacebook.profileID = face;
         
-        time = [NSString stringWithFormat:@"%@", [dateFormat stringFromDate:lastDate]];
-    } else {
-        // days=1-5
-        if (nrDays > 0) {
-            if (nrDays == 1) {
-                time = @"1 day ago";
-            } else {
-                time = [NSString stringWithFormat:@"%d days ago", nrDays];
-            }
-        } else {
-            if (nrHours == 0) {
-                if (nrMinutes < 2) {
-                    time = @"just now";
-                } else {
-                    time = [NSString stringWithFormat:@"%d minutes ago", nrMinutes];
-                }
-            } else { // days=0 hours!=0
-                if (nrHours == 1) {
-                    time = @"1 hour ago";
-                } else {
-                    time = [NSString stringWithFormat:@"%d hours ago", nrHours];
-                }
-            }
-        }
     }
+    else {
+        self.imageFacebook.hidden = YES;
+        self.imageVAvatar.hidden = NO;
+        self.imageVAvatar.image = [UIImage imageNamed:@"icon-avatar-60x60"];
+    }
+    if (_data[@"nombre"]) {
+        self.lblUserName.text =_data[@"nombre"];
+
+    }
+    else{
+        self.lblUserName.text =_data[@"email"];
+    }
+    self.lblUserName.textColor = [GraphicUtils colorDefault];
+    self.lblUserName.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:16];
+    self.lblPosition.text = [_data[@"posicion"] stringValue];
+    self.lblPuntos.text = [NSString stringWithFormat:@"%@ Pts.", [_data[@"puntosGanados"] stringValue]];
+    /*
+     long total = user.getTotApuesta() > 0 ? user.getTotApuesta() : 1;
+     long totalIngresado = user.getTotApIngresada() > 0 ? user.getTotApIngresada() : 1;
+     long completado = (user.getTotApIngresada() * 100) / total;
+     long acierto = ((user.getTotApGanExa() + user.getTotApGanNoExa()) * 100) / totalIngresado;
+     */
+    int totalApuestas = [_data[@"totApuesta"]intValue] > 0 ? [_data[@"totApuesta"]intValue] : 1;
+    int totalIngresado = [_data[@"totApIngresada"] intValue] > 0 ? [_data[@"totApIngresada"] intValue] : 1;
+    int porcentajeCompletado = [_data[@"totApIngresada"] intValue]*100/totalApuestas;
+    int porcentajeAcierto = (([_data[@"totApGanExa"] intValue] + [_data[@"totApGanNoExa"] intValue])*100 / totalIngresado);
+    self.lblCompletado.text = [NSString stringWithFormat:@"%d%%%@",porcentajeCompletado, NSLocalizedString(@"Comp.", nil)];
     
-    return [NSString stringWithFormat:NSLocalizedString(@"%@", @"label"), time];
+    self.lblAcierto.text = [NSString stringWithFormat:@"%d%%%@",porcentajeAcierto, NSLocalizedString(@"Success", nil)];
+    
+    self.lblCompletado.alpha = 0.5;
+    self.lblAcierto.alpha = 0.5;
+    self.lblPuntos.alpha = 0.5;
+    
 }
+
 
 @end

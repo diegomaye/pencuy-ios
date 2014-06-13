@@ -19,6 +19,7 @@
 @property (nonatomic, assign) NSString *phone;
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) UIImage *image;
+@property (nonatomic, strong) NSNumber *idUsuario;
 @property (nonatomic, assign, getter = isSelected) BOOL selected;
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSDate *dateUpdated;

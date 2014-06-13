@@ -11,8 +11,9 @@
 
 #import "MasterViewController.h"
 
-@interface UsuariosTVController : MasterViewController <UITableViewDataSource, UITableViewDelegate, ZKRevealingTableViewCellDelegate>
+@interface UsuariosTVController : MasterViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) NSArray* usuarios;
 
 @end

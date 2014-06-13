@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ApuestasTVController.h"
 
-@interface ResultadoPartidoViewController : UIViewController <UISplitViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
+@interface ResultadoPartidoViewController : MasterViewController <UISplitViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (strong, nonatomic) NSMutableDictionary *apuesta;
 @property (strong, nonatomic) ApuestasTVController *fixture;

@@ -7,10 +7,8 @@
 //
 
 #import "PencasTVController.h"
-
 #import "ADVTheme.h"
 
-#import "DataSource.h"
 #import "AppDelegate.h"
 
 #import "DatosGrlsPencaViewController.h"
@@ -21,8 +19,6 @@
 @interface PencasTVController () {
     NSIndexPath *currentIndex;
 }
-
-@property (strong, nonatomic) ZKRevealingTableViewCell *currentlyRevealedCell;
 
 @end
 
@@ -63,40 +59,7 @@
     [btnCompose setImage:[UIImage imageNamed:@"navigation-btn-settings"] forState:UIControlStateNormal];
     [btnCompose addTarget:self action:@selector(actionCompose:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnCompose];
-    
     self.tableView.tableHeaderView.backgroundColor = [UIColor colorWithRed:0.27f green:0.29f blue:0.31f alpha:1.00f];
-    
-    NSString *filterTitle = [NSString stringWithFormat:@"Showing %@ of %@", @10, @52];
-    UILabel *labelFilter = (UILabel *)[self.tableView.tableHeaderView viewWithTag:1];
-    
-    const CGFloat fontSize = 14;
-    UIFont *boldFont = [UIFont fontWithName:@"ProximaNova-Semibold" size:fontSize];
-    UIFont *regularFont = [UIFont fontWithName:@"ProximaNova-Regular" size:fontSize];
-    UIColor *regularColor = [UIColor whiteColor];
-    UIColor *boldColor = [UIColor whiteColor];
-    NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:
-                           regularFont, NSFontAttributeName,
-                           regularColor, NSForegroundColorAttributeName, nil];
-    NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:
-                              boldFont, NSFontAttributeName,
-                              boldColor, NSForegroundColorAttributeName, nil];
-    const NSRange range = NSMakeRange(8, 2);
-    
-        // Create the attributed string (text + attributes)
-    NSMutableAttributedString *attributedText =
-    [[NSMutableAttributedString alloc] initWithString:filterTitle
-                                           attributes:attrs];
-    [attributedText setAttributes:subAttrs range:range];
-    
-    const NSRange range1 = NSMakeRange(13, 3);
-    [attributedText setAttributes:subAttrs range:range1];
-    
-    [labelFilter setAttributedText:attributedText];
-    
-    UIButton *btnFilter = (UIButton *)[self.tableView.tableHeaderView viewWithTag:2];
-    btnFilter.layer.cornerRadius = 2;
-    btnFilter.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:10];
-    btnFilter.backgroundColor = [UIColor colorWithRed:0.17f green:0.18f blue:0.20f alpha:1.00f];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -118,11 +81,8 @@
 }
 
 - (void)actionCompose:(id)sender {
-    [self performSegueWithIdentifier:@"createUser" sender:self];
+    [self performSegueWithIdentifier:@"createPenca" sender:self];
 }
-
-
-
 
 #pragma mark - UITableView datasource
 
@@ -143,43 +103,6 @@
     NSDictionary *penca = self.pencas[indexPath.row];
     cell.penca = penca;
     
-    cell.delegate       = self;
-    cell.backView.frame = CGRectMake(0, 0, 190, [self tableView:_tableView heightForRowAtIndexPath:nil]);
-    cell.backView.backgroundColor = [UIColor colorWithRed:0.91f green:0.38f blue:0.39f alpha:1.00f];
-    cell.direction = ZKRevealingTableViewCellDirectionRight;
-    
-    for(UIView *cellItem in cell.backView.subviews) {
-        [cellItem removeFromSuperview];
-    }
-    
-    UIButton *btnManage = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnManage.frame = CGRectMake(10, 20, 36, 37);
-    btnManage.contentMode = UIViewContentModeCenter;
-    [btnManage setImage:[UIImage imageNamed:@"email_actions_reply"]
-               forState:UIControlStateNormal];
-    [cell.backView addSubview:btnManage];
-    
-    UIButton *btnMess = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnMess.frame = CGRectMake(55, 20, 39, 37);
-    btnMess.contentMode = UIViewContentModeCenter;
-    [btnMess setImage:[UIImage imageNamed:@"email_actions_forward"]
-             forState:UIControlStateNormal];
-    [cell.backView addSubview:btnMess];
-    
-    UIButton *btnLeave = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnLeave.frame = CGRectMake(105, 20, 36, 37);
-    btnLeave.contentMode = UIViewContentModeCenter;
-    [btnLeave setImage:[UIImage imageNamed:@"email_actions_move"]
-              forState:UIControlStateNormal];
-    [cell.backView addSubview:btnLeave];
-    
-    UIButton *btnDelete = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnDelete.frame = CGRectMake(140, 15, 56, 47);
-    btnDelete.contentMode = UIViewContentModeCenter;
-    [btnDelete setImage:[UIImage imageNamed:@"email_actions_delete"]
-               forState:UIControlStateNormal];
-    [cell.backView addSubview:btnDelete];
-    
     return cell;
 }
 
@@ -196,27 +119,10 @@
     [self performSegueWithIdentifier:@"showDetailPenca" sender:self];
 }
 
-#pragma mark - ZKRevealingTableViewCellDelegate
-
-- (BOOL)cellShouldReveal:(ZKRevealingTableViewCell *)cell {
-	return YES;
-}
-
-- (void)cellDidReveal:(PencaCell *)cell {
-	NSLog(@"Revealed Cell with name: %@", cell.lblTitle.text);
-	self.currentlyRevealedCell = cell;
-}
-
-- (void)cellDidBeginPan:(ZKRevealingTableViewCell *)cell {
-	if (cell != self.currentlyRevealedCell)
-		self.currentlyRevealedCell = nil;
-}
-
-
 #pragma mark - Segue
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"createUser"]) {
+    if ([segue.identifier isEqualToString:@"createPenca"]) {
         UINavigationController *nav = segue.destinationViewController;
         DatosGrlsPencaViewController *detailVC = nav.viewControllers[0];
         detailVC.fechas = self.fechas;
@@ -226,6 +132,7 @@
         HostViewController* detailVC = segue.destinationViewController;
         NSDictionary* penca = self.pencas[currentIndex.row];
         detailVC.idPenca = [[penca valueForKey:@"idPenca"] stringValue];
+        detailVC.infoPenca = penca;
         detailVC.fechas = self.fechas;
     }
 }

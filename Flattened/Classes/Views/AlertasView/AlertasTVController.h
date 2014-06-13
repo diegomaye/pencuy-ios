@@ -10,16 +10,10 @@
 #import "AlertaCell.h"
 #import "MasterViewController.h"
 
-@interface AlertasTVController : MasterViewController <UITableViewDataSource, UITableViewDelegate, ZKRevealingTableViewCellDelegate>
+@interface AlertasTVController : MasterViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @property (nonatomic, strong) NSArray *alertas;
-
-//-(void) modificarDescBoton:(NSString*) texto;
-//
-//-(NSString*) getDescBoton;
-//
-//-(void) modificaLabel:(NSString *) titulo;
 
 @end

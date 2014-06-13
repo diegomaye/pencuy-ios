@@ -19,6 +19,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "PencuyFetcher.h"
+#import "GraphicUtils.h"
+#import "SIAlertView.h"
 
 @interface ResultadoPartidoViewController ()
 
@@ -49,20 +51,25 @@
     
     self.navigationItem.titleView = titleLabel;
     
-    self.txtLocatario.text= self.apuesta[@"partido"][@"local"];
-    self.txtVisitante.text= self.apuesta[@"partido"][@"visitante"];
+    self.txtLocatario.text= NSLocalizedString(self.apuesta[@"localDesc"],nil);
+    self.txtVisitante.text= NSLocalizedString(self.apuesta[@"visitanteDesc"],nil);
     
     
     [self.txtLocatario alignTop];
     [self.txtVisitante alignTop];
     
-    NSString* pathLocatario = [[NSBundle mainBundle] pathForResource:[self.apuesta[@"partido"][@"local"] stringByAppendingString:@"-square"] ofType:@"ico"];
+    self.txtLocatario.font = [UIFont fontWithName:@"ProximaNova-Bold" size:17];
+    self.txtLocatario.textColor = [GraphicUtils colorMidnightBlue];
+    self.txtVisitante.font = [UIFont fontWithName:@"ProximaNova-Bold" size:17];
+    self.txtVisitante.textColor = [GraphicUtils colorMidnightBlue];
+    
+    NSString* pathLocatario = [[NSBundle mainBundle] pathForResource:[self.apuesta[@"localDesc"] stringByAppendingString:@"-square"] ofType:@"ico"];
     self.imgLocatario.image = [UIImage imageWithContentsOfFile:pathLocatario];
-    NSString* pathVisitante = [[NSBundle mainBundle] pathForResource:[self.apuesta[@"partido"][@"visitante"] stringByAppendingString:@"-square"] ofType:@"ico"];
+    NSString* pathVisitante = [[NSBundle mainBundle] pathForResource:[self.apuesta[@"visitanteDesc"] stringByAppendingString:@"-square"] ofType:@"ico"];
     self.imgVisitante.image = [UIImage imageWithContentsOfFile:pathVisitante];
     
-    self.pickerLocatario = [[UIPickerView alloc] initWithFrame:(CGRectMake(0,-20,self.view.bounds.size.width,120))];
-    [self.pickerLocatario setBounds:CGRectMake(0,0,self.view.bounds.size.width,120)];
+    self.pickerLocatario = [[UIPickerView alloc] initWithFrame:(CGRectMake(0,-20,self.view.bounds.size.width,300))];
+    [self.pickerLocatario setBounds:CGRectMake(0,0,self.view.bounds.size.width,300)];
     [self.view addSubview:self.pickerLocatario];
     
     self.pickerLocatario.dataSource = self;
@@ -93,13 +100,14 @@
 
 -(UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
 {
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 44)]; // your frame, so picker gets "colored"
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 40, 32)]; // your frame, so picker gets "colored"
     
     
-    label.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.64];
+    label.backgroundColor = [GraphicUtils colorDefault];
     label.textColor = [UIColor whiteColor];
-    label.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18];
-    label.text = [NSString stringWithFormat:@"%d",row];
+    label.font = [UIFont fontWithName:@"ProximaNova-Bold" size:18];
+    label.text = [NSString stringWithFormat:@"%lu",(long)row];
+    label.textAlignment = NSTextAlignmentCenter;
     return label;
 }
 
@@ -153,20 +161,67 @@
     NSNumber *visitante = [NSNumber numberWithInteger:([self.pickerLocatario selectedRowInComponent:0])] ;
     [diccionario setValue:locatario forKey:@"golesVisitante"];
     [diccionario setValue:visitante forKey:@"golesLocal"];
-    [diccionario setValue:@"false" forKey:@"tipoFinal"];
+    [self showProgressBar];
+    if([self.apuesta[@"tipoFinal"] intValue]== 1){
+        [diccionario setValue:@"true" forKey:@"tipoFinal"];
+        if ([locatario intValue] == [visitante intValue]) {
+            SIAlertView* alertView = [[SIAlertView alloc]initWithTitle:NSLocalizedString(@"Choose a winner!", nil) andMessage:NSLocalizedString(@"This match determines the pass to the next round, please choose a winner.", nil)];
+            
+            [alertView addButtonWithTitle:NSLocalizedString(self.apuesta[@"localDesc"],nil)
+                                     type:SIAlertViewButtonTypeDefault
+                                  handler:^(SIAlertView *alert) {
+                                      [diccionario setValue:@"true" forKey:@"ganaLocal"];
+                                      [self sendApuesta:diccionario];
+                                  }];
+            [alertView addButtonWithTitle:NSLocalizedString(self.apuesta[@"visitanteDesc"],nil)
+                                     type:SIAlertViewButtonTypeDestructive
+                                  handler:^(SIAlertView *alert) {
+                                      [diccionario setValue:@"false" forKey:@"ganaLocal"];
+                                      [self sendApuesta:diccionario];
+                                  }];
+            
+            alertView.transitionStyle = SIAlertViewTransitionStyleBounce;
+            [alertView show];
+
+        }
+        else{
+            if ([locatario intValue] > [visitante intValue]) {
+                [diccionario setValue:@"true" forKey:@"ganaLocal"];
+            }
+            else{
+                [diccionario setValue:@"false" forKey:@"ganaLocal"];
+            }
+            [self sendApuesta:diccionario];
+        }
+
+    }
+    else {
+        [diccionario setValue:@"false" forKey:@"tipoFinal"];
+        [self sendApuesta:diccionario];
+    }
     
-        //[diccionario setValue:[[NSDictionary alloc]initWithObjectsAndKeys:@"65",@"idEquipo", nil] forKey:@"ganador"];
-    [diccionario setValue:@"INGRESADO" forKey:@"estado"];
-    NSLog(@"Valore enviados: %@", diccionario);
+}
+
+-(void) sendApuesta:(NSDictionary*) apuesta{
+    [apuesta setValue:@"INGRESADO" forKey:@"estado"];
+    NSLog(@"Valore enviados: %@", apuesta);
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:diccionario
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:apuesta
                                                        options:NSJSONWritingPrettyPrinted
                                                          error:&error];
-    [PencuyFetcher multiFetcherSync:[PencuyFetcher URLtoMakeApuestas] withHTTP:@"PUT" withData:jsonData];
-    [(ApuestasDataLoaderTableViewController*)self.fixture fetchApuestas:self.fixture.idPenca andFecha:[self.fixture.idFecha stringValue] ];
-    [self.fixture.tableView reloadData];
-    [self dismissViewControllerAnimated:YES completion:^{
-    }];
+    NSDictionary* retorno = [PencuyFetcher multiFetcherSync:[PencuyFetcher URLtoMakeApuestas] withHTTP:@"PUT" withData:jsonData];
+    NSLog(@"Devolvió: %@", retorno);
+    if (retorno) {
+        [self setComplete];
+        [(ApuestasDataLoaderTableViewController*)self.fixture fetchApuestas:self.fixture.idPenca andFecha:[self.fixture.idFecha stringValue] ];
+        [self.fixture.tableView reloadData];
+        [self dismissViewControllerAnimated:YES completion:^{
+        }];
+    }
+    else{
+        [self setCompleteErrorSorry];
+    }
+    
 }
 
 @end

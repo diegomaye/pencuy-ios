@@ -14,5 +14,12 @@
 
 @property (nonatomic, strong) NSString* idPenca;
 @property (nonatomic, strong) NSArray* fechas;
+@property (nonatomic, strong) NSDictionary* infoPenca;
+
+@property (strong, nonatomic) IBOutlet UILabel *lblNombrePenca;
+@property (strong, nonatomic) IBOutlet UILabel *lblDescripcionPenca;
+@property (strong, nonatomic) IBOutlet UILabel *lblPendientes;
+@property (strong, nonatomic) IBOutlet UILabel *lblFinalizados;
+@property (strong, nonatomic) IBOutlet UILabel *lblParticipantes;
 
 @end

@@ -159,17 +159,17 @@ const int TOOLBAR_HEIGHT_2 = 35;
     
     UIDatePicker *picker = (UIDatePicker*)_txtFecha.inputView;
         //Fecha inicial por defecto fecha de hoy
-    NSDate* fechaInicio = [NSDate new];
-    fechaInicio=picker.date;
+        //NSDate* fechaInicio = [NSDate new];
+        //NSDate* fechaInicio=picker.date;
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    dateFormatter.dateFormat = NSLocalizedString(@"dd/MM/yyyy",nil);
+    dateFormatter.dateFormat = NSLocalizedString(@"MM/dd/yyyy",nil);
     NSString *fecha = [dateFormatter stringFromDate:picker.date];
     dateFormatter.dateFormat = NSLocalizedString(@"HH:mm",nil);
     NSString *hora = [dateFormatter stringFromDate:picker.date];
     NSString *resultado= [NSString stringWithFormat:@"%@ %@ %@ %@",
-    NSLocalizedString(@"Comienza el",nil),
+    NSLocalizedString(@"Starts at ",nil),
     fecha,
-    NSLocalizedString(@"a las",nil),
+    NSLocalizedString(@" on ",nil),
     hora];
     _txtFecha.text = [NSString stringWithFormat:@"%@",resultado];
  

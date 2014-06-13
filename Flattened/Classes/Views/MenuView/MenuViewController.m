@@ -13,7 +13,8 @@
 #import "Usuario.h"
 #import "FacebookImageStorage.h"
 #import "ImageManager.h"
-
+#import "OtherViewController.h"
+#import "GraphicUtils.h"
 @interface MenuViewController ()
 
 @property (nonatomic, strong) NSArray       *menu;
@@ -27,11 +28,13 @@
     [super viewDidLoad];
     
     if(![Utils isVersion6AndBelow]){
-        self.profileView.frame = CGRectMake(0, 15, self.profileView.frame.size.width, self.profileView.frame.size.height);
-        CGRect tableRect = self.tableView.frame;
-        tableRect.origin.y += 15;
-        tableRect.size.height -= 15;
-        self.tableView.frame = tableRect;
+        if (self.profileView.frame.origin.y !=15) {
+            self.profileView.frame = CGRectMake(0, 15, self.profileView.frame.size.width, self.profileView.frame.size.height);
+            CGRect tableRect = self.tableView.frame;
+            tableRect.origin.y += 15;
+            tableRect.size.height -= 15;
+            self.tableView.frame = tableRect;
+        }        
     }
     
     self.menu = [DataSource menu];
@@ -44,6 +47,7 @@
     NSDictionary* userDefaultDictionary = (NSDictionary*) [NSKeyedUnarchiver unarchiveObjectWithData:userDefaultData];
     NSError* error;
     Usuario* usuarioPenca = [[Usuario alloc] initWithDictionary:userDefaultDictionary error:&error];
+    
     NSLog(@"Error tratando de sacar el usuario por defecto: %@", error);
     /*
      Sacando usuario por defecto
@@ -64,6 +68,7 @@
         self.facebookImageView.hidden=NO;
         self.facebookImageView.profileID = usuarioPenca.faceID;
         self.facebookImageView.pictureCropping = FBProfilePictureCroppingOriginal;
+        [GraphicUtils makeSquadViewRounded:self.facebookImageView];
     }
     else{
         profileImageView.hidden=NO;
@@ -84,9 +89,18 @@
     
     UIButton *btnSettings = (UIButton *)[_profileView viewWithTag:4];
     [btnSettings setImage:[UIImage imageNamed:@"menu-profile-settings"] forState:UIControlStateNormal];
+    [btnSettings addTarget:self action:@selector(actionSettings:) forControlEvents:UIControlEventTouchUpInside];
     btnSettings.backgroundColor = [UIColor clearColor];
 }
 
+- (void)actionSettings:(id)sender {
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone"
+                                                             bundle: nil];
+    UINavigationController *nav = [mainStoryboard instantiateViewControllerWithIdentifier:@"UserSettingsNav"];
+    // any setup code for *vc
+    [[AppDelegate sharedDelegate] setFoldVCWithNavBar:nav];
+    
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -187,13 +201,9 @@
     UIImage *imgRowImage = nil;
     if (item[@"image"]) {
         imgRowImage = [UIImage imageNamed:item[@"image"]];
-        
-            //imgRow.image = imgRowImage;
-        imgRow.image = [self scaleImage:imgRowImage toSize:CGSizeMake(22, 22)];
     }
-    else{
-        imgRow.image = imgRowImage;
-    }
+    imgRow.image = imgRowImage;
+    
     UILabel *lblText = (UILabel *)[cell viewWithTag:2];
     lblText.text = item[@"title"];
     lblText.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:16];

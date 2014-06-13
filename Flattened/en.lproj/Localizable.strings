@@ -1,0 +1,223 @@
+/* 
+  Localizable.strings
+  Flattened
+
+  Created by Diego Maye on 31/05/14.
+  Copyright (c) 2014 AppDesignVault. All rights reserved.
+*/
+//TABS DEL SISTEMA
+
+/*Tabs*/
+"Cover"="Cover";
+"Bets"="Bets";
+"Invitations"="Invitations";
+"Groups"="Groups";
+"Statics"="Statics";
+"Rules"="Rules";
+
+/*Pantallas*/
+"COVER"="COVER";
+"BETS"="BETS";
+"INVITATIONS"="INVITATIONS";
+"GROUPS"="GROUPS";
+"STATICS"="STATICS";
+"RULES"="RULES";
+"UPDATE BET"="UPDATE BET";
+"INVITE FRIENDS"="INVITE FRIENDS";
+"CREATE A BET"="CREATE A BET";
+
+//SWIPE PENCA
+
+/*TABS*/
+"Ranking" = "Ranking";
+"Group A" = "Group A";
+"Group B" = "Group B";
+"Group C" = "Group C";
+"Group D" = "Group D";
+"Group E" = "Group E";
+"Group F" = "Group F";
+"Group G" = "Group G";
+"Group H" = "Group H";
+"Second Round" = "Second Round";
+"Quarter - finals" = "Quarters";
+"Semifinal" = "Semifinal";
+"Third/Fourth place match" = "Fourth Place";
+"Final" = "Final";
+"Invitations"="Invitations";
+/*Titulos de penca*/
+"PENDINGS"="PENDINGS";
+"ENDED"="ENDED";
+"PARTICIPANTS"="PARTICIPANTS";
+/*Usuarios*/
+"Success"="Success";
+/*Fase de Grupos*/
+"Not Started"="Not Started";
+"Started"="Started";
+"Blocked"="Blocked";
+"Ended"="Ended";
+/*Paises*/
+"Algeria"="Algeria";
+"Cameroon"="Cameroon";
+"Ivory Coast"="Ivory Coast";
+"Ghana"="Ghana";
+"Nigeria"="Nigeria";
+"Australia"="Australia";
+"Iran"="Iran";
+"Japan"="Japan";
+"Republic of Korea"="Republic of Korea";
+"Germany"="Germany";
+"Belgium"="Belgium";
+"Bosnia and Herzegovina"="Bosnia and Herzegovina";
+"Croatia"="Croatia";
+"Spain"="Spain";
+"France"="France";
+"Greece"="Greece";
+"England"="England";
+"Italy"="Italy";
+"Netherlands"="Netherlands";
+"Portugal"="Portugal";
+"Russia"="Russia";
+"Switzerland"="Switzerland";
+"Costa Rica"="Costa Rica";
+"USA"="USA";
+"Honduras"="Honduras";
+"Mexico"="Mexico";
+"Argentina"="Argentina";
+"Brazil"="Brazil";
+"Chile"="Chile";
+"Colombia"="Colombia";
+"Ecuador"="Ecuador";
+"Uruguay"="Uruguay";
+/*LISTA VACIA*/
+"There is no information \n to display at the moment!"="There is no information \n to display at the moment!";
+
+//"reglasTitModalidad"="Modo de Jogo"
+//"reglasModalidad"="Modo Campeonato: Previsões que não determinam corretamente as equipes não somam pontos.\n\n Modo fase a fase: Findo uma fase o sistema conclui as equipes que avançam e todos os jogadores podem entrar resultados dos jogos"
+
+"reglasTitModalidad"="Game mode";
+"reglasModalidad1"="Championship mode: Forecasts do not lay the teams do not add up correctly points.";
+"reglasModalidad2"="Phase-to-phase mode:Ended a phase  the system completes advancing teams and all players can enter match results.";
+
+//"reglasTitulo"="Regras do aplicativo"
+//"reglasTitPuntos"="Sistema de pontos"
+//"reglasTitResultados"="Sistema do resultados"
+//"reglasResultados"="Pode digitar as previsões até 30 minutos antes do jogo começar. As previsões da fase de grupos determina os times que avançam de rodada. As previsões que não determinam corretamente as equipes não adicionar pontos."
+//"reglasPuntos"="Resultado do Jogo acumula 2 pontos. Gols do mandante acumula 1 ponto. Golos do visitante acumula 1 ponto. Saldo de gols acumula 1 ponto. Um total de 5 pontos podem se acumular em cada jogo."
+
+"reglasTitPuntos" ="Point Rules";
+"reglasTitResultados" ="Result Rules";
+"reglasResultados1"="Forecasts can be entered up to 30 minutes before the match starts.";
+"reglasResultados2"="Forecasting group stage will determine second round.";
+"reglasResultados3"="Forecasts that don't determine the teams on second round or forward won't get points.";
+"reglasResultados4"="Create an a new prediction once a fase was ending, enable you to play fase to fase";
+"reglasResultados5"="The prediction are only visible for others in the fase of groups.";
+"reglasPuntos0" ="Match Result (Home, Visitor, Draw) add 2 points.";
+"reglasPuntos1" ="Goals tenant add 1 point.";
+"reglasPuntos2" ="Visitor Goals add 1 point.";
+"reglasPuntos3" ="Goal difference add 1 point.";
+"reglasPuntos4" ="A total of 5 points can be added per match.";
+/*tiempo*/
+"%d days ago"="%d days ago";
+"%d minutes ago"="%d minutes ago";
+"%d hours ago"="%d hours ago";
+
+"There is not invitation \n to display at the moment!"="There is not invitation \n to display at the moment!";
+
+"Invitation"="Invitation";
+"Would you like to accept the inviation?"="Would you like to accept the inviation?";
+"Yes"="Yes";
+"No"="No";
+
+"Sorry!"="Sorry!";
+"First complete the matchs in the group stage"="First complete the matchs in the group stage";
+
+"Loading"="Loading";
+"Finishing Processing"="Finishing Processing";
+//Estadisticas
+"Select a country"="Select a country";
+"WC won"="WC won";
+"Cups"="Cups";
+"Points"="Points";
+"Matchs played"="Matchs played";
+"Matchs won"="Matchs won";
+"Lost Points"="Lost Points";
+"Goals Scored"="Goals Scored";
+"Goals Against"="Goals Against";
+"Please select the team"="Please select the team";
+
+"Name for the bet"="Name for the bet";
+"Description to your friend"="Description to your friend";
+"Unit cost for bet"="Unit cost for bet";
+"The name of the bet.\r"="The name of the bet.\r";
+"Description for the bet.\r"="Description for the bet.\r";
+"Unit price for bet.\r"="Unit price for bet.\r";
+"You need to insert:"="You need to insert:";
+"You cannot create the bet at the moment, please try again late"="You cannot create the bet at the moment, please try again late";
+
+"invited by"="invited by";
+"Invited by"="Invited by";
+
+/*Tipos*/
+"MM/dd/yyyy"="MM/dd/yyyy";
+
+/*Palabras*/
+"Success"="Success";
+//ProfileView
+"USER PROFILE"="USER PROFILE";
+"Total Points Granted"="Total Points Won";
+"Exact Result"="Exact Result";
+"Parcial Result"="Parcial Result";
+"Total Bets"="Total Bets";
+"Maked by me"="Maked by me";
+"Pending"="Pending";
+//THContacts
+"Type your buddy name"="Type your buddy name";
+"FACEBOOK FRIENDS"="FACEBOOK FRIENDS";
+"Your buddy "="Your buddy ";
+" was invited successfully"=" was invited successfully";
+"If you not found your friends in the list you can invite them play My Prediction with facebook with our web app ;)"="If you not found your friends in the list tell your friends about the app if they install the app, you can invite them to play. ;)";
+
+"Points Earned"="Points Earned";
+"Bets"="Bets";
+
+//Login 1
+"Email not valid!"="Email not valid!";
+"Please insert a valid email."="Please insert a valid email.";
+"You don't have a Facebook account?"="You don't have a Facebook account?";
+"You can access here!"="You can access here!";
+"ACCEPT"="ACCEPT";
+"RETURN"="GO BACK";
+"E-Mail"="E-Mail";
+//Login 2
+"Password"="Password";
+"If you have an account then press the button \"Login\" otherwise you can press \"Create Account\""="If you have an account then press the button \"Login\" otherwise you can press \"Create Account\"";
+"Login"="Login";
+"Create Account"="Create Account";
+"You already have an account!"="You already have an account!";
+"You're already logged into the system with an account of fecebook try login with that account. Go back and sign in with facebook."="You're already logged into the system with an account of fecebook try login with that account. Go back and sign in with facebook.";
+"Password error!"="Password error!";
+"The password is not correct try again."="The password is not correct try again.";
+"E-mail invalid!"="E-mail invalid!";
+"This e-mail does not exist in the system, if you want to create a new user selects \"Create Account\"."="This e-mail does not exist in the system, if you want to create a new user selects \"Create Account\".";
+"Name"="Name";
+"Enter the password again"="Enter the password again";
+"%@ \n Debes re ingresar tu contraseña";
+
+//Alertas en Registro Usuario
+"That email already exist"="That email already exist";
+"This email address is already entered in the system press GO BACK and try to login with your account."="This email address is already entered in the system press GO BACK and try to login with your account.";
+"Already have an account!"="Already have an account!";
+"You're already logged into the system with an account of fecebook try login with that account. Go back and log in with facebook."="You're already logged into the system with an account of fecebook try login with that account. Go back and log in with facebook.";
+"Ups! This email is already in the system"="Ups! This email is already in the system";
+"This email address is already entered in the system press GO BACK and try to login with your account."="This email address is already entered in the system press GO BACK and try to login with your account.";
+"The password lenght must be more than 5 digits"="The password lenght must be more than 5 digits";
+"Passwords do not match"="Passwords do not match";
+"The two passwords you entered must match"="The two passwords you entered must match";
+"Invalid E-Mail"="Invalid E-Mail";
+"The format of email is not correct"="The format of email is not correct";
+"You must enter a name"="You must enter a name";
+"%@ \n You must enter an email address"="%@ \n You must enter an email address";
+"%@ \n You must enter a password"="%@ \n You must enter a password";
+"%@ \n You must re enter a password"="%@ \n You must re enter a password";
+
+"A connection error happened apology"="A connection error happened apology";

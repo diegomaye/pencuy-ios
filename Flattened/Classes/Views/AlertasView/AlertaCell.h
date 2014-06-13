@@ -7,12 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZKRevealingTableViewCell.h"
 #import <FacebookSDK/FacebookSDK.h>
 
-@protocol AlertaCellDelegate;
-
-@interface AlertaCell : ZKRevealingTableViewCell
+@interface AlertaCell : UITableViewCell
 
 @property (strong, nonatomic) NSDictionary *alerta;
 

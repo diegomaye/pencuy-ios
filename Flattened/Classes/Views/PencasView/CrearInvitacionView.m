@@ -69,15 +69,6 @@
     [super viewDidAppear:animated];
 }
 
-- (BOOL)isTall {
-    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone
-        && [UIScreen mainScreen].bounds.size.height == 568)
-    {
-        return YES;
-    }
-    return NO;
-}
-
 - (void)viewDidUnload {
     [super viewDidUnload];
 }

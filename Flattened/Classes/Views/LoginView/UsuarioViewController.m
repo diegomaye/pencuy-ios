@@ -18,6 +18,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtPass;
 @property (weak, nonatomic) IBOutlet UIButton *btnLogin;
 @property (weak, nonatomic) IBOutlet UILabel *lblNotieneCuenta;
+@property (strong, nonatomic) IBOutlet UIButton *btnRegistrarme;
+@property (strong, nonatomic) IBOutlet UIButton *btnVolver;
 
 
 @end
@@ -42,7 +44,12 @@
     
     [self agregarEspacioInterno:_txtUsuario];
     [self agregarEspacioInterno:_txtPass];
-    
+    self.txtUsuario.placeholder = NSLocalizedString(@"E-mail",nil);
+    self.txtPass.placeholder = NSLocalizedString(@"Password",nil);
+    self.lblNotieneCuenta.text = NSLocalizedString(@"If you have an account then press the button \"Login\" otherwise you can press \"Create Account\"", nil);
+    [self.btnLogin setTitle:NSLocalizedString(@"Login", nil) forState:UIControlStateNormal];
+    [self.btnRegistrarme setTitle:NSLocalizedString(@"Create Account", nil) forState:UIControlStateNormal];
+    [self.btnVolver setTitle:NSLocalizedString(@"RETURN", nil) forState:UIControlStateNormal];
     self.toolbarView.hidden=YES;
 }
 
@@ -94,7 +101,7 @@
     [request setHTTPMethod:@"PUT"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [requestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody: requestData];
     NSData *jsonResults= [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     NSDictionary *propertyListResults= [NSJSONSerialization JSONObjectWithData:jsonResults options:0 error:NULL];
@@ -103,21 +110,20 @@
     BOOL valida = [[propertyListResults valueForKey:@"valida"] boolValue];
     BOOL cuentaFacebook = [[propertyListResults valueForKey:@"cuentaFacebook"] boolValue];
     if (valida&&correoExiste) {
-        /*
-         VER ESTO CON MAURICIO.
-        [PencuyFetcher multiFetcherSyncPublic:[PencuyFetcher URLtoLoginUser]
-                                     withHTTP:@"PUT"
-                                     withData:jsonData
-                                 withUserName:usuario.email
-                                 withPassword:usuario.password
+        NSError* conError = nil;
+        NSError* jsonError = nil;
+        NSDictionary* diccionario = [PencuyFetcher multiFetcherSync:[PencuyFetcher URLtoQueryProfile]
+                                     withHTTP:@"GET"
+                                     withData:nil
+                                 withUserName:self.txtUsuario.text
+                                 withPassword:self.txtPass.text
                            communicationError:&conError
                        jsonSerializationError:&jsonError];
-        */
-        
+       
         NSUserDefaults * userDefaults =[NSUserDefaults standardUserDefaults];
         Usuario* usuario= [Usuario new];
-        [usuario setNombreCompleto:@"Jhon Doe"];
-        [usuario setNombre:@"Jhon Doe"];
+        [usuario setNombreCompleto:diccionario[@"nombreCompleto"]];
+        [usuario setNombre:diccionario[@"nombreCompleto"]];
         [usuario setEmail:_txtUsuario.text];
         [usuario setPassword:_txtPass.text];
         [usuario setRePassword:_txtPass.text];
@@ -138,16 +144,16 @@
         }
         else{
                 //ACA ENTRA CUANDO TIENE YA UNA CUENTA EN EL SISTEMA CON FACEBOOK
-            [self showAlert:@"Ya tienes una cuenta!" andMessage:@"Ya estas ingresado en el sistema con una cuenta de fecebook, intenta ingresar con esa cuenta. Vuelve atras y accede con facebook."];
+            [self showAlert:NSLocalizedString(@"You already have an account!",nil) andMessage:NSLocalizedString(@"You're already logged into the system with an account of fecebook try login with that account. Go back and sign in with facebook.",nil)];
         }
     }
     else if (correoExiste){
             //EL CORREO QUE INGRESO EXISTE PERO NO LE PEGO A LA CLAVE.
-        [self showAlert:@"Error de password!" andMessage:@"La contraseña no es correcta inteta nuevamente."];
+        [self showAlert:NSLocalizedString(@"Password error!",nil) andMessage:NSLocalizedString(@"The password is not correct try again.",nil)];
     }
     else{
             //EL CORREO QUE INGRESO NO EXISTE, LA CLAVE NO EXISTE Y NO HAY USUARIO DE FACEBOOK.
-        [self showAlert:@"Correo invalido" andMessage:@"Esta direccion de correo no existe en el sistema, si deseas crear un nuevo usuario selecciona \"Registrar me!\"."];
+        [self showAlert:@"E-mail invalid!" andMessage:@"This e-mail does not exist in the system, if you want to create a new user selects \"Create Account\"."];
     }
     return NO;
 }

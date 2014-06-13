@@ -76,6 +76,8 @@
     self.textView.scrollsToTop = NO;
     self.textView.clipsToBounds = NO;
     self.textView.autocorrectionType = UITextAutocorrectionTypeNo;
+    [self.textView setKeyboardType:UIKeyboardTypeEmailAddress];
+    self.textView.autocapitalizationType = UITextAutocapitalizationTypeNone;
     //[self.textView becomeFirstResponder];
     
     // Add shadow to bottom border
@@ -247,7 +249,7 @@
     }
     
     if ([self.delegate respondsToSelector:@selector(contactPickerDidRemoveContact:)]){
-        [self.delegate contactPickerDidRemoveContact:[contact nonretainedObjectValue]];
+        [self.delegate contactPickerDidRemoveContact:contact];
     }
     
     [self removeContactByKey:contact];
@@ -377,6 +379,8 @@
     } else {
         self.placeholderLabel.hidden = YES;
     }
+    
+    [self.textView setReturnKeyType: UIReturnKeyDone];
 }
 
 #pragma mark - UITextViewDelegate
@@ -386,6 +390,7 @@
     self.textView.hidden = NO;
     
     if ( [text isEqualToString:@"\n"] ) { // Return key was pressed
+        [textView resignFirstResponder];
         return NO;
     }
     

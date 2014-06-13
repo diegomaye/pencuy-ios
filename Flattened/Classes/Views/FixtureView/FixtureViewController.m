@@ -7,15 +7,9 @@
 //
 
 #import "FixtureViewController.h"
-
 #import "ADVTheme.h"
-
-#import "DataSource.h"
 #import "AppDelegate.h"
-
-#import "DetailFixtureViewController.h"
-#import "ResultadoPartidoViewController.h"
-
+#import "GraphicUtils.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Utils.h"
 
@@ -24,12 +18,7 @@
     NSIndexPath *currentIndex;
 }
 
-@property (strong, nonatomic) ZKRevealingTableViewCell *currentlyRevealedCell;
-
 @end
-
-
-
 
 @implementation FixtureViewController
 
@@ -48,7 +37,7 @@
     [ADVThemeManager customizeView:self.view];
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"FIXTURE";
+    titleLabel.text = NSLocalizedString(@"GROUPS",nil);
     titleLabel.textColor = [UIColor whiteColor];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:17];
@@ -67,29 +56,37 @@
         }
     }
     
-    UIButton *btnCompose = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnCompose.frame = CGRectMake(0, 0, 40, 30);
-    [btnCompose setImage:[UIImage imageNamed:@"navigation-btn-settings"] forState:UIControlStateNormal];
-    [btnCompose addTarget:self action:@selector(actionCompose:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnCompose];
-    
     self.tableView.tableHeaderView.backgroundColor = [UIColor colorWithRed:0.27f green:0.29f blue:0.31f alpha:1.00f];
-    
-    [self fechaLabel:@"Fases"];
+    [self fechaLabel:NSLocalizedString(@"Grupos",nil) withLabel:(UILabel *)[self.tableView.tableHeaderView viewWithTag:1]];
     
     UIButton *btnFilter = (UIButton *)[self.tableView.tableHeaderView viewWithTag:2];
     UIButton *btnFilter2 = (UIButton *)[self.tableView.tableHeaderView viewWithTag:3];
     [self tipeadorBotones:btnFilter];
     [self tipeadorBotones:btnFilter2];
+    /*Formato header*/
+    self.lblTitlePuntos.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:15];
+    self.lblTitlePuntos.textColor = [UIColor whiteColor];
     
+    [self formateadorLabel:self.lblPJ];
+    [self formateadorLabel:self.lblG];
+    [self formateadorLabel:self.lblE];
+    [self formateadorLabel:self.lblP];
+    [self formateadorLabel:self.lblGF];
+    [self formateadorLabel:self.lblGC];
+    [self formateadorLabel:self.lblPts];
+    
+    self.tableView.tableHeaderView = self.headerView;
 }
 
--(void) fechaLabel:(NSString *) titulo{
+-(void)formateadorLabel:(UILabel*)label{
+    label.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:11];
+    label.textColor = [UIColor whiteColor];
+}
+
+-(void) fechaLabel:(NSString *) titulo withLabel:(UILabel*)label{
     
     NSString *filterTitle = [NSString stringWithFormat:@"%@", titulo];
-    UILabel *labelFilter = (UILabel *)[self.tableView.tableHeaderView viewWithTag:1];
-    
-    const CGFloat fontSize = 14;
+    const CGFloat fontSize = 18;
     
     UIFont *boldFont = [UIFont fontWithName:@"ProximaNova-Semibold" size:fontSize];
     UIFont *regularFont = [UIFont fontWithName:@"ProximaNova-Regular" size:fontSize];
@@ -107,7 +104,7 @@
                                            attributes:attrs];
     [attributedText setAttributes:subAttrs range:range];
     
-    [labelFilter setAttributedText:attributedText];
+    [label setAttributedText:attributedText];
 
 }
 
@@ -121,7 +118,6 @@
 	[super viewWillAppear:animated];
     
     self.partidos = _partidos;
-    self.apuestas = _apuestas;
     [self.tableView reloadData];
 }
 
@@ -140,25 +136,86 @@
     [[AppDelegate sharedDelegate] togglePaperFold:sender];
 }
 
-- (void)actionCompose:(id)sender {
-    [self performSegueWithIdentifier:@"showDetail" sender:self];
-}
-
 
 #pragma mark - UITableView datasource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return [self.partidos count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.partidos) {
-        return self.partidos.count;
-    }
-    else if (self.apuestas){
-        return self.apuestas.count;
-    }
-    return 0;
+    NSInteger* rows = [self.partidos[section][@"partidos"] count];
+    return rows;
+}
+
+//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+//{
+//    return [self.partidos[section] valueForKeyPath:@"equipo"];
+//}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 80)];
+    header.backgroundColor = [GraphicUtils colorFromRGBHexString:@"#bdc3c7"];
+    /*Lable nombre equipo*/
+    UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, 5, 200, 30)];
+    textLabel.text = NSLocalizedString([self.partidos[section] valueForKey:@"equipo"], nil);
+    textLabel.backgroundColor = [UIColor grayColor];
+    textLabel.textColor = [GraphicUtils colorMidnightBlue];
+    textLabel.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:15];
+    textLabel.backgroundColor = [UIColor clearColor];
+    textLabel.lineBreakMode = 2;
+    /*Lable para los puntos*/
+    UILabel *textPoints = [self copyLabel:self.lblTitlePuntos withYPosition:30];
+    UILabel * textPJ = [self copyLabel:self.lblPJ withYPosition:50];
+    UILabel * textG = [self copyLabel:self.lblG withYPosition:50];
+    UILabel * textE = [self copyLabel:self.lblE withYPosition:50];
+    UILabel * textP = [self copyLabel:self.lblP withYPosition:50];
+    UILabel * textGF = [self copyLabel:self.lblGF withYPosition:50];
+    UILabel * textGC = [self copyLabel:self.lblGC withYPosition:50];
+    UILabel * textPts = [self copyLabel:self.lblPts withYPosition:50];
+    textPJ.text = [[self.partidos[section] valueForKey:@"partidosJugados"] stringValue];
+    textG.text = [[self.partidos[section] valueForKey:@"partidosGanados"] stringValue];
+    textE.text = [[self.partidos[section] valueForKey:@"partidosEmpatados"] stringValue];
+    textP.text = [[self.partidos[section] valueForKey:@"partidosPerdidos"] stringValue];
+    textGF.text = [[self.partidos[section] valueForKey:@"golesFavor"] stringValue];
+    textGC.text = [[self.partidos[section] valueForKey:@"golesContra"] stringValue];
+    textPts.text = [[self.partidos[section] valueForKey:@"puntos"] stringValue];
+
+    textLabel.text = NSLocalizedString([self.partidos[section] valueForKey:@"equipo"], nil);
+    textLabel.backgroundColor = [UIColor grayColor];
+    textLabel.textColor = [GraphicUtils colorMidnightBlue];
+    textLabel.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:17];
+    textLabel.backgroundColor = [UIColor clearColor];
+    
+    UIImageView* image = [[UIImageView alloc] initWithFrame:CGRectMake(25, 35, 40, 40)];
+    image.image = [UIImage imageNamed:[self.partidos[section] valueForKey:@"equipo"]];
+    [header addSubview:image];
+    [header addSubview:textLabel];
+    [header addSubview:textPoints];
+    [header addSubview:textPJ];
+    [header addSubview:textG];
+    [header addSubview:textE];
+    [header addSubview:textP];
+    [header addSubview:textGF];
+    [header addSubview:textGC];
+    [header addSubview:textPts];
+    
+    return header;
+}
+
+-(UILabel*) copyLabel: (UILabel*) label withYPosition:(float) positionInY{
+    UILabel* labelReturn = [[UILabel alloc] initWithFrame:CGRectMake(label.frame.origin.x, positionInY, label.frame.size.width, label.frame.size.height)];
+    labelReturn.text = label.text;
+    labelReturn.textColor = label.textColor;
+    labelReturn.font = label.font;
+    labelReturn.textAlignment = label.textAlignment;
+    return labelReturn;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 80;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -166,114 +223,20 @@
     PartidoCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (self.partidos) {
-        NSDictionary *partido = self.partidos[indexPath.row];
+        NSDictionary *partido = self.partidos[indexPath.section][@"partidos"][indexPath.row];
         cell.partido = partido;
-        cell.delegate       = self;
-        cell.backView.frame = CGRectMake(0, 0, 190, [self tableView:_tableView heightForRowAtIndexPath:nil]);
-        cell.backView.backgroundColor = [UIColor colorWithRed:0.91f green:0.38f blue:0.39f alpha:1.00f];
-        cell.direction = ZKRevealingTableViewCellDirectionRight;
     }
-    else if(self.apuestas){
-        
-        NSDictionary *apuesta = self.apuestas[indexPath.row];
-        NSLog(@"Listando Celda %d", indexPath.row);
-        NSLog(@"idApuesta%@", [apuesta valueForKey:@"idApuesta"]);
-        
-        NSMutableDictionary *partido = [[NSMutableDictionary alloc] initWithDictionary:[apuesta valueForKey:@"partido"]];
-        if (![[apuesta valueForKey:@"golesLocal"] isKindOfClass : [NSNull class]]) {
-            [partido setValue:[apuesta valueForKey:@"golesLocal"] forKey:@"golesLocal"];
-        }
-        if (![[apuesta valueForKey:@"golesVisitante"] isKindOfClass : [NSNull class]]) {
-            [partido setValue:[apuesta valueForKey:@"golesVisitante"] forKey:@"golesVisitante"];
-        }
-        cell.partido = partido;
-        cell.delegate = self;
-        cell.backView.frame = CGRectMake(0, 0, 190, [self tableView:_tableView heightForRowAtIndexPath:nil]);
-        cell.backView.backgroundColor = [UIColor colorWithRed:0.91f green:0.38f blue:0.39f alpha:1.00f];
-        cell.direction = ZKRevealingTableViewCellDirectionRight;
-
-    }
-    
-    for(UIView *cellItem in cell.backView.subviews) {
-        [cellItem removeFromSuperview];
-    }
-    
-    UIButton *btnManage = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnManage.frame = CGRectMake(10, 20, 36, 37);
-    btnManage.contentMode = UIViewContentModeCenter;
-    [btnManage setImage:[UIImage imageNamed:@"email_actions_reply"]
-               forState:UIControlStateNormal];
-    [cell.backView addSubview:btnManage];
-    
-    UIButton *btnMess = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnMess.frame = CGRectMake(55, 20, 39, 37);
-    btnMess.contentMode = UIViewContentModeCenter;
-    [btnMess setImage:[UIImage imageNamed:@"email_actions_forward"]
-             forState:UIControlStateNormal];
-    [cell.backView addSubview:btnMess];
-    
-    UIButton *btnLeave = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnLeave.frame = CGRectMake(105, 20, 36, 37);
-    btnLeave.contentMode = UIViewContentModeCenter;
-    [btnLeave setImage:[UIImage imageNamed:@"email_actions_move"]
-              forState:UIControlStateNormal];
-    [cell.backView addSubview:btnLeave];
-    
-    UIButton *btnDelete = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnDelete.frame = CGRectMake(140, 15, 56, 47);
-    btnDelete.contentMode = UIViewContentModeCenter;
-    [btnDelete setImage:[UIImage imageNamed:@"email_actions_delete"]
-               forState:UIControlStateNormal];
-    [cell.backView addSubview:btnDelete];
     
     return cell;
+}
+- (BOOL)allowsHeaderViewsToFloat{
+    return NO;
 }
 
 #pragma mark - Table view delegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 90;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    currentIndex = indexPath;
-    if (self.partidos) {
-        [self performSegueWithIdentifier:@"showCompose" sender:self];
-    }
-    else{
-        [self performSegueWithIdentifier:@"showSeleccionApuesta" sender:self];
-    }
-}
-
-#pragma mark - ZKRevealingTableViewCellDelegate
-
-- (BOOL)cellShouldReveal:(ZKRevealingTableViewCell *)cell {
-	return YES;
-}
-
-- (void)cellDidReveal:(PartidoCell *)cell {
-        //NSLog(@"Revealed Cell with name: %@", cell.lblTitle.text);
-	self.currentlyRevealedCell = cell;
-}
-
-- (void)cellDidBeginPan:(ZKRevealingTableViewCell *)cell {
-	if (cell != self.currentlyRevealedCell)
-		self.currentlyRevealedCell = nil;
-}
-
-
-#pragma mark - Segue
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"showCompose"]) {
-        UINavigationController *nav = segue.destinationViewController;
-        DetailFixtureViewController *detailVC = nav.viewControllers[0];
-            //Mensaje por defecto para el envio de la invitación
-        NSDictionary *partido = self.partidos[currentIndex.row];
-        detailVC.partido = partido;
-    }
+    return 70;
 }
 
 

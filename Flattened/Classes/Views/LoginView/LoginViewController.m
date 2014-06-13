@@ -29,16 +29,6 @@
 
 @implementation LoginViewController
 
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -53,6 +43,11 @@
     
     [_txtCorreo setDelegate:self];
     [self agregarEspacioInterno:_txtCorreo];
+    self.lblYouDont.text = NSLocalizedString(@"You don't have a Facebook account?", nil);
+    [self.btnAccessWithAccount setTitle:NSLocalizedString(@"You can access here!", nil) forState:UIControlStateNormal];
+    [self.btnAceptar setTitle:NSLocalizedString(@"ACCEPT", nil) forState:UIControlStateNormal];
+    [self.btnVolver setTitle:NSLocalizedString(@"RETURN", nil) forState:UIControlStateNormal];
+    self.txtCorreo.placeholder = NSLocalizedString(@"E-Mail",nil);
     self.toolbarView.hidden=YES;
 
 }
@@ -137,19 +132,19 @@
     return YES;
 }
 #pragma mark Facebook delegates
-- (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
-        //[self performSegueWithIdentifier: @"StartWithFacebook" sender: self];
-        //[NSUserDefaults standardUserDefaults] valueForKey:@"LoggedUser"];
-    if (FBSession.activeSession.isOpen) {
-        [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
-            if (!error) {
-                NSString* username = user.name;
-                NSString* email = [user objectForKey:@"email"];
-                NSLog(@"nombre y correo: %@, %@", username, email);
-            }
-        }];
-    }
-}
+//- (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
+//        //[self performSegueWithIdentifier: @"StartWithFacebook" sender: self];
+//        //[NSUserDefaults standardUserDefaults] valueForKey:@"LoggedUser"];
+//    if (FBSession.activeSession.isOpen) {
+//        [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+//            if (!error) {
+//                NSString* username = user.name;
+//                NSString* email = [user objectForKey:@"email"];
+//                NSLog(@"nombre y correo: %@, %@", username, email);
+//            }
+//        }];
+//    }
+//}
 
     // This method will be called when the user information has been fetched
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView
@@ -157,34 +152,34 @@
     if (FBSession.activeSession.isOpen) {
         
         
-        if (![[NSUserDefaults standardUserDefaults] valueForKey:@"USUARIO-PENCA"]) {
-            NSString *randomKey = [RandomManager getRandomAphanumeric:10];
-            Usuario* usuario= [Usuario new];
-            [usuario setNombreCompleto:user.name];
-            [usuario setNombre:user.first_name];
-            [usuario setApellido:user.last_name];
-            
-            [usuario setMasculino:[user objectForKey:@"gender"]];
-            [usuario setFaceID:user.id];
-            NSString *token =  [[[FBSession activeSession] accessTokenData] accessToken];
-            [usuario setPassword:randomKey];
-            [usuario setRePassword:randomKey];
-            [usuario setApnsDeviceToken:[[NSUserDefaults standardUserDefaults] valueForKey:@"DEVICE-TOKEN" ]];
-            [usuario setLastDevAppleModelUsed:[Utils machineName]];
-            [usuario setLastDevApple:[Utils isVersion6AndBelow]?@"IOS6orLess":@"IOS7.X"];
-            [usuario setFacebookToken:token];
-            [usuario setCuentaFacebook:YES];
-            NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
-            [usuario setLocale:language];
-            
-            _usuarioFacebook = usuario;
-            if ([user objectForKey:@"email"]) {
-                [usuario setEmail:[user objectForKey:@"email"]];
-                [self shootLoginFacebook:usuario];
-            }
-            else{
-                [self pedirCorreo];
-            }
+        if (![[NSUserDefaults standardUserDefaults] valueForKey:@"USUARIO-PENCA"] ) {
+                NSString *randomKey = [RandomManager getRandomAphanumeric:10];
+                Usuario* usuario= [Usuario new];
+                [usuario setNombreCompleto:user.name];
+                [usuario setNombre:user.first_name];
+                [usuario setApellido:user.last_name];
+                
+                [usuario setMasculino:[user objectForKey:@"gender"]];
+                [usuario setFaceID:user.objectID];
+                NSString *token =  [[[FBSession activeSession] accessTokenData] accessToken];
+                [usuario setPassword:randomKey];
+                [usuario setRePassword:randomKey];
+                [usuario setApnsDeviceToken:[[NSUserDefaults standardUserDefaults] valueForKey:@"DEVICE-TOKEN" ]];
+                [usuario setLastDevAppleModelUsed:[Utils machineName]];
+                [usuario setLastDevApple:[Utils isVersion6AndBelow]?@"IOS6orLess":@"IOS7.X"];
+                [usuario setFacebookToken:token];
+                [usuario setCuentaFacebook:YES];
+                NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+                [usuario setLocale:language];
+                
+                _usuarioFacebook = usuario;
+                if ([user objectForKey:@"email"]) {
+                    [usuario setEmail:[user objectForKey:@"email"]];
+                    [self shootLoginFacebook:usuario];
+                }
+                else{
+                    [self pedirCorreo];
+                }
         }
         else{
             [self performSegueWithIdentifier: @"StartWithFacebook" sender:self];
@@ -262,7 +257,6 @@
     [self performSegueWithIdentifier: @"StartWithFacebook" sender: self];
 }
 
-#warning Revisar esto que no lo probe.
 -(BOOL) textFieldShouldReturn:(UITextField *)textField{
     BOOL valid = [Validator validateEmail:_txtCorreo.text];
     if (valid) {
@@ -271,7 +265,7 @@
     }
     else{
         
-        [self showAlert:@"Correo Invalido!" andMessage:@"Debe de ingresar un correo en un formato valido."];
+        [self showAlert:NSLocalizedString(@"Email not valid!",nil) andMessage:NSLocalizedString(@"Please insert a valid email.",nil)];
     }
     return YES;
 }
@@ -284,7 +278,7 @@
     }
     else{
         
-        [self showAlert:@"Correo Invalido!" andMessage:@"Debe de ingresar un correo en un formato valido."];
+        [self showAlert:NSLocalizedString(@"Email not valid!",nil) andMessage:NSLocalizedString(@"Please insert email valid.",nil)];
     }
 }
 
@@ -293,6 +287,7 @@
     [FBSession.activeSession closeAndClearTokenInformation];
     [self volver];
 }
+
 
 #pragma mark Configuracion de Segues
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender

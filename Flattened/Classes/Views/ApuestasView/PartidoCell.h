@@ -7,24 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZKRevealingTableViewCell.h"
 
-
-@protocol PartidoCellDelegate;
-
-@interface PartidoCell : ZKRevealingTableViewCell
+@interface PartidoCell : UITableViewCell
 
 @property (strong, nonatomic) NSDictionary *data;
 @property (strong, nonatomic) NSDictionary *partido;
 @property (strong, nonatomic) IBOutlet UIImageView *imageVBkg;
 
 @property (strong, nonatomic) IBOutlet UIImageView *imageVisitante;
-@property (strong, nonatomic) IBOutlet UILabel *lblResultadoVisitante;
 @property (strong, nonatomic) IBOutlet UIImageView *imageLocatario;
-@property (strong, nonatomic) IBOutlet UILabel *lblResultadoLocatario;
 
-@property (strong, nonatomic) IBOutlet UILabel *lblNombreLocatario;
-@property (strong, nonatomic) IBOutlet UILabel *lblNombreVisitante;
 @property (strong, nonatomic) IBOutlet UILabel *lblFechaPartido;
+@property (strong, nonatomic) IBOutlet UILabel *lblHoraPartido;
+
+@property (strong, nonatomic) IBOutlet UILabel *lblLocatario;
+@property (strong, nonatomic) IBOutlet UILabel *lblVisitante;
 
 @end

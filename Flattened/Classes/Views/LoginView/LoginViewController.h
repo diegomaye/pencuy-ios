@@ -13,7 +13,7 @@
 #import "Enums.h"
 
 @interface LoginViewController : MasterLoginViewController<FBLoginViewDelegate>
-@property (unsafe_unretained, nonatomic) IBOutlet FBLoginView *FBLoginView;
+@property (strong, nonatomic) IBOutlet FBLoginView *FBLoginView;
 @property (weak, nonatomic) IBOutlet UIButton *btnVolver;
 @property (weak, nonatomic) IBOutlet UIButton *btnAceptar;
 @property (weak, nonatomic) IBOutlet UITextField *txtCorreo;

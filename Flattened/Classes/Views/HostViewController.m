@@ -11,7 +11,10 @@
 #import "ApuestasDataLoaderTableViewController.h"
 #import "ApuestasCerradasDLTVController.h"
 #import "InvitacionesPencaDLTVController.h"
+#import "UsuariosDLTVController.h"
 #import "DateUtility.h"
+#import "GraphicUtils.h"
+#import "THContactPickerViewController.h"
 
 @interface HostViewController () <ViewPagerDataSource, ViewPagerDelegate>
 
@@ -31,7 +34,7 @@
     self.dataSource = self;
     self.delegate = self;
     
-    self.title = @"ACTUALIZAR PENCA";
+    self.title = NSLocalizedString(@"UPDATE BET",nil);
     
     // Keeps tab bar below navigation bar on iOS 7.0+
 //    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
@@ -42,22 +45,41 @@
     [btnBack setImage:[UIImage imageNamed:@"backButton"] forState:UIControlStateNormal];
     [btnBack addTarget:self action:@selector(actionBack:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnBack];
+    if ([self.infoPenca[@"puedeInvitar"] integerValue]==1) {
+        UIButton *btnCompose = [UIButton buttonWithType:UIButtonTypeCustom];
+        btnCompose.frame = CGRectMake(0, 0, 40, 30);
+        [btnCompose setImage:[UIImage imageNamed:@"navigation-btn-send"] forState:UIControlStateNormal];
+        [btnCompose addTarget:self action:@selector(actionCompose:) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnCompose];
+    }
     
-    UIButton *btnCompose = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnCompose.frame = CGRectMake(0, 0, 40, 30);
-    [btnCompose setImage:[UIImage imageNamed:@"navigation-btn-settings"] forState:UIControlStateNormal];
-    [btnCompose addTarget:self action:@selector(actionCompose:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btnCompose];
     
-//    self.navigationItem.rightBarButtonItem = ({
-//        
-//        UIBarButtonItem *button;
-//        button = [[UIBarButtonItem alloc] initWithTitle:@"Invitados" style:UIBarButtonItemStylePlain target:self action:@selector(selectTabWithNumberFive)];
-//        
-//        button;
-//    });
+
+    self.lblNombrePenca.text = self.infoPenca[@"nombre"];
+    self.lblDescripcionPenca.text = self.infoPenca[@"descripcion"];
+    self.lblPendientes.text = [NSString stringWithFormat:@"%@:%@",NSLocalizedString(@"PENDINGS", nil), [self.infoPenca[@"cantPPend"]stringValue]];
+    self.lblFinalizados.text = [NSString stringWithFormat:@"%@:%@",NSLocalizedString(@"ENDED", nil), [self.infoPenca[@"cantPFina"]stringValue]];
+    self.lblParticipantes.text = [NSString stringWithFormat:@"%@:%@",NSLocalizedString(@"PARTICIPANTS", nil), [self.infoPenca[@"cantUsuarios"]stringValue]];
+    
+    [self formatTitleLabel:self.lblNombrePenca withColor:[UIColor whiteColor] andFontSize:16];
+    [self formatTitleLabel:self.lblDescripcionPenca withColor:[UIColor whiteColor] andFontSize:14];
+    
+    [self formatLabel:self.lblPendientes withColor:[GraphicUtils colorOrange]];
+    [self formatLabel:self.lblFinalizados withColor:[GraphicUtils colorPumpkin]];
+    [self formatLabel:self.lblParticipantes withColor:[GraphicUtils colorDefault]];
+    
     [self performSelector:@selector(loadContent) withObject:nil afterDelay:0];
     
+}
+
+-(void) formatLabel: (UILabel*)label withColor:(UIColor*) color{
+    label.textColor = color;
+    label.font = [UIFont fontWithName:@"ProximaNova-Regular" size:10];
+}
+
+-(void) formatTitleLabel: (UILabel*)label withColor:(UIColor*) color andFontSize:(float)fontSize{
+    label.textColor = color;
+    label.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:fontSize];
 }
 
 - (void)actionCompose:(id)sender {
@@ -71,9 +93,11 @@
 -(void) initTabList{
     self.tabList = [NSMutableDictionary new];
     NSString* apuestasViewController= @"PartidosPenca";
+    
     int index = 0;
-    for (;index < [self.fechas count]; index++) {
-        NSDictionary* fecha= self.fechas[index];
+    [self.tabList setObject:[[TabInfo alloc ] initWithTabName:NSLocalizedString(@"Ranking",nil) andViewController:@"UsuariosView"] forKey:[NSNumber numberWithInt:index++]];
+    for (;index < [self.fechas count] + 1; index++) {
+        NSDictionary* fecha= self.fechas[index-1];
         NSDate *fechaFin = [DateUtility deserializeJsonDateString:[[fecha valueForKey:@"fechaFinalizacion"] stringValue] ];
         NSDate *fechaInicio = [DateUtility deserializeJsonDateString:[[fecha valueForKey:@"fechaInicio"] stringValue]];
         TabApuestaInfo* tabApuesta = [[TabApuestaInfo alloc] initWithTabApuestaId:[fecha valueForKey:@"idFechaCampeonato"]
@@ -84,9 +108,9 @@
         
         [self.tabList setObject:tabApuesta forKey:[NSNumber numberWithInt:index]];
     }
-    [self.tabList setObject:[[TabInfo alloc ] initWithTabName:@"Closed Matchs" andViewController:@"PartidosCerradosPenca"] forKey:[NSNumber numberWithInt:index++]];
-    [self.tabList setObject:[[TabInfo alloc ] initWithTabName:@"Invitations" andViewController:@"InvitationsPencaView"] forKey:[NSNumber numberWithInt:index++]];
-    [self.tabList setObject:[[TabInfo alloc ] initWithTabName:@"Users" andViewController:@"UsuariosView"] forKey:[NSNumber numberWithInt:index++]];
+    
+    [self.tabList setObject:[[TabInfo alloc ] initWithTabName:NSLocalizedString(@"Invitations",nil) andViewController:@"InvitationsPencaView"] forKey:[NSNumber numberWithInt:index++]];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -136,11 +160,12 @@
     
     UILabel *label = [UILabel new];
     label.backgroundColor = [UIColor clearColor];
-    label.font = [UIFont systemFontOfSize:12.0];
+    label.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:14];
     NSString* tabName = [self getTabByIndex:index].tabName;
-    label.text = [NSString stringWithFormat:tabName, (unsigned long)index];
+    NSString* translated = NSLocalizedString(tabName, nil);
+    label.text = [NSString stringWithFormat:translated, (unsigned long)index];
     label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [UIColor blackColor];
+    label.textColor = [UIColor whiteColor];
     [label sizeToFit];
     
     return label;
@@ -162,6 +187,10 @@
     else if ([cvc isKindOfClass:[InvitacionesPencaDLTVController class]]) {
         InvitacionesPencaDLTVController* invitaciones = ((InvitacionesPencaDLTVController*)cvc);
         invitaciones.idPenca = self.idPenca;
+    }
+    else if ([cvc isKindOfClass:[UsuariosDLTVController class]]) {
+        UsuariosDLTVController* usuarios = ((UsuariosDLTVController*)cvc);
+        usuarios.idPenca = self.idPenca;
     }
     
     return cvc;
@@ -202,11 +231,11 @@
     
     switch (component) {
         case ViewPagerIndicator:
-            return [[UIColor redColor] colorWithAlphaComponent:0.64];
+            return [UIColor whiteColor];
         case ViewPagerTabsView:
-            return [[UIColor lightGrayColor] colorWithAlphaComponent:0.32];
+            return [GraphicUtils colorDefault];
         case ViewPagerContent:
-            return [[UIColor darkGrayColor] colorWithAlphaComponent:0.32];
+            return [GraphicUtils colorDefault];;
         default:
             return color;
     }
@@ -216,17 +245,10 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showCompose"]) {
-            //UINavigationController *nav = segue.destinationViewController;
-            //DetailViewController *detailVC = nav.viewControllers[0];
-            //
-//        detailVC.item = @{@"recipients": @[@"Christian Bale", @"Tom Cruise", @"Morgan Freeman"],
-//                          @"subject": @"Lorem ipsum dolor sit amet",
-//                          @"body": @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis.\n\n"
-//                          
-//                          "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.\n\n"
-//                          
-//                          "Nemo enim ipsam voluptatem quia"};
-//        detailVC.editable = YES;
+            UINavigationController *nav = segue.destinationViewController;
+            THContactPickerViewController *detailVC = nav.viewControllers[0];
+            //Mensaje por defecto para el envio de la invitación
+            detailVC.idPenca = self.idPenca;
     }
 }
 

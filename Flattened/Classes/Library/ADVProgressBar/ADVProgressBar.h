@@ -32,9 +32,7 @@
 
 @interface ADVProgressBar : UIView {
 @private
-    
-    UIView* percentView;    
-    
+        
     UIImageView *bgImageView;
     
     UIImageView *progressImageView;

@@ -41,21 +41,44 @@
 #pragma mark Api Privada para pencas
 + (NSURL *)URLtoQueryPencasActivas;
 + (NSURL *)URLtoQueryPencas;
++ (NSURL *)URLtoQueryUsuariosPenca:(NSString *)idPenca;
 
 #pragma mark Api Privada para invitaciones
 + (NSURL *)URLtoQueryInvitacionesByIdPenca:(NSString *) idPenca;
 + (NSURL *)URLtoQueryInvitaciones;
++ (NSURL *)URLtoCreateInvitacion;
++ (NSURL *)URLtoAceptRevocarInvitacion:(NSString *)idInvitacion withBooleanSting:(NSString *) trueFalse;
+
+#pragma mark Api Privada para equipos
++ (NSURL *)URLtoQueryEquipos;
 
 #pragma mark Api Privada para alertas
 + (NSURL *)URLtoQueryAlertas;
+
+#pragma mark Api Privada para suggest de usuarios
++ (NSURL *)URLtoQuerySystemUsers:(NSString*)idPenca withSuggest:(NSString*) suggest;
+
+#pragma mark Api Privada para usuarios
++ (NSURL *)URLtoQueryProfile;
+
+#pragma mark Api privada consulta resumen grupos
++ (NSURL *)URLtoQueryResumenGrupos:(NSString*) idFechaCampeonato;
+
+#pragma mark Api Privada para estadisticas
++ (NSURL *)URLtoQueryEstadisticas:(NSString *) idEquipo;
 
 #pragma mark Mutli Fetcher para creación dinamica de consultas.
 +(void)multiFetcher:(NSURL *)url
            withHTTP:(NSString *)httpMethod
         withHandler:(void (^)(NSURLResponse *response, NSData *data, NSError *connectionError))callbackBlock;
+
 +(NSDictionary*)multiFetcherSync:(NSURL *)url
                         withHTTP:(NSString *) httpMethod
                         withData:(NSData *)requestData;
+
++(NSArray*)multiFetcherGetArraySync:(NSURL *)url
+                           withHTTP:(NSString *) httpMethod
+                           withData:(NSData *)requestData;
 
 +(NSDictionary*)multiFetcherSyncPublic:(NSURL *)url
                               withHTTP:(NSString *) httpMethod
@@ -64,5 +87,13 @@
                           withPassword:(NSString*) password
                     communicationError:(NSError **) connError
                 jsonSerializationError:(NSError **) jsonError;
+
++(NSDictionary*)multiFetcherSync:(NSURL *)url
+                        withHTTP:(NSString *) httpMethod
+                        withData:(NSData *)requestData
+                    withUserName:(NSString*) userName
+                    withPassword:(NSString*) password
+              communicationError:(NSError **) connError
+          jsonSerializationError:(NSError **) jsonError;
 
 @end
