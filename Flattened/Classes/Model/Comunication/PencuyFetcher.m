@@ -14,8 +14,8 @@
 #define PENCUY_PUBLIC_API @"public/"
 #define PENCUY_API @"api/"
     //#define PENCUY_URL @"http://localhost:8180/Pencuy-web/rest/"
-    #define PENCUY_URL @"http://192.168.0.100:8180/Pencuy-web/rest/"
-    //#define PENCUY_URL @"http://162.243.34.210/Pencuy-web/rest/"
+    //#define PENCUY_URL @"http://192.168.0.100:8180/Pencuy-web/rest/"
+    #define PENCUY_URL @"http://162.243.34.210/Pencuy-web/rest/"
 
 + (NSURL *)URLForQuery:(NSString *)query kindOf:(NSString *)kind
 {
@@ -216,7 +216,7 @@
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [urlRequest setValue:[NSString stringWithFormat:@"Basic %@",authValue] forHTTPHeaderField:@"Authorization"];
     if (requestData) {
-        [urlRequest setValue:[NSString stringWithFormat:@"%lu", [requestData length]] forHTTPHeaderField:@"Content-Length"];
+        [urlRequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
         [urlRequest setHTTPBody: requestData];
     }
     NSData *jsonResults= [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
@@ -249,7 +249,7 @@
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [urlRequest setValue:[NSString stringWithFormat:@"Basic %@",authValue] forHTTPHeaderField:@"Authorization"];
     if (requestData) {
-        [urlRequest setValue:[NSString stringWithFormat:@"%lu", [requestData length]] forHTTPHeaderField:@"Content-Length"];
+        [urlRequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
         [urlRequest setHTTPBody: requestData];
     }
     NSData *jsonResults= [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
@@ -278,7 +278,7 @@
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         //[urlRequest setValue:[NSString stringWithFormat:@"Basic %@",authValue] forHTTPHeaderField:@"Authorization"];
-    [urlRequest setValue:[NSString stringWithFormat:@"%lu", [requestData length]] forHTTPHeaderField:@"Content-Length"];
+    [urlRequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
     [urlRequest setHTTPBody: requestData];
     NSData *jsonResults= [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:connError];
     return [NSJSONSerialization JSONObjectWithData:jsonResults options:0 error:jsonError];

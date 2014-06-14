@@ -8,7 +8,7 @@
 #import "AppDelegate.h"
 #import "ADVTheme.h"
 #import "PaperFoldNavigationController.h"
-
+#import "PencuyFetcher.h"
 static AppDelegate *sharedDelegate;
 static Usuario *usuario;
 
@@ -377,7 +377,48 @@ static Usuario *usuario;
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [FBAppEvents activateApp];
-    
+    Usuario* usuario = [AppDelegate getUsuario];
+    NSError* errorComunicacion;
+    NSError* errorSerializacion;
+    NSDictionary* retorno = [PencuyFetcher multiFetcherSync:[PencuyFetcher URLtoQueryProfile] withHTTP:@"GET" withData:nil withUserName:usuario.email withPassword:usuario.password communicationError:&errorComunicacion jsonSerializationError:&errorSerializacion];
+    if(errorComunicacion.code == -1012 && usuario.faceID){
+        //SI TENGO UN ERROR DE AUTENTICACIÓN ENTONCES MANDO EL USUARIO DE FACEBOOK DE NUEVO... VEMAMOS QUE PASA
+        
+        NSLog(@"###############################################################");
+        NSLog(@"ENTRO ACA CARAJOOOOO!!!!!!!!!!!!!!!");
+        NSLog(@"###############################################################");
+        
+        NSUserDefaults * userDefaults =[NSUserDefaults standardUserDefaults];
+        
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[usuario toDictionary]
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&error];
+        NSData *myEncodedObject = [NSKeyedArchiver archivedDataWithRootObject:[usuario toDictionary]];
+        
+        //NSDictionary * val = [NSDictionary new];//[usuario toDictionary];
+        
+        [userDefaults setObject:myEncodedObject forKey:@"USUARIO-PENCA"];
+        [userDefaults synchronize];
+        NSError *conError = nil;
+        NSError *jsonError = nil;
+        NSLog(@"valores: %@", jsonData);
+        [PencuyFetcher multiFetcherSyncPublic:[PencuyFetcher URLtoCreateFaceUser]
+                                     withHTTP:@"POST"
+                                     withData:jsonData
+                                 withUserName:usuario.email
+                                 withPassword:usuario.password
+                           communicationError:&conError
+                       jsonSerializationError:&jsonError];
+        NSLog(@"Connection error: %@", conError);
+        NSLog(@"JsonError : %@", jsonData);
+    }
+        
+    NSLog(@"###############################################################");
+    NSLog(@"La aplicacion se activo, en el retorno tenemos: %@", retorno);
+    NSLog(@"La aplicacion se activo, en el errorComunicacion tenemos: %@", errorComunicacion);
+    NSLog(@"La aplicacion se activo, en el errorSerializacion tenemos: %@", errorSerializacion);
+    NSLog(@"###############################################################");
         // Facebook SDK * login flow *
         // We need to properly handle activation of the application with regards to SSO
         //  (e.g., returning from iOS 6.0 authorization dialog or from fast app switching).
