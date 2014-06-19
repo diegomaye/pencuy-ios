@@ -104,6 +104,11 @@
         NSLog(@"Listando Celda %lu", (long)indexPath.row);
         NSLog(@"idApuesta%@", [apuesta valueForKey:@"idApuesta"]);
         cell.apuesta = apuesta;
+        if ([[apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"BLOQUEADO"]||
+            [[apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"INICIADO"]||
+            [[apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"FINALIZADO"]) {
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
         return cell;
     }
     else{
@@ -114,7 +119,7 @@
 #pragma mark - Table view delegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 85;
+    return 105;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -123,6 +128,19 @@
     NSDictionary *apuesta = [[NSMutableDictionary alloc] initWithDictionary:[self.apuestas objectAtIndex:currentIndex.row]];
     if ([[apuesta valueForKey:@"tipo"] isEqualToString:@"A_DEFINIR"]) {
         SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:NSLocalizedString(@"Sorry!", nil) andMessage:NSLocalizedString(@"First complete the matchs in the group stage", nil)];
+        
+        [alertView addButtonWithTitle:@"Ok"
+                                 type:SIAlertViewButtonTypeDestructive
+                              handler:^(SIAlertView *alert) {
+                              }];
+        
+        alertView.transitionStyle = SIAlertViewTransitionStyleBounce;
+        [alertView show];
+    }
+    else if ([[apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"BLOQUEADO"]||
+             [[apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"INICIADO"]||
+             [[apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"FINALIZADO"]) {
+        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:NSLocalizedString(@"Sorry!", nil) andMessage:NSLocalizedString(@"You cannot modify the score at the moment, because the status..", nil)];
         
         [alertView addButtonWithTitle:@"Ok"
                                  type:SIAlertViewButtonTypeDestructive

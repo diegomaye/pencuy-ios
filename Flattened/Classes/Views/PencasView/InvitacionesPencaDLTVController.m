@@ -18,6 +18,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     [self fetchInvitaciones:self.idPenca];
 }
 

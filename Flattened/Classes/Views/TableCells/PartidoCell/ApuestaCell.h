@@ -19,6 +19,11 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblResultadoVisitante;
 @property (strong, nonatomic) IBOutlet UIImageView *imageLocatario;
 @property (strong, nonatomic) IBOutlet UILabel *lblResultadoLocatario;
+@property (strong, nonatomic) IBOutlet UILabel *lblSeparadorResultado;
+
+@property (strong, nonatomic) IBOutlet UILabel *lblPuntosGanados;
+@property (strong, nonatomic) IBOutlet UILabel *lblResultadoApostado;
+@property (strong, nonatomic) IBOutlet UILabel *lblYourBet;
 
 @property (strong, nonatomic) IBOutlet UIImageView *imgEstado;
 @property (strong, nonatomic) IBOutlet UIImageView *imgResultado;

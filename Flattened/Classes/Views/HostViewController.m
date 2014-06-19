@@ -95,7 +95,9 @@
     NSString* apuestasViewController= @"PartidosPenca";
     
     int index = 0;
-    [self.tabList setObject:[[TabInfo alloc ] initWithTabName:NSLocalizedString(@"Ranking",nil) andViewController:@"UsuariosView"] forKey:[NSNumber numberWithInt:index++]];
+    TabInfo* tabUsuarios = [[TabInfo alloc ] initWithTabName:NSLocalizedString(@"Ranking",nil) andViewController:@"UsuariosView"];
+    [self.tabList setObject:tabUsuarios forKey:[NSNumber numberWithInt:index++]];
+    //[self initTab:tabUsuarios];
     for (;index < [self.fechas count] + 1; index++) {
         NSDictionary* fecha= self.fechas[index-1];
         NSDate *fechaFin = [DateUtility deserializeJsonDateString:[[fecha valueForKey:@"fechaFinalizacion"] stringValue] ];
@@ -107,10 +109,33 @@
                                                                 andControllerName:apuestasViewController];
         
         [self.tabList setObject:tabApuesta forKey:[NSNumber numberWithInt:index]];
+        //[self initTab:tabApuesta];
     }
-    
-    [self.tabList setObject:[[TabInfo alloc ] initWithTabName:NSLocalizedString(@"Invitations",nil) andViewController:@"InvitationsPencaView"] forKey:[NSNumber numberWithInt:index++]];
-    
+    TabInfo* tabInfoInvitaciones= [[TabInfo alloc ] initWithTabName:NSLocalizedString(@"Invitations",nil) andViewController:@"InvitationsPencaView"];
+    [self.tabList setObject:tabInfoInvitaciones forKey:[NSNumber numberWithInt:index++]];
+    //[self initTab:tabInfoInvitaciones];
+}
+
+-(void) initTab:(TabInfo*)tabInfo{
+    UIViewController *cvc = [self.storyboard instantiateViewControllerWithIdentifier:tabInfo.viewControllerName];
+    if ([tabInfo isKindOfClass:TabApuestaInfo.class] && [cvc isKindOfClass:[ApuestasDataLoaderTableViewController class]]) {
+        ApuestasDataLoaderTableViewController* apuesta = ((ApuestasDataLoaderTableViewController*)cvc);
+        TabApuestaInfo* tabApuestaInfo = ((TabApuestaInfo*)tabInfo);
+        apuesta.idPenca = self.idPenca;
+        apuesta.idFecha = tabApuestaInfo.idFechaCampeonato;
+        [apuesta fetchApuestas:apuesta.idPenca andFecha:[apuesta.idFecha stringValue]];
+    }
+    else if ([cvc isKindOfClass:[InvitacionesPencaDLTVController class]]) {
+        InvitacionesPencaDLTVController* invitaciones = ((InvitacionesPencaDLTVController*)cvc);
+        invitaciones.idPenca = self.idPenca;
+        [invitaciones fetchInvitaciones:self.idPenca];
+    }
+    else if ([cvc isKindOfClass:[UsuariosDLTVController class]]) {
+        UsuariosDLTVController* usuarios = ((UsuariosDLTVController*)cvc);
+        usuarios.idPenca = self.idPenca;
+        [usuarios fetchPencas:self.idPenca];
+        [usuarios.tableView reloadData];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {

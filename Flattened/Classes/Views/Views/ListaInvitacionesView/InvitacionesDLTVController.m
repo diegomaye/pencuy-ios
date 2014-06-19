@@ -16,6 +16,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (self) {
+        [self setProgressBar];
+    }
     [self fetchInvitaciones];
 }
 

@@ -14,4 +14,6 @@
 - (void) setComplete;
 - (void) setCompleteError;
 - (void) setCompleteErrorSorry;
+- (void) setProgressBar;
+
 @end

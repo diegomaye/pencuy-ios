@@ -54,10 +54,10 @@
     self.imageLocatario.image = [UIImage imageNamed:_partido[@"local"]];
     self.imageVisitante.image = [UIImage imageNamed:_partido[@"visitante"]];
     
-    self.lblLocatario.text = _partido[@"local"];
+    self.lblLocatario.text = NSLocalizedString(_partido[@"local"],nil);
     self.lblLocatario.textColor = [GraphicUtils colorMidnightBlue];
     self.lblLocatario.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:9];
-    self.lblVisitante.text = _partido[@"visitante"];
+    self.lblVisitante.text = NSLocalizedString(_partido[@"visitante"],nil);
     self.lblVisitante.textColor = [GraphicUtils colorMidnightBlue];
     self.lblVisitante.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:9];
 
@@ -85,6 +85,20 @@
     _lblHoraPartido.text = stringFromTime;
     _lblHoraPartido.font = [UIFont fontWithName:@"ProximaNova-Bold" size:15];
     _lblHoraPartido.textColor = [GraphicUtils colorMidnightBlue];
+    
+    /*Resultado*/
+    //golesLocal
+    //golesVisitante
+    if([_partido[@"estado"] isEqualToString:@"FINALIZADO"]){
+        NSString* goles= [NSString stringWithFormat:@"%@  :  %@", [_partido[@"golesLocal"] stringValue], [_partido[@"golesVisitante"] stringValue]];
+        _lblResultado.text = goles;
+        _lblResultado.font = [UIFont fontWithName:@"ProximaNova-Bold" size:13];
+        _lblResultado.textColor = [GraphicUtils colorMidnightBlue];
+        _lblResultado.hidden=NO;
+    }
+    else{
+        _lblResultado.hidden=YES;
+    }
 }
 
 @end

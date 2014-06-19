@@ -11,5 +11,5 @@
 @interface UsuariosDLTVController : UsuariosTVController
 
 @property(nonatomic,strong) NSString* idPenca;
-
+-(void)fetchPencas:(NSString *) idPenca;
 @end

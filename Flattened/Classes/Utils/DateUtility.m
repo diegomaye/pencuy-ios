@@ -26,8 +26,7 @@
 #pragma mark Deserealizador para campos tipo date en json devuelve objeto NSDate
 +(NSDate *)deserializeJsonDateString: (NSString *)jsonDateString
 {
-    NSInteger offset = [[NSTimeZone defaultTimeZone] secondsFromGMT]; //get number of seconds to add or subtract according to the client default time zone
-    
+    NSInteger offset = [[NSTimeZone timeZoneWithName:@"UTC"] secondsFromGMT]; //get number of seconds to add or subtract according to the client default time zone
     NSTimeInterval unixTime = [[jsonDateString substringWithRange:NSMakeRange(0, 13)] doubleValue] / 1000; //WCF will send 13 digit-long value for the time interval since 1970 (millisecond precision) whereas iOS works with 10 digit-long values (second precision), hence the divide by 1000
     
     return [[NSDate dateWithTimeIntervalSince1970:unixTime] dateByAddingTimeInterval:offset];

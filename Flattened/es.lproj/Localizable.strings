@@ -53,7 +53,7 @@
 /*Usuarios*/
 "Success"="Aciertos";
 /*Fase de Grupos*/
-"Not Started"="No iniciado";
+"Not started"="No iniciado";
 "Started"="Iniciado";
 "Blocked"="Bloqueado";
 "Ended"="Finalizado";
@@ -214,4 +214,18 @@
 
 "A connection error happened apology"="Sucedió un error de conexión, disculpe";
 
+"Group A"="Grupo A";
+"Group B"="Grupo B";
+"Group C"="Grupo C";
+"Group D"="Grupo D";
+"Group E"="Grupo E";
+"Group F"="Grupo F";
+"Group G"="Grupo G";
+"Group H"="Grupo H";
 
+//Apuestas
+"Choose a winner!"="Elija un ganados!";
+"This match determines the pass to the next round, please choose a winner."="Este partido determina el pasaje a la siguiente ronda.";
+"You cannot modify the score at the moment, because the status.."="Usted no puede modificar este partido";
+"Your bet"="Tu apuesta";
+"You win %@ points"="Ganaste %@ puntos";

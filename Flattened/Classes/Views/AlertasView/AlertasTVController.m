@@ -30,7 +30,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    if (self) {
+        [self setProgressBar];
+    }
     if(![Utils isVersion6AndBelow])
         self.navigationController.navigationBar.translucent = NO;
     

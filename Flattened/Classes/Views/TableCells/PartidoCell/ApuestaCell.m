@@ -92,6 +92,9 @@
          visitanteDesc = Chile;
      }
      */
+    self.lblYourBet.text = NSLocalizedString(@"Your bet",nil);
+    
+    NSString* estadoPartido= [_apuesta valueForKey:@"partido"][@"estado"];
     
     if ([[_apuesta valueForKey:@"estado"] isEqualToString:@"PENDIENTE"]) {
         self.imgEstado.backgroundColor = [GraphicUtils colorPumpkin];
@@ -99,19 +102,39 @@
         self.imgResultado.backgroundColor = [GraphicUtils colorPumpkin];
         self.imgResultado.alpha = 0.3f;
     }
-    else if ([[_apuesta valueForKey:@"estado"] isEqualToString:@"INGRESADO"]){
+    else if ([[_apuesta valueForKey:@"estado"] isEqualToString:@"INGRESADO"] && [estadoPartido isEqualToString:@"FINALIZADO"]){
         self.imgEstado.backgroundColor = [GraphicUtils colorDefault];
         self.imgEstado.alpha = 0.7f;
         self.imgResultado.backgroundColor = [GraphicUtils colorDefault];
         self.imgResultado.alpha = 0.3f;
     }
+    else if ([[_apuesta valueForKey:@"estado"] isEqualToString:@"INGRESADO"] && [estadoPartido isEqualToString:@"NO_INICIADO"]){
+        self.imgEstado.backgroundColor = [GraphicUtils colorFromRGBHexString:@"#16a085"];
+        self.imgEstado.alpha = 0.7f;
+        self.imgResultado.backgroundColor = [GraphicUtils colorFromRGBHexString:@"#16a085"];
+        self.imgResultado.alpha = 0.3f;
+    }
+    else if ([[_apuesta valueForKey:@"estado"] isEqualToString:@"INGRESADO"] && [estadoPartido isEqualToString:@"INICIADO"]){
+        self.imgEstado.backgroundColor = [GraphicUtils colorSunFlower];
+        self.imgEstado.alpha = 0.7f;
+        self.imgResultado.backgroundColor = [GraphicUtils colorSunFlower];
+        self.imgResultado.alpha = 0.3f;
+    }
     
-    self.lblEstado.text = [self calcEstado:[_apuesta valueForKey:@"partido"][@"estado"]];
+    self.lblEstado.text = [self calcEstado:estadoPartido];
     
     if ([[_apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"INICIADO"]){
         self.lblEstado.alpha = 0;
-        [UIView animateWithDuration:1.0 delay:0.5 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
+        self.lblResultadoLocatario.alpha = 0;
+        self.lblResultadoVisitante.alpha = 0;
+        self.lblSeparadorResultado.alpha = 0;
+        self.lblFechaPartido.alpha = 0;
+        [UIView animateWithDuration:0.8 delay:0.3 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
             self.lblEstado.alpha = 1;
+            self.lblResultadoLocatario.alpha = 1;
+            self.lblResultadoVisitante.alpha = 1;
+            self.lblSeparadorResultado.alpha = 1;
+            self.lblFechaPartido.alpha = 1;
         } completion:nil];
     }
     if ([UIImage imageNamed:[_apuesta valueForKey:@"localDesc"]]==nil) {
@@ -139,19 +162,53 @@
     _lblNombreVisitante.textColor = [GraphicUtils colorMidnightBlue];
     _lblNombreVisitante.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:12];
     
-    if ([[_apuesta valueForKey:@"golesLocal"] isKindOfClass : [NSNull class]]) {
-        _lblResultadoLocatario.text = @"X";
+    /*RESULTADO REAL*/
+    
+    if ([[_apuesta valueForKey:@"partido"][@"golesLocal"] intValue]==0 && [[_apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"NO_INICIADO"]) {
+        self.lblResultadoLocatario.text = @"X";
     }
     else{
-        _lblResultadoLocatario.text = [[_apuesta valueForKey:@"golesLocal"] stringValue];
+        self.lblResultadoLocatario.text = [[_apuesta valueForKey:@"partido"][@"golesLocal"] stringValue];
     }
-    if ([[_apuesta valueForKey:@"golesVisitante"] isKindOfClass : [NSNull class]]) {
-        _lblResultadoVisitante.text = @"X";
+    if ([[_apuesta valueForKey:@"partido"][@"golesVisitante"] intValue]==0 && [[_apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"NO_INICIADO"]) {
+        self.lblResultadoVisitante.text = @"X";
     }
     else{
-        _lblResultadoVisitante.text = [[_apuesta valueForKey:@"golesVisitante"] stringValue];
+        self.lblResultadoVisitante.text = [[_apuesta valueForKey:@"partido"][@"golesVisitante"] stringValue];
     }
     
+    
+    /*RESULTADO APOSTADO*/
+    NSMutableString* resultadoApuesta = [NSMutableString new];
+    
+    if ([[_apuesta valueForKey:@"golesLocal"] isKindOfClass : [NSNull class]]) {
+        [resultadoApuesta appendString:@"X"];
+    }
+    else{
+        [resultadoApuesta appendString:[[_apuesta valueForKey:@"golesLocal"] stringValue]];
+    }
+    [resultadoApuesta appendString:@"  :  "];
+    if ([[_apuesta valueForKey:@"golesVisitante"] isKindOfClass : [NSNull class]]) {
+        [resultadoApuesta appendString:@"X"];
+    }
+    else{
+        [resultadoApuesta appendString:[[_apuesta valueForKey:@"golesVisitante"] stringValue]];
+    }
+    self.lblResultadoApostado.text = resultadoApuesta;
+    
+    /*RESULTADO REAL*/
+    self.lblPuntosGanados.hidden=YES;
+    if ([[_apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"FINALIZADO"]) {
+        self.lblPuntosGanados.hidden = NO;
+        if ([[_apuesta valueForKey:@"puntosGanados"] intValue]==0) {
+            self.lblPuntosGanados.text = NSLocalizedString(@"Didn't win any points", nil);
+        }
+        else{
+            self.lblPuntosGanados.text = [NSString stringWithFormat:NSLocalizedString(@"You win %@ points",nil), [[_apuesta valueForKey:@"puntosGanados"] stringValue]];
+        }
+    }
+    
+    /*FECHA Y HORA DEL PARTIDO.*/
     NSDate *date = [DateUtility deserializeJsonDateString:[[_apuesta valueForKey:@"partido"][@"fecha"] stringValue]];
     /*
     NSString *dateString = [NSDateFormatter localizedStringFromDate:date
@@ -163,7 +220,7 @@
                                                               locale:[NSLocale currentLocale]];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:formatString];
-    [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
+    //[dateFormatter setTimeZone:[NSTimeZone defaultTimeZone]];
     
     NSString *stringFromDate = [dateFormatter stringFromDate:date];
     _lblFechaPartido.text = stringFromDate;

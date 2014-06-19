@@ -9,6 +9,7 @@
 #import "FixtureDataLoaderViewController.h"
 #import "PencuyFetcher.h"
 #import "NSThread+BlockPerforming.h"
+#import "FixtureViewController.h"
 
 @interface FixtureDataLoaderViewController ()
 
@@ -29,10 +30,16 @@
 - (IBAction)touchProximo:(id)sender {
     if (![_fechaSeleccionada[@"nombre"] isEqualToString:@"Group H"]) {
         _index++;
-        _index = (_index>[_fechas count]-1)?[_fechas count]-1:_index;
+        _index = (_index>[_fechas count]-1)?((int)[_fechas count])-1:_index;
         _fechaSeleccionada = _fechas[_index];
         [self fechaLabel:_fechaSeleccionada[@"nombre"] withLabel:(UILabel *)[self.tableView.tableHeaderView viewWithTag:1]];
         [self fetchPartidos:[_fechaSeleccionada[@"idFechaCampeonato"] stringValue]];
+        if ([_fechaSeleccionada[@"nombre"] isEqualToString:@"Group H"]) {
+            self.btnNext.hidden=YES;
+        }
+        if ([_fechaSeleccionada[@"nombre"] isEqualToString:@"Group B"]) {
+            self.btnBack.hidden=NO;
+        }
     }
     
 }
@@ -44,7 +51,14 @@
         _fechaSeleccionada = _fechas[_index];
         [self fechaLabel:_fechaSeleccionada[@"nombre"] withLabel:(UILabel *)[self.tableView.tableHeaderView viewWithTag:1]];
         [self fetchPartidos:[_fechaSeleccionada[@"idFechaCampeonato"] stringValue]];
+        if ([_fechaSeleccionada[@"nombre"] isEqualToString:@"Group G"]) {
+            self.btnNext.hidden=NO;
+        }
+        if ([_fechaSeleccionada[@"nombre"] isEqualToString:@"Group A"]) {
+            self.btnBack.hidden=YES;
+        }
     }
+    
 }
 
 -(void)fetchFechas{

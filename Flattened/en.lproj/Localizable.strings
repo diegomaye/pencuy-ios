@@ -51,7 +51,7 @@
 /*Usuarios*/
 "Success"="Success";
 /*Fase de Grupos*/
-"Not Started"="Not Started";
+"Not started"="Not Started";
 "Started"="Started";
 "Blocked"="Blocked";
 "Ended"="Ended";
@@ -221,3 +221,19 @@
 "%@ \n You must re enter a password"="%@ \n You must re enter a password";
 
 "A connection error happened apology"="A connection error happened apology";
+
+"Group A"="Group A";
+"Group B"="Group B";
+"Group C"="Group C";
+"Group D"="Group D";
+"Group E"="Group E";
+"Group F"="Group F";
+"Group G"="Group G";
+"Group H"="Group H";
+
+//Apuestas
+"Choose a winner!"="Choose a winner!";
+"This match determines the pass to the next round, please choose a winner."="This match determines the pass to the next round, please choose a winner.";
+"You cannot modify the score at the moment, because the status.."="You cannot modify the score at the moment, because the status..";
+"Your bet"="Your bet";
+"You win %@ points"="You win %@ points";

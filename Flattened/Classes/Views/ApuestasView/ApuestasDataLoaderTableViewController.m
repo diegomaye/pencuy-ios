@@ -21,6 +21,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     [self fetchApuestas:self.idPenca andFecha:[self.idFecha stringValue]];
 }
 

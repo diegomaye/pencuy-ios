@@ -19,6 +19,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *lblFechaPartido;
 @property (strong, nonatomic) IBOutlet UILabel *lblHoraPartido;
+@property (strong, nonatomic) IBOutlet UILabel *lblResultado;
 
 @property (strong, nonatomic) IBOutlet UILabel *lblLocatario;
 @property (strong, nonatomic) IBOutlet UILabel *lblVisitante;

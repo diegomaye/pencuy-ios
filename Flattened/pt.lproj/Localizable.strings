@@ -51,7 +51,7 @@
 /*Usuarios*/
 "Success"="Sucesso";
 /*Fase de Grupos*/
-"Not Started"="Não Iniciado";
+"Not started"="Não Iniciado";
 "Started"="Iniciado";
 "Blocked"="Bloqueado";
 "Ended"="Finalizado";
@@ -129,7 +129,7 @@
 "Finishing Processing"="Processamento Finalizado";
 //Estadisticas
 "Select a country"="Selecione um país";
-"WC won"="Copas do Mundo ganhadas";
+"WC won"="Copas do Mundo";
 "Cups"="Copas";
 "Points"="Pontos";
 "Matchs played"="Partidas jugadas";
@@ -216,3 +216,18 @@
 
 "A connection error happened apology"="Um erro de conexão ocorreu, desculpas";
 
+"Group A"="Grupo A";
+"Group B"="Grupo B";
+"Group C"="Grupo C";
+"Group D"="Grupo D";
+"Group E"="Grupo E";
+"Group F"="Grupo F";
+"Group G"="Grupo G";
+"Group H"="Grupo H";
+
+//Apuestas
+"Choose a winner!"="Escolha um vencedor!";
+"This match determines the pass to the next round, please choose a winner."="Este jogo determina o passe para a próxima rodada, por favor, escolher um vencedor.";
+"You cannot modify the score at the moment, because the status.."="Você não pode modificar o resultao no momento, por o status deste..";
+"Your bet"="A sua apuesta";
+"You win %@ points"="Ganhou %@ pontos";

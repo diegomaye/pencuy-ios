@@ -10,4 +10,7 @@
 
 @interface FixtureDataLoaderViewController : FixtureViewController
 
+@property (strong, nonatomic) IBOutlet UIButton *btnNext;
+@property (strong, nonatomic) IBOutlet UIButton *btnBack;
+
 @end

@@ -30,7 +30,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    if (self) {
+        [self setProgressBar];
+    }
     if(![Utils isVersion6AndBelow])
         self.navigationController.navigationBar.translucent = NO;
     
@@ -58,11 +60,7 @@
     
     self.tableView.tableHeaderView.backgroundColor = [UIColor colorWithRed:0.27f green:0.29f blue:0.31f alpha:1.00f];
     [self fechaLabel:NSLocalizedString(@"Grupos",nil) withLabel:(UILabel *)[self.tableView.tableHeaderView viewWithTag:1]];
-    
-    UIButton *btnFilter = (UIButton *)[self.tableView.tableHeaderView viewWithTag:2];
-    UIButton *btnFilter2 = (UIButton *)[self.tableView.tableHeaderView viewWithTag:3];
-    [self tipeadorBotones:btnFilter];
-    [self tipeadorBotones:btnFilter2];
+
     /*Formato header*/
     self.lblTitlePuntos.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:15];
     self.lblTitlePuntos.textColor = [UIColor whiteColor];
@@ -85,7 +83,7 @@
 
 -(void) fechaLabel:(NSString *) titulo withLabel:(UILabel*)label{
     
-    NSString *filterTitle = [NSString stringWithFormat:@"%@", titulo];
+    NSString *filterTitle = [NSString stringWithFormat:@"%@", NSLocalizedString(titulo,nil)];
     const CGFloat fontSize = 18;
     
     UIFont *boldFont = [UIFont fontWithName:@"ProximaNova-Semibold" size:fontSize];
@@ -106,12 +104,6 @@
     
     [label setAttributedText:attributedText];
 
-}
-
-- (void)tipeadorBotones:(UIButton*) boton{
-    boton.layer.cornerRadius = 3;
-    boton.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:10];
-    boton.backgroundColor = [UIColor colorWithRed:0.17f green:0.18f blue:0.20f alpha:1.00f];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -11,5 +11,5 @@
 @interface InvitacionesPencaDLTVController : InvitacionesTVController
 
 @property(nonatomic,strong) NSString* idPenca;
-
+-(void)fetchInvitaciones:(NSString *) idPenca;
 @end

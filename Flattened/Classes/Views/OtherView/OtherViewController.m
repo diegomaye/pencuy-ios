@@ -50,6 +50,7 @@
     }
     [self setPickerView];
     [self setTouchEventView];
+    [self setTraducciones];
     self.lblEquipo1.text=NSLocalizedString(@"Select a country", nil);
     self.lblEquipo2.text=NSLocalizedString(@"Select a country", nil);
 
