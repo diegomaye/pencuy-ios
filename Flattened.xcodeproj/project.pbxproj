@@ -10,6 +10,7 @@
 		2D02EFAC1901FF6D002751F1 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D02EFAB1901FF6D002751F1 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		2D02EFB019020ACC002751F1 /* DatosGrlsPencaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D02EFAF19020ACC002751F1 /* DatosGrlsPencaViewController.m */; };
 		2D09368A18F242FE00951EE7 /* AlertasDLTVController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D09368918F242FE00951EE7 /* AlertasDLTVController.m */; };
+		2D236CA5196B708A00801513 /* background3.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D236CA4196B708A00801513 /* background3.png */; };
 		2D2789FB18A5BA3D00414D5E /* FixtureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2789FA18A5BA3D00414D5E /* FixtureViewController.m */; };
 		2D28E0B7194522F400DBE465 /* M13ProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D28E0B6194522F400DBE465 /* M13ProgressView.m */; };
 		2D28E0BD1945232900DBE465 /* M13ProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D28E0BA1945232900DBE465 /* M13ProgressHUD.m */; };
@@ -32,11 +33,6 @@
 		2D2FD0A4193C597F000F7C55 /* field 3.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FD0A0193C597F000F7C55 /* field 3.png */; };
 		2D2FD0A5193C597F000F7C55 /* field 4.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FD0A1193C597F000F7C55 /* field 4.png */; };
 		2D2FD0A6193C597F000F7C55 /* field.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FD0A2193C597F000F7C55 /* field.png */; };
-		2D2FD0AC193C5A0B000F7C55 /* Dawn-320x480.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FD0A7193C5A0B000F7C55 /* Dawn-320x480.jpg */; };
-		2D2FD0AD193C5A0B000F7C55 /* Dawn-640x960.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FD0A8193C5A0B000F7C55 /* Dawn-640x960.jpg */; };
-		2D2FD0AE193C5A0B000F7C55 /* Dawn-640x1136.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FD0A9193C5A0B000F7C55 /* Dawn-640x1136.jpg */; };
-		2D2FD0AF193C5A0B000F7C55 /* Dawn-1024x768.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FD0AA193C5A0B000F7C55 /* Dawn-1024x768.jpg */; };
-		2D2FD0B0193C5A0B000F7C55 /* Dawn-1536x2048.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FD0AB193C5A0B000F7C55 /* Dawn-1536x2048.jpg */; };
 		2D2FD0B4193D5EE2000F7C55 /* ReglasViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2FD0B3193D5EE2000F7C55 /* ReglasViewController.m */; };
 		2D3D2A2D1946B42B00B8EA82 /* AppIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D3D2A251946B42B00B8EA82 /* AppIcon.png */; };
 		2D3D2A2E1946B42B00B8EA82 /* AppIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D3D2A261946B42B00B8EA82 /* AppIcon@2x.png */; };
@@ -223,7 +219,7 @@
 		2DD61331190CCFE800060C02 /* ApuestaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD61330190CCFE800060C02 /* ApuestaCell.m */; };
 		2DD61334190DA84C00060C02 /* PencasTVController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD61333190DA84C00060C02 /* PencasTVController.m */; };
 		2DD61337190DB01300060C02 /* PencaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD61336190DB01300060C02 /* PencaCell.m */; };
-		2DD6133F190E08C400060C02 /* ApuestasCerradasDLTVController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD6133E190E08C400060C02 /* ApuestasCerradasDLTVController.m */; };
+		2DD6133F190E08C400060C02 /* ApuestasHoyDLTVController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD6133E190E08C400060C02 /* ApuestasHoyDLTVController.m */; };
 		2DD61356190F6B4700060C02 /* InvitacionesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD61355190F6B4700060C02 /* InvitacionesCell.m */; };
 		2DD61359190F6B7900060C02 /* UsuariosTVController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD61358190F6B7900060C02 /* UsuariosTVController.m */; };
 		2DD613661910BA8C00060C02 /* NSThread+BlockPerforming.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD613651910BA8C00060C02 /* NSThread+BlockPerforming.m */; };
@@ -459,6 +455,8 @@
 		2D02EFAF19020ACC002751F1 /* DatosGrlsPencaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DatosGrlsPencaViewController.m; path = CrearPencaView/DatosGrlsPencaViewController.m; sourceTree = "<group>"; };
 		2D09368818F242FE00951EE7 /* FixtureDataLoaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FixtureDataLoaderViewController.h; path = FixtureView/FixtureDataLoaderViewController.h; sourceTree = "<group>"; };
 		2D09368918F242FE00951EE7 /* AlertasDLTVController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlertasDLTVController.m; path = FixtureView/AlertasDLTVController.m; sourceTree = "<group>"; };
+		2D1917211959171B00382CA8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		2D236CA4196B708A00801513 /* background3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background3.png; sourceTree = "<group>"; };
 		2D2789F918A5BA3D00414D5E /* FixtureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FixtureViewController.h; path = FixtureView/FixtureViewController.h; sourceTree = "<group>"; };
 		2D2789FA18A5BA3D00414D5E /* FixtureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FixtureViewController.m; path = FixtureView/FixtureViewController.m; sourceTree = "<group>"; };
 		2D28E0B5194522F400DBE465 /* M13ProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M13ProgressView.h; sourceTree = "<group>"; };
@@ -488,15 +486,9 @@
 		2D2FD0A0193C597F000F7C55 /* field 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "field 3.png"; sourceTree = "<group>"; };
 		2D2FD0A1193C597F000F7C55 /* field 4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "field 4.png"; sourceTree = "<group>"; };
 		2D2FD0A2193C597F000F7C55 /* field.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = field.png; sourceTree = "<group>"; };
-		2D2FD0A7193C5A0B000F7C55 /* Dawn-320x480.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Dawn-320x480.jpg"; sourceTree = "<group>"; };
-		2D2FD0A8193C5A0B000F7C55 /* Dawn-640x960.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Dawn-640x960.jpg"; sourceTree = "<group>"; };
-		2D2FD0A9193C5A0B000F7C55 /* Dawn-640x1136.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Dawn-640x1136.jpg"; sourceTree = "<group>"; };
-		2D2FD0AA193C5A0B000F7C55 /* Dawn-1024x768.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Dawn-1024x768.jpg"; sourceTree = "<group>"; };
-		2D2FD0AB193C5A0B000F7C55 /* Dawn-1536x2048.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Dawn-1536x2048.jpg"; sourceTree = "<group>"; };
 		2D2FD0B2193D5EE2000F7C55 /* ReglasViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReglasViewController.h; path = ReglasView/ReglasViewController.h; sourceTree = "<group>"; };
 		2D2FD0B3193D5EE2000F7C55 /* ReglasViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReglasViewController.m; path = ReglasView/ReglasViewController.m; sourceTree = "<group>"; };
 		2D31E8811935AFF90019492E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2D3D2A221946B26200B8EA82 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = pt; path = pt.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		2D3D2A231946B26200B8EA82 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2D3D2A241946B26200B8EA82 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2D3D2A251946B42B00B8EA82 /* AppIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppIcon.png; sourceTree = "<group>"; };
@@ -507,7 +499,6 @@
 		2D3D2A2A1946B42B00B8EA82 /* Settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Settings@2x.png"; sourceTree = "<group>"; };
 		2D3D2A2B1946B42B00B8EA82 /* Spotlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spotlight.png; sourceTree = "<group>"; };
 		2D3D2A2C1946B42B00B8EA82 /* Spotlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Spotlight@2x.png"; sourceTree = "<group>"; };
-		2D4D6A381939BCC40070EF5B /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		2D4D6A391939BCC40070EF5B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2D4D6A3B1939BD160070EF5B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2D4D6A3D1939BD1E0070EF5B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -745,8 +736,8 @@
 		2DD61333190DA84C00060C02 /* PencasTVController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PencasTVController.m; path = PencasView/PencasTVController.m; sourceTree = "<group>"; };
 		2DD61335190DAFEF00060C02 /* PencaCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PencaCell.h; path = Flattened/Classes/Views/PencasView/PencaCell.h; sourceTree = SOURCE_ROOT; };
 		2DD61336190DB01300060C02 /* PencaCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PencaCell.m; path = TableCells/StoreCell/PencaCell.m; sourceTree = "<group>"; };
-		2DD6133D190E08C400060C02 /* ApuestasCerradasDLTVController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApuestasCerradasDLTVController.h; path = ApuestasView/ApuestasCerradasDLTVController.h; sourceTree = "<group>"; };
-		2DD6133E190E08C400060C02 /* ApuestasCerradasDLTVController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApuestasCerradasDLTVController.m; path = ApuestasView/ApuestasCerradasDLTVController.m; sourceTree = "<group>"; };
+		2DD6133D190E08C400060C02 /* ApuestasHoyDLTVController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApuestasHoyDLTVController.h; path = ApuestasView/ApuestasHoyDLTVController.h; sourceTree = "<group>"; };
+		2DD6133E190E08C400060C02 /* ApuestasHoyDLTVController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApuestasHoyDLTVController.m; path = ApuestasView/ApuestasHoyDLTVController.m; sourceTree = "<group>"; };
 		2DD61354190F6B3200060C02 /* InvitacionesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InvitacionesCell.h; path = Flattened/Classes/Views/PencasView/InvitacionesCell.h; sourceTree = SOURCE_ROOT; };
 		2DD61355190F6B4700060C02 /* InvitacionesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InvitacionesCell.m; path = Flattened/Classes/Views/PencasView/InvitacionesCell.m; sourceTree = SOURCE_ROOT; };
 		2DD61357190F6B6D00060C02 /* UsuariosTVController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UsuariosTVController.h; path = Flattened/Classes/Views/PencasView/UsuariosTVController.h; sourceTree = SOURCE_ROOT; };
@@ -757,7 +748,6 @@
 		2DD6C4F51905F65A00CC033B /* ViewPagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewPagerController.m; sourceTree = "<group>"; };
 		2DD6C4F819060D8F00CC033B /* DateTimePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateTimePicker.h; path = Utils/DateTimePicker.h; sourceTree = "<group>"; };
 		2DD6C4F919060D8F00CC033B /* DateTimePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateTimePicker.m; path = Utils/DateTimePicker.m; sourceTree = "<group>"; };
-		2DD6C4FF190620E000CC033B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		2DE800BA1837059000B2302A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = LoginView/LoginViewController.h; sourceTree = "<group>"; };
 		2DE800BB1837059000B2302A /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = LoginView/LoginViewController.m; sourceTree = "<group>"; };
 		7F0107A7166BE639000425BE /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
@@ -1035,7 +1025,7 @@
 		7F9F7D9016517FE100514B27 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		7F9F7D9216517FE800514B27 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		7F9F7D9416517FF600514B27 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		7FA4DA79164AC7DC00556574 /* Brasil 2014 My Prediction.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Brasil 2014 My Prediction.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7FA4DA79164AC7DC00556574 /* My Prediction.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Prediction.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FA4DA7D164AC7DC00556574 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7FA4DA7F164AC7DC00556574 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7FA4DA81164AC7DC00556574 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1278,11 +1268,7 @@
 		2D727D931919D41B00A38042 /* backgrounds */ = {
 			isa = PBXGroup;
 			children = (
-				2D2FD0A7193C5A0B000F7C55 /* Dawn-320x480.jpg */,
-				2D2FD0A8193C5A0B000F7C55 /* Dawn-640x960.jpg */,
-				2D2FD0A9193C5A0B000F7C55 /* Dawn-640x1136.jpg */,
-				2D2FD0AA193C5A0B000F7C55 /* Dawn-1024x768.jpg */,
-				2D2FD0AB193C5A0B000F7C55 /* Dawn-1536x2048.jpg */,
+				2D236CA4196B708A00801513 /* background3.png */,
 			);
 			name = backgrounds;
 			sourceTree = "<group>";
@@ -1620,8 +1606,8 @@
 				2DD6132C190CC71B00060C02 /* ApuestasTVController.m */,
 				2D954B991908CE0A00031796 /* ApuestasDataLoaderTableViewController.h */,
 				2D954B9A1908CE0A00031796 /* ApuestasDataLoaderTableViewController.m */,
-				2DD6133D190E08C400060C02 /* ApuestasCerradasDLTVController.h */,
-				2DD6133E190E08C400060C02 /* ApuestasCerradasDLTVController.m */,
+				2DD6133D190E08C400060C02 /* ApuestasHoyDLTVController.h */,
+				2DD6133E190E08C400060C02 /* ApuestasHoyDLTVController.m */,
 			);
 			name = ListaApuestaView;
 			sourceTree = "<group>";
@@ -2421,7 +2407,7 @@
 		7FA4DA7A164AC7DC00556574 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7FA4DA79164AC7DC00556574 /* Brasil 2014 My Prediction.app */,
+				7FA4DA79164AC7DC00556574 /* My Prediction.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2480,7 +2466,7 @@
 			);
 			name = Flattened;
 			productName = "PandoraUI-TED";
-			productReference = 7FA4DA79164AC7DC00556574 /* Brasil 2014 My Prediction.app */;
+			productReference = 7FA4DA79164AC7DC00556574 /* My Prediction.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2533,12 +2519,12 @@
 				7F4D8629175E2EFA0069A1C2 /* swipe_guide2.psd in Resources */,
 				2DB7B7281938136500B1DF7F /* 990-presentation-g@2x.png in Resources */,
 				7F4D863F175E2EFA0069A1C2 /* readme.md in Resources */,
+				2D236CA5196B708A00801513 /* background3.png in Resources */,
 				7F4D8652175E2EFA0069A1C2 /* InfoPlist.strings in Resources */,
 				2DB7B7091937DEDD00B1DF7F /* 881-globe-selected@2x.png in Resources */,
 				7F4D8654175E2EFA0069A1C2 /* MainStoryboard_iPhone.storyboard in Resources */,
 				2D9A76BD19049CBB0074BCC3 /* Nigeria.png in Resources */,
 				2DB7B70B1937DEDD00B1DF7F /* 895-user-group-selected@2x.png in Resources */,
-				2D2FD0B0193C5A0B000F7C55 /* Dawn-1536x2048.jpg in Resources */,
 				2D4D74E11915910800DC8E9E /* icon-avatar-60x60.png in Resources */,
 				7F4D8657175E2EFA0069A1C2 /* Personal-Account.plist in Resources */,
 				7F4D8658175E2EFA0069A1C2 /* Timeline.plist in Resources */,
@@ -2605,7 +2591,6 @@
 				7F4D8680175E2EFA0069A1C2 /* email_actions_delete@2x.png in Resources */,
 				2DB7B7081937DEDD00B1DF7F /* 881-globe-selected.png in Resources */,
 				7F4D8681175E2EFA0069A1C2 /* email_actions_forward.png in Resources */,
-				2D2FD0AD193C5A0B000F7C55 /* Dawn-640x960.jpg in Resources */,
 				2DB7B7121937F71C00B1DF7F /* 138-scales-g.png in Resources */,
 				2D9A76A51904963B0074BCC3 /* Croatia.png in Resources */,
 				2D2B28D2194D0C57003D713E /* 765-arrow-left-selected.png in Resources */,
@@ -2690,7 +2675,6 @@
 				2D9A76E61904A4A20074BCC3 /* Brazil-square.ico in Resources */,
 				2D9A76A91904963B0074BCC3 /* Germany.png in Resources */,
 				2D9A76A71904963B0074BCC3 /* England.png in Resources */,
-				2D2FD0AC193C5A0B000F7C55 /* Dawn-320x480.jpg in Resources */,
 				7F4D86AD175E2EFA0069A1C2 /* menu-profile-avatar.png in Resources */,
 				7F4D86AE175E2EFA0069A1C2 /* menu-profile-avatar@2x.png in Resources */,
 				7F4D86AF175E2EFA0069A1C2 /* menu-profile-background.png in Resources */,
@@ -2709,7 +2693,6 @@
 				7F4D86B6175E2EFA0069A1C2 /* menu-separator@2x.png in Resources */,
 				2D9A76A21904963B0074BCC3 /* Colombia.png in Resources */,
 				2DB7B72A1938136500B1DF7F /* 1056-org-chart-g@2x.png in Resources */,
-				2D2FD0AE193C5A0B000F7C55 /* Dawn-640x1136.jpg in Resources */,
 				7F4D86B7175E2EFA0069A1C2 /* navigation-btn-cancel.png in Resources */,
 				7F4D86B8175E2EFA0069A1C2 /* navigation-btn-cancel@2x.png in Resources */,
 				2D3D2A331946B42B00B8EA82 /* Spotlight.png in Resources */,
@@ -2755,7 +2738,6 @@
 				7F4D86D0175E2EFA0069A1C2 /* segmentedBackgroundSelected@2x.png in Resources */,
 				2D4D74E61915910800DC8E9E /* icon-checkbox-unselected-25x25@2x.png in Resources */,
 				7F4D86D1175E2EFA0069A1C2 /* segmentedDivider.png in Resources */,
-				2D2FD0AF193C5A0B000F7C55 /* Dawn-1024x768.jpg in Resources */,
 				2DB7B6F01937DEDD00B1DF7F /* 715-globe-selected.png in Resources */,
 				2DB7B7261938136500B1DF7F /* 874-newspaper-g@2x.png in Resources */,
 				2DB7B7061937DEDD00B1DF7F /* 851-calendar-selected.png in Resources */,
@@ -2889,7 +2871,7 @@
 				2DAB305918580A1200388B34 /* Enums.m in Sources */,
 				2D7F327C1911E5DE005A1328 /* InvitacionesPencaDLTVController.m in Sources */,
 				2D727EA41920339300A38042 /* JSONModelArray.m in Sources */,
-				2DD6133F190E08C400060C02 /* ApuestasCerradasDLTVController.m in Sources */,
+				2DD6133F190E08C400060C02 /* ApuestasHoyDLTVController.m in Sources */,
 				2D09368A18F242FE00951EE7 /* AlertasDLTVController.m in Sources */,
 				2D4D74F71915914900DC8E9E /* THContactBubble.m in Sources */,
 				2D28E0B7194522F400DBE465 /* M13ProgressView.m in Sources */,
@@ -3002,9 +2984,7 @@
 		7F4D8562175E2EF90069A1C2 /* MainStoryboard_iPhone.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				2DD6C4FF190620E000CC033B /* en */,
-				2D4D6A381939BCC40070EF5B /* es */,
-				2D3D2A221946B26200B8EA82 /* pt */,
+				2D1917211959171B00382CA8 /* Base */,
 			);
 			name = MainStoryboard_iPhone.storyboard;
 			sourceTree = "<group>";
@@ -3080,7 +3060,7 @@
 				INFOPLIST_FILE = "Flattened/Flattened-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "Brasil 2014 My Prediction";
+				PRODUCT_NAME = "My Prediction";
 				PROVISIONING_PROFILE = "13ADEF31-2AE9-4364-B8DF-3133C348BB97";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -3103,7 +3083,7 @@
 				INFOPLIST_FILE = "Flattened/Flattened-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "Brasil 2014 My Prediction";
+				PRODUCT_NAME = "My Prediction";
 				PROVISIONING_PROFILE = "13ADEF31-2AE9-4364-B8DF-3133C348BB97";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
