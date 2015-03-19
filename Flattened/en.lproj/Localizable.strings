@@ -135,7 +135,7 @@
 "Finishing Processing"="Finishing Processing";
 //Estadisticas
 "Select a country"="Select a country";
-"WC won"="WC won";
+"WC played"="WC played";
 "Cups"="Cups";
 "Points"="Points";
 "Matchs played"="Matchs played";
@@ -237,3 +237,6 @@
 "You cannot modify the score at the moment, because the status.."="You cannot modify the score at the moment, because the status..";
 "Your bet"="Your bet";
 "You win %@ points"="You win %@ points";
+"Drawns"="Drawns";
+"Didn't win any points"="Didn't win any points";
+"Today"="Today";

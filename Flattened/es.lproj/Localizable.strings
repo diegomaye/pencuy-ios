@@ -129,7 +129,7 @@
 
 //Estadisticas
 "Select a country"="Selecciona un pais";
-"WC won"="Mundiales Ganados";
+"WC played"="Mundiales Jugados";
 "Cups"="Copas";
 "Points"="Puntos";
 "Matchs played"="P. Jugados";
@@ -229,3 +229,6 @@
 "You cannot modify the score at the moment, because the status.."="Usted no puede modificar este partido";
 "Your bet"="Tu apuesta";
 "You win %@ points"="Ganaste %@ puntos";
+"Drawns"="P. Empatados";
+"Didn't win any points"="No ganaste puntos";
+"Today"="Hoy";

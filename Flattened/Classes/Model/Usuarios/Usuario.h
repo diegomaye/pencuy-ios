@@ -35,4 +35,6 @@
 @property(nonatomic, assign, getter=isValida) BOOL valida;
 @property(nonatomic, assign, getter=isCuentaFacebook) BOOL cuentaFacebook;
 
+-(Usuario*) initWithDictionary:(NSDictionary*) diccionario;
+
 @end

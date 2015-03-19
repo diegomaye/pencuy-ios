@@ -8,8 +8,10 @@
 
 #import "ApuestasTVController.h"
 
-@interface ApuestasCerradasDLTVController : ApuestasTVController
+@interface ApuestasHoyDLTVController : ApuestasTVController
 
 @property(nonatomic,strong) NSString* idPenca;
+
+-(void)fetchApuestas:(NSString *) idPenca;
 
 @end

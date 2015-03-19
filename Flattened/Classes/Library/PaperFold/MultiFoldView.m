@@ -398,7 +398,7 @@
     else if (self.foldDirection==FoldDirectionVertical)
     {
         // check if there is another subfold beside this fold
-        int index = [foldView tag] - FOLDVIEW_TAG;
+        int index = (int)[foldView tag] - FOLDVIEW_TAG;
         
         if (index < self.numberOfFolds-1)
         {

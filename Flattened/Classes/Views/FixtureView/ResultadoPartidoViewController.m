@@ -204,13 +204,13 @@
 
 -(void) sendApuesta:(NSDictionary*) apuesta{
     [apuesta setValue:@"INGRESADO" forKey:@"estado"];
-    NSLog(@"Valore enviados: %@", apuesta);
+    //NSLog(@"Valore enviados: %@", apuesta);
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:apuesta
                                                        options:NSJSONWritingPrettyPrinted
                                                          error:&error];
     NSDictionary* retorno = [PencuyFetcher multiFetcherSync:[PencuyFetcher URLtoMakeApuestas] withHTTP:@"PUT" withData:jsonData];
-    NSLog(@"Devolvió: %@", retorno);
+    //NSLog(@"Devolvió: %@", retorno);
     if (retorno) {
         [self setComplete];
         [(ApuestasDataLoaderTableViewController*)self.fixture fetchApuestas:self.fixture.idPenca andFecha:[self.fixture.idFecha stringValue] ];

@@ -175,7 +175,7 @@
                                                            options:NSJSONWritingPrettyPrinted
                                                              error:&error];
         if (!jsonData) {
-            NSLog(@"Error al convertir el diccionario en json: %@", error);
+            //NSLog(@"Error al convertir el diccionario en json: %@", error);
             [self showAlert:NSLocalizedString(@"Ups!",nil)
                  andMessage:NSLocalizedString(@"You cannot create the bet at the moment, please try again late",nil)];
             [self disappear];

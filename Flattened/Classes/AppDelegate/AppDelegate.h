@@ -39,6 +39,7 @@
 - (void)resetAfterTypeChange:(BOOL)cancel;
 - (void)showMenuiPad:(id)sender;
 - (void)selectWhatKindOfSetup;
+- (void)selectWhatKindOfSetupWithoutSet;
 - (void) setFoldVCWithNavBar: (UINavigationController*) nav;
 - (void) navigateToLogin;
 @end

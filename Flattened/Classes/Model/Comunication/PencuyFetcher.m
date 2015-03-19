@@ -106,6 +106,10 @@
 {
     return [self URLAPIForQuery:[NSString stringWithFormat:@"apuesta/"]];
 }
++ (NSURL *)URLtoQueryApuestasByDay:(NSString *)idPenca andDate:(NSString *)date
+{
+    return [self URLAPIForQuery:[NSString stringWithFormat:@"apuesta/diarias/%@/%@", idPenca, date]];
+}
 
 #pragma mark Api Privada para pencas
 
@@ -188,6 +192,7 @@
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [urlRequest setValue:[NSString stringWithFormat:@"Basic %@",authValue] forHTTPHeaderField:@"Authorization"];
     if (usuario) {
+        //NSLog(@"%@ usuario: %@  password: %@",urlRequest,user, pass);
         NSOperationQueue *queue= [NSOperationQueue mainQueue];
         //[self.operationQueue cancelAllOperations];
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:queue completionHandler:callbackBlock];
@@ -221,7 +226,7 @@
     }
     NSData *jsonResults= [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
     if (error) {
-        NSLog(@" Error: %@ ", error);
+        //NSLog(@" Error: %@ ", error);
     }
     return [NSJSONSerialization JSONObjectWithData:jsonResults options:0 error:NULL];
 }
@@ -254,7 +259,7 @@
     }
     NSData *jsonResults= [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
     if (error) {
-        NSLog(@" Error: %@ ", error);
+        //NSLog(@" Error: %@ ", error);
     }
     return [NSJSONSerialization JSONObjectWithData:jsonResults options:0 error:NULL];
 }

@@ -10,31 +10,43 @@
 	<string>Flattened</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>A9F5DCD3-33B2-4903-ABF5-1B320FFD223C</key>
+		<key>269BDC92F6E2A807EDF3BA1D08FE1A4D61DAF74B</key>
 		<string>https://github.com/diegomaye/pencuy-ios.git</string>
+		<key>E2E339EC05FF99AF5ECAE62EDBC78398DA1111C6</key>
+		<string>https://github.com/Sumi-Interactive/SIAlertView.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Flattened.xcodeproj/project.xcworkspace</string>
+	<string>Flattened.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>A9F5DCD3-33B2-4903-ABF5-1B320FFD223C</key>
+		<key>269BDC92F6E2A807EDF3BA1D08FE1A4D61DAF74B</key>
 		<string>../..</string>
+		<key>E2E339EC05FF99AF5ECAE62EDBC78398DA1111C6</key>
+		<string>../..Flattened/Classes/Library/SIAlertView/SIAlertView/</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/diegomaye/pencuy-ios.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>A9F5DCD3-33B2-4903-ABF5-1B320FFD223C</string>
+	<string>269BDC92F6E2A807EDF3BA1D08FE1A4D61DAF74B</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>A9F5DCD3-33B2-4903-ABF5-1B320FFD223C</string>
+			<string>269BDC92F6E2A807EDF3BA1D08FE1A4D61DAF74B</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Pencuy</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E2E339EC05FF99AF5ECAE62EDBC78398DA1111C6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SIAlertView</string>
 		</dict>
 	</array>
 </dict>

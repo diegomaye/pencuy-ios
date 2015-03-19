@@ -26,6 +26,7 @@
 
 #import "ZKRevealingTableViewCell.h"
 #import <QuartzCore/QuartzCore.h>
+#import <objc/runtime.h>
 
 @interface ZKRevealingTableViewCell ()
 
@@ -68,6 +69,7 @@
 @synthesize delegate     = _delegate;
 @synthesize shouldBounce = _shouldBounce;
 @synthesize backView     = _backView;
+static char BOOLRevealing;
 
 #pragma mark - Lifecycle
 
@@ -105,9 +107,6 @@
 }
 
 #pragma mark - Accessors
-#import <objc/runtime.h>
-
-static char BOOLRevealing;
 
 - (BOOL)isRevealing
 {

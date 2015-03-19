@@ -24,15 +24,15 @@
         [PencuyFetcher multiFetcher:[PencuyFetcher URLtoQueryUsuariosPenca:idPenca] withHTTP:@"GET" withHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
             if ([data length] > 0 && connectionError==nil) {
                 NSArray *usuarios= [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-                NSLog(@"Trajo las siguientes usuarios para la penca %@: %@",idPenca,usuarios);
+                //NSLog(@"Trajo las siguientes usuarios para la penca %@: %@",idPenca,usuarios);
                 self.usuarios= usuarios;
                 [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
             }
             else if([data length]==0 && connectionError==nil){
-                NSLog(@"Nothing");
+                //NSLog(@"Nothing");
             }
             else if(connectionError!=nil){
-                NSLog(@"An error appends: %@",connectionError);
+                //NSLog(@"An error appends: %@",connectionError);
             }
         }];
     }    

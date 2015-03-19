@@ -48,7 +48,7 @@
     NSError* error;
     Usuario* usuarioPenca = [[Usuario alloc] initWithDictionary:userDefaultDictionary error:&error];
     
-    NSLog(@"Error tratando de sacar el usuario por defecto: %@", error);
+    //NSLog(@"Error tratando de sacar el usuario por defecto: %@", error);
     /*
      Sacando usuario por defecto
      */

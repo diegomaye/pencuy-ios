@@ -15,7 +15,7 @@ static Usuario *usuario;
 @implementation AppDelegate
 
 + (Usuario*) getUsuario {
-    if (usuario==nil) {
+    if (!usuario) {
         NSUserDefaults * userDefaults =[NSUserDefaults standardUserDefaults];
         NSData* userDefaultData = [userDefaults valueForKey:@"USUARIO-PENCA"];
         NSDictionary* userDefaultDictionary = (NSDictionary*) [NSKeyedUnarchiver unarchiveObjectWithData:userDefaultData];
@@ -27,6 +27,65 @@ static Usuario *usuario;
 
 + (void) setUsuarioNil{
     usuario = nil;
+}
+
+// This method will handle ALL the session state changes in the app
+- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState) state error:(NSError *)error
+{
+    // If the session was opened successfully
+    if (!error && state == FBSessionStateOpen){
+        NSLog(@"Session opened");
+        // Show the user the logged-in UI
+        //[self userLoggedIn];
+        return;
+    }
+    if (state == FBSessionStateClosed || state == FBSessionStateClosedLoginFailed){
+        // If the session is closed
+        NSLog(@"Session closed");
+        // Show the user the logged-out UI
+        //[self userLoggedOut];
+    }
+    
+    // Handle errors
+    if (error){
+        NSLog(@"Error");
+        NSString *alertText;
+        NSString *alertTitle;
+        // If the error requires people using an app to make an action outside of the app in order to recover
+        if ([FBErrorUtility shouldNotifyUserForError:error] == YES){
+            alertTitle = @"Something went wrong";
+            alertText = [FBErrorUtility userMessageForError:error];
+            //[self showMessage:alertText withTitle:alertTitle];
+        } else {
+            
+            // If the user cancelled login, do nothing
+            if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled) {
+                NSLog(@"User cancelled login");
+                
+                // Handle session closures that happen outside of the app
+            } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession){
+                alertTitle = @"Session Error";
+                alertText = @"Your current session is no longer valid. Please log in again.";
+                //[self showMessage:alertText withTitle:alertTitle];
+                
+                // Here we will handle all other errors with a generic error message.
+                // We recommend you check our Handling Errors guide for more information
+                // https://developers.facebook.com/docs/ios/errors/
+            } else {
+                //Get more error information from the error
+                NSDictionary *errorInformation = [[[error.userInfo objectForKey:@"com.facebook.sdk:ParsedJSONResponseKey"] objectForKey:@"body"] objectForKey:@"error"];
+                
+                // Show the user an error message
+                alertTitle = @"Something went wrong";
+                alertText = [NSString stringWithFormat:@"Please retry. \n\n If the problem persists contact us and mention this error code: %@", [errorInformation objectForKey:@"message"]];
+                //[self showMessage:alertText withTitle:alertTitle];
+            }
+        }
+        // Clear this token
+        [FBSession.activeSession closeAndClearTokenInformation];
+        // Show the user the logged-out UI
+        //[self userLoggedOut];
+    }
 }
 
 - (void) closeSession {
@@ -69,7 +128,7 @@ static Usuario *usuario;
                           completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
                                   // Forward any errors to the FBLoginView delegate.
                               if (error) {
-                                  NSLog(@"Error pidiendo el token");
+                                  //NSLog(@"Error pidiendo el token");
                                       //[self.loginViewController loginView:nil handleError:error];
                               }
                           }];
@@ -78,6 +137,18 @@ static Usuario *usuario;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [FBLoginView class];
+    if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
+        
+        // If there's one, just open the session silently, without showing the user the login UI
+        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
+                                           allowLoginUI:NO
+                                      completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
+                                          // Handler for session state changes
+                                          // This method will be called EACH time the session state changes,
+                                          // also for intermediate states and NOT just when the session open
+                                          [self sessionStateChanged:session state:state error:error];
+                                      }];
+    }
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge |UIRemoteNotificationTypeSound)];
     [ADVThemeManager customizeAppAppearance];
     // Override point for customization after application launch.
@@ -140,7 +211,7 @@ static Usuario *usuario;
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
-    self.navigationType = [[NSUserDefaults standardUserDefaults] integerForKey:@"NavigationType"];
+    self.navigationType = (ADVNavigationType)[[NSUserDefaults standardUserDefaults] integerForKey:@"NavigationType"];
     
     if (_navigationType == ADVNavigationTypeTab) {
         [self setupTabbar];
@@ -150,6 +221,25 @@ static Usuario *usuario;
     self.window.rootViewController = self.mainVC;
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
+}
+
+-(void)selectWhatKindOfSetupWithoutSet {
+    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"NavigationType"]) {
+        [[NSUserDefaults standardUserDefaults] setInteger:ADVNavigationTypeMenu forKey:@"NavigationType"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    self.navigationType = (ADVNavigationType)[[NSUserDefaults standardUserDefaults] integerForKey:@"NavigationType"];
+    
+    if (_navigationType == ADVNavigationTypeTab) {
+        [self setupTabbar];
+    } else {
+        [self setupMenu];
+    }
+    self.window.rootViewController = self.mainVC;
+    self.window.backgroundColor = [UIColor blackColor];
+    [self.window makeKeyAndVisible];
+
 }
 
 - (void)setupTabbar {
@@ -349,11 +439,11 @@ static Usuario *usuario;
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSString* token = [NSString stringWithFormat:@"%@", deviceToken];
     [[NSUserDefaults standardUserDefaults] setValue:token forKey:@"DEVICE-TOKEN"];
-    NSLog(@"devToken=%@",token);
+    //NSLog(@"devToken=%@",token);
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
-    NSLog(@"Error in registration. Error: %@", err);
+    //NSLog(@"Error in registration. Error: %@", err);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -382,10 +472,11 @@ static Usuario *usuario;
         NSError* errorComunicacion;
         NSError* errorSerializacion;
         [PencuyFetcher multiFetcherSync:[PencuyFetcher URLtoQueryProfile] withHTTP:@"GET" withData:nil withUserName:usuario.email withPassword:usuario.password communicationError:&errorComunicacion jsonSerializationError:&errorSerializacion];
+        //NSLog(@"%@",diccionario);
         if(errorComunicacion.code == -1012 && usuario.faceID){
             //SI TENGO UN ERROR DE AUTENTICACIÓN ENTONCES MANDO EL USUARIO DE FACEBOOK DE NUEVO... VEMAMOS QUE PASA
             
-            NSLog(@"Se va a buscar el usuario por defecto y se recrea el usuario de facebook para habilitar contraseña.");
+            //NSLog(@"Se va a buscar el usuario por defecto y se recrea el usuario de facebook para habilitar contraseña.");
             
             NSUserDefaults * userDefaults =[NSUserDefaults standardUserDefaults];
             
@@ -401,7 +492,7 @@ static Usuario *usuario;
             [userDefaults synchronize];
             NSError *conError = nil;
             NSError *jsonError = nil;
-            NSLog(@"valores: %@", jsonData);
+            //NSLog(@"valores: %@", jsonData);
             [PencuyFetcher multiFetcherSyncPublic:[PencuyFetcher URLtoCreateFaceUser]
                                          withHTTP:@"POST"
                                          withData:jsonData
@@ -409,8 +500,8 @@ static Usuario *usuario;
                                      withPassword:usuario.password
                                communicationError:&conError
                            jsonSerializationError:&jsonError];
-            NSLog(@"Connection error: %@", conError);
-            NSLog(@"JsonError : %@", jsonData);
+            //NSLog(@"Connection error: %@", conError);
+            //NSLog(@"JsonError : %@", jsonData);
         }
     }
     // Facebook SDK * login flow *

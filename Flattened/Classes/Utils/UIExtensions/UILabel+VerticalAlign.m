@@ -11,7 +11,8 @@
 @implementation UILabel (VerticalAlign)
 - (void)alignTop
 {
-    CGSize fontSize = [self.text sizeWithFont:self.font];
+    NSDictionary *attributes = @{NSFontAttributeName: self.font};
+    CGSize fontSize = [self.text sizeWithAttributes:attributes];
     
     double finalHeight = fontSize.height * self.numberOfLines;
     double finalWidth = self.frame.size.width;    //expected width of label
@@ -30,7 +31,8 @@
 
 - (void)alignBottom
 {
-    CGSize fontSize = [self.text sizeWithFont:self.font];
+    NSDictionary *attributes = @{NSFontAttributeName: self.font};
+    CGSize fontSize = [self.text sizeWithAttributes:attributes];
     
     double finalHeight = fontSize.height * self.numberOfLines;
     double finalWidth = self.frame.size.width;    //expected width of label

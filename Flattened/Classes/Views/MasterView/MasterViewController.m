@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "M13ProgressHUD.h"
 #import "M13ProgressViewRing.h"
+#import "GraphicUtils.h"
 
 @interface MasterViewController (){
     M13ProgressHUD *HUD;
@@ -45,8 +46,14 @@
     HUD.animationPoint = CGPointMake([UIScreen mainScreen].bounds.size.width / 2, [UIScreen mainScreen].bounds.size.height / 2);
     UIWindow *window = ((AppDelegate *)[UIApplication sharedApplication].delegate).window;
     [window addSubview:HUD];
+    [HUD setPrimaryColor:[GraphicUtils colorDefault]];
+    [HUD setSecondaryColor:[GraphicUtils colorDefault]];
+    [HUD setStatusColor:[GraphicUtils colorDefault]];
+    [HUD setHudBackgroundColor:[UIColor whiteColor]];
+    UIFont* font= [UIFont fontWithName:@"ProximaNova-Semibold" size:16];
+    [HUD setStatusFont:font];
+    [HUD setCornerRadius:5.0f];
     [HUD setShouldAutorotate:NO];
-    [HUD setApplyBlurToBackground:YES];
     [HUD setMaskType:M13ProgressHUDMaskTypeGradient];
 }
 

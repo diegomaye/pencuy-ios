@@ -18,6 +18,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Utils.h"
 #import "SIAlertView.h"
+#import "ApuestasDataLoaderTableViewController.h"
+#import "ApuestasHoyDLTVController.h"
 
 @interface ApuestasTVController (){
     NSIndexPath *currentIndex;
@@ -101,8 +103,8 @@
         ApuestaCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
         NSDictionary *apuesta = self.apuestas[indexPath.row];
-        NSLog(@"Listando Celda %lu", (long)indexPath.row);
-        NSLog(@"idApuesta%@", [apuesta valueForKey:@"idApuesta"]);
+        //NSLog(@"Listando Celda %lu", (long)indexPath.row);
+        //NSLog(@"idApuesta%@", [apuesta valueForKey:@"idApuesta"]);
         cell.apuesta = apuesta;
         if ([[apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"BLOQUEADO"]||
             [[apuesta valueForKey:@"partido"][@"estado"] isEqualToString:@"INICIADO"]||
@@ -150,8 +152,11 @@
         alertView.transitionStyle = SIAlertViewTransitionStyleBounce;
         [alertView show];
     }
-    else{
+    else if ([self isKindOfClass:[ApuestasDataLoaderTableViewController class]]) {
         [self performSegueWithIdentifier:@"showSeleccionApuesta" sender:self];
+    }
+    else if ([self isKindOfClass:[ApuestasHoyDLTVController class]]) {
+        [self performSegueWithIdentifier:@"showSeleccionApuesta2" sender:self];
     }
 
     

@@ -22,4 +22,11 @@
 
 -(void) customizationUIDatePickerUITextView:(UITextField*)text withButtonDescription:(NSString*) buttonDescription;
 
+//Loading Components
+- (void) showProgressBar;
+- (void) setComplete;
+- (void) setCompleteError;
+- (void) setCompleteErrorSorry;
+- (void) setProgressBar;
+
 @end

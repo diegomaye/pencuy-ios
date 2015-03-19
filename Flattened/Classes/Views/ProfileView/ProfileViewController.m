@@ -66,7 +66,7 @@
     [PencuyFetcher multiFetcher:[PencuyFetcher URLtoQueryProfile] withHTTP:@"GET" withHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         if ([data length] > 0 && connectionError==nil) {
             NSDictionary *perfil= [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-            NSLog(@"Trajo el siguiente perfil: %@",perfil);
+            //NSLog(@"Trajo el siguiente perfil: %@",perfil);
             self.lblTotalPuntosGanados.text = [NSString stringWithFormat:@"%@ %@", [perfil[@"totPGan"] stringValue], NSLocalizedString(@"Total Points Granted", nil)];
             self.lblResultadoExacto.text = [NSString stringWithFormat:@"%@ %@", [perfil[@"totApGanExa"] stringValue], NSLocalizedString(@"Exact Result", nil)];
             self.lblResultadoParcial.text = [NSString stringWithFormat:@"%@ %@", [perfil[@"totApGanNoExa"]stringValue], NSLocalizedString(@"Parcial Result", nil)];
@@ -76,10 +76,10 @@
             self.lblApuestasPendientes.text = [NSString stringWithFormat:@"%i %@",pendientes, NSLocalizedString(@"Pending", nil)];
         }
         else if([data length]==0 && connectionError==nil){
-            NSLog(@"No hay info");
+            //NSLog(@"No hay info");
         }
         else if(connectionError!=nil){
-            NSLog(@"Sucedio un error: %@",connectionError);
+            //NSLog(@"Sucedio un error: %@",connectionError);
         }
     }];
     self.lblPuntosGanados.text = NSLocalizedString(@"Points Earned", nil);
@@ -121,11 +121,11 @@
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"LoggedUser"];
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"USUARIO-PENCA"];
     [AppDelegate setUsuarioNil];
-    [[AppDelegate sharedDelegate] closeSession];
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone"
                                                              bundle: nil];
     LoginViewController* loginVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
-    [self.view.window setRootViewController:loginVC];
+    [[AppDelegate sharedDelegate] closeSession];
+    [[[[UIApplication sharedApplication] delegate] window] setRootViewController:loginVC];
 }
 
 #pragma mark - Actions

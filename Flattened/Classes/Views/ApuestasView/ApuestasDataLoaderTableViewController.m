@@ -30,16 +30,16 @@
         if ([data length] > 0 && connectionError==nil) {
             NSMutableArray *apuestas= [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:NULL];
             self.apuestas= apuestas;
-            NSLog(@"Trajo los siguientes partidos para la fecha %@: %@",idPenca,apuestas);
+            //NSLog(@"Trajo los siguientes partidos para la fecha %@: %@",idPenca,apuestas);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
             });
         }
         else if([data length]==0 && connectionError==nil){
-            NSLog(@"No trajo nada");
+            //NSLog(@"No trajo nada");
         }
         else if(connectionError!=nil){
-            NSLog(@"Dio error: %@",connectionError);
+            //NSLog(@"Dio error: %@",connectionError);
         }
     }];
 }

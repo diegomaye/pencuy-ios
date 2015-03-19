@@ -68,9 +68,9 @@
             if ([data length] > 0 && connectionError==nil) {
                 NSArray *fechas= [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
                 self.fechas= fechas;
-                NSLog(@"Trajo las siguientes fechas: %@",fechas);
+                //NSLog(@"Trajo las siguientes fechas: %@",fechas);
                     //dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"////////////////////SE EJECUTO EL FETCH DE FECHAS////////////////////////");
+                    //NSLog(@"////////////////////SE EJECUTO EL FETCH DE FECHAS////////////////////////");
                     _fechaSeleccionada= self.fechas[0];
                     _index= 0;
                     [self fechaLabel:_fechaSeleccionada[@"nombre"] withLabel:(UILabel *)[self.tableView.tableHeaderView viewWithTag:1]];
@@ -78,15 +78,15 @@
                     //});
             }
             else if([data length]==0 && connectionError==nil){
-                NSLog(@"No hay info");
+                //NSLog(@"No hay info");
                 [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
             }
             else if(connectionError!=nil){
-                NSLog(@"Sucedio un error: %@",connectionError);
+                //NSLog(@"Sucedio un error: %@",connectionError);
                 [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
             }
             else {
-                NSLog(@"Error de conexion");
+                //NSLog(@"Error de conexion");
                 [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
             }
         }];
@@ -104,21 +104,21 @@
     [PencuyFetcher multiFetcher:[PencuyFetcher URLtoQueryResumenGrupos:idFecha] withHTTP:@"GET" withHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         if (data &&[data length] > 0 && connectionError==nil) {
             NSArray *partidos= [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-            NSLog(@"Trajo los siguientes partidos para la fecha %@: %@",idFecha,partidos);
+            //NSLog(@"Trajo los siguientes partidos para la fecha %@: %@",idFecha,partidos);
             self.partidos= partidos;
             [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
             [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
         }
         else if([data length]==0 && connectionError==nil){
-            NSLog(@"No hay info");
+            //NSLog(@"No hay info");
             [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
         }
         else if(connectionError!=nil){
-            NSLog(@"Sucedio un error: %@",connectionError);
+            //NSLog(@"Sucedio un error: %@",connectionError);
             [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
         }
         else {
-            NSLog(@"Error de conexion");
+            //NSLog(@"Error de conexion");
             [self performSelector:@selector(setCompleteError) withObject:nil afterDelay:0.5];
         }
     }];

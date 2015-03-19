@@ -316,10 +316,10 @@ UIBarButtonItem *barButton;
                 [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
             }
             else if([data length]==0 && connectionError==nil){
-                NSLog(@"No hay info");
+                //NSLog(@"No hay info");
             }
             else if(connectionError!=nil){
-                NSLog(@"Sucedio un error: %@",connectionError);
+                //NSLog(@"Sucedio un error: %@",connectionError);
             }
         }];
         

@@ -53,18 +53,40 @@
     [self setTraducciones];
     self.lblEquipo1.text=NSLocalizedString(@"Select a country", nil);
     self.lblEquipo2.text=NSLocalizedString(@"Select a country", nil);
-
 }
 
 -(void) setTraducciones{
-    self.lblMundiales.text= NSLocalizedString(@"WC won", nil);
+    self.lblMundiales.text= NSLocalizedString(@"WC played", nil);
+    [self formateadorTexto:self.lblMundiales];
     self.lblCopas.text = NSLocalizedString(@"Cups", nil);
+    [self formateadorTexto:self.lblCopas];
     self.lblPuntos.text = NSLocalizedString(@"Points", nil);
+    [self formateadorTexto:self.lblPuntos];
     self.lblPJugados.text = NSLocalizedString(@"Matchs played", nil);
+    [self formateadorTexto:self.lblPJugados];
     self.lblPGanados.text = NSLocalizedString(@"Matchs won", nil);
+    [self formateadorTexto:self.lblPGanados];
+    self.lblPEmpatados.text = NSLocalizedString(@"Drawns", nil);
+    [self formateadorTexto:self.lblPEmpatados];
     self.lblPPerdidos.text = NSLocalizedString(@"Lost Points", nil);
+    [self formateadorTexto:self.lblPPerdidos];
     self.lblGolesConv.text = NSLocalizedString(@"Goals Scored", nil);
+    [self formateadorTexto:self.lblGolesConv];
     self.lblGolesRec.text = NSLocalizedString(@"Goals Against", nil);
+    [self formateadorTexto:self.lblGolesRec];
+}
+
+-(void) formateadorTexto:(UILabel*) label{
+    label.textColor = [UIColor blackColor];
+    label.backgroundColor = [UIColor clearColor];
+    label.font = [UIFont fontWithName:@"ProximaNova-Bold" size:12];
+}
+
+-(void) formateadorPais:(UITextField*) label{
+    label.text = [label.text uppercaseString];
+    label.textColor = [UIColor whiteColor];
+    label.backgroundColor = [UIColor clearColor];
+    label.font = [UIFont fontWithName:@"ProximaNova-Semiold" size:8];
 }
 
 -(void) setTouchEventView{

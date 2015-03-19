@@ -39,6 +39,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (self) {
+        [self setProgressBar];
+    }
     [_txtUsuario setDelegate:self];
     [_txtPass setDelegate:self];
     
@@ -92,12 +95,12 @@
     NSMutableURLRequest *request= [NSMutableURLRequest requestWithURL:[PencuyFetcher URLtoCheckUser]];
     NSURLResponse *response= nil;
     NSError *error= nil;
-    NSLog(@"Disparando llamada sincronico");
+    //NSLog(@"Disparando llamada sincronico");
     NSDictionary *eventLocation = [NSDictionary dictionaryWithObjectsAndKeys:self.txtUsuario.text,@"email",self.txtPass.text,@"password", nil];
     NSData *requestData = [NSJSONSerialization dataWithJSONObject:eventLocation
                                                           options:NSJSONWritingPrettyPrinted
                                                             error:&error];
-    NSLog(@"jsonRequest is %@", requestData);
+    //NSLog(@"jsonRequest is %@", requestData);
     [request setHTTPMethod:@"PUT"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -136,9 +139,11 @@
         [userDefaults synchronize];
         
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LoggedUser"];
+        [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
         return YES;
     }
     else if (cuentaFacebook){
+        [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
         if (valida) {
                 //NUNCA ENTRA ACA PORQUE TENDRIA QUE VALIDAR UNA CLAVE AUTOGENERADA.
         }
@@ -148,13 +153,16 @@
         }
     }
     else if (correoExiste){
+        [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
             //EL CORREO QUE INGRESO EXISTE PERO NO LE PEGO A LA CLAVE.
         [self showAlert:NSLocalizedString(@"Password error!",nil) andMessage:NSLocalizedString(@"The password is not correct try again.",nil)];
     }
     else{
+        [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
             //EL CORREO QUE INGRESO NO EXISTE, LA CLAVE NO EXISTE Y NO HAY USUARIO DE FACEBOOK.
         [self showAlert:@"E-mail invalid!" andMessage:@"This e-mail does not exist in the system, if you want to create a new user selects \"Create Account\"."];
     }
+    [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
     return NO;
 }
 
@@ -175,9 +183,11 @@
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
+    [self showProgressBar];
     if([identifier isEqualToString:@"GoToTheApp"]){
         return [self validateUserAndPassword];
     }
+    [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
     return YES;
 }
 

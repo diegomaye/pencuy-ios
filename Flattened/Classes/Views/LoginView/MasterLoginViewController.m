@@ -8,8 +8,14 @@
 
 #import "MasterLoginViewController.h"
 #import "SIAlertView.h"
+#import "M13ProgressHUD.h"
+#import "M13ProgressViewRing.h"
+#import "AppDelegate.h"
+#import "GraphicUtils.h"
+
 @interface MasterLoginViewController (){
     CGSize kbSize;
+    M13ProgressHUD *HUD;
 }
 
 @property(strong, nonatomic) UITextField* textFieldFecha;
@@ -19,6 +25,65 @@
 const int TOOLBAR_HEIGHT_2 = 35;
 
 @implementation MasterLoginViewController
+
+-(void) showProgressBar{
+    [HUD setIndeterminate:YES];
+    HUD.status = NSLocalizedString(@"Loading",nil);
+    [HUD show:YES];
+}
+
+-(void) setProgressBar{
+    HUD = [[M13ProgressHUD alloc] initWithProgressView:[[M13ProgressViewRing alloc] init]];
+    HUD.layer.zPosition = 3;
+    HUD.progressViewSize = CGSizeMake(60.0, 60.0);
+    HUD.animationPoint = CGPointMake([UIScreen mainScreen].bounds.size.width / 2, [UIScreen mainScreen].bounds.size.height / 2);
+    UIWindow *window = ((AppDelegate *)[UIApplication sharedApplication].delegate).window;
+    [window addSubview:HUD];
+    [HUD setPrimaryColor:[GraphicUtils colorDefault]];
+    [HUD setSecondaryColor:[GraphicUtils colorDefault]];
+    [HUD setStatusColor:[GraphicUtils colorDefault]];
+    [HUD setHudBackgroundColor:[UIColor whiteColor]];
+    UIFont* font= [UIFont fontWithName:@"ProximaNova-Semibold" size:16];
+    [HUD setStatusFont:font];
+    [HUD setCornerRadius:5.0f];
+    [HUD setShouldAutorotate:NO];
+    [HUD setMaskType:M13ProgressHUDMaskTypeGradient];
+}
+
+- (void)setComplete
+{
+    HUD.status = NSLocalizedString(@"Finishing Processing",nil);
+    //[HUD setStatusPosition:M13ProgressHUDStatusPositionRightOfProgress];
+    [HUD setIndeterminate:NO];
+    [HUD performAction:M13ProgressViewActionSuccess animated:YES];
+    [self performSelector:@selector(reset) withObject:nil afterDelay:1];
+}
+
+- (void)setCompleteError
+{
+    HUD.status = NSLocalizedString(@"A connection error happened apology",nil);
+    //[HUD setStatusPosition:M13ProgressHUDStatusPositionRightOfProgress];
+    [HUD setIndeterminate:NO];
+    [HUD performAction:M13ProgressViewActionFailure animated:YES];
+    [self performSelector:@selector(reset) withObject:nil afterDelay:1.5];
+}
+
+- (void)setCompleteErrorSorry
+{
+    HUD.status = NSLocalizedString(@"Sorry, something wrong happened, try again",nil);
+    //[HUD setStatusPosition:M13ProgressHUDStatusPositionRightOfProgress];
+    [HUD setIndeterminate:NO];
+    [HUD performAction:M13ProgressViewActionFailure animated:YES];
+    [self performSelector:@selector(reset) withObject:nil afterDelay:2];
+}
+
+- (void)reset
+{
+    [HUD hide:YES];
+    [HUD performAction:M13ProgressViewActionNone animated:NO];
+    //UIWindow *window = ((AppDelegate *)[UIApplication sharedApplication].delegate).window;
+    //[HUD removeFromSuperview];
+}
 
 - (void)viewDidLoad
 {

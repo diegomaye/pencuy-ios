@@ -27,15 +27,15 @@
         [PencuyFetcher multiFetcher:[PencuyFetcher URLtoQueryInvitacionesByIdPenca:idPenca] withHTTP:@"GET" withHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
             if ([data length] > 0 && connectionError==nil) {
                 NSArray *invitaciones= [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-                NSLog(@"Trajo las siguientes invitaciones para la penca %@: %@",idPenca,invitaciones);
+                //NSLog(@"Trajo las siguientes invitaciones para la penca %@: %@",idPenca,invitaciones);
                 self.invitaciones= invitaciones;
                 [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
             }
             else if([data length]==0 && connectionError==nil){
-                NSLog(@"Nothing");
+                //NSLog(@"Nothing");
             }
             else if(connectionError!=nil){
-                NSLog(@"An error appends: %@",connectionError);
+                //NSLog(@"An error appends: %@",connectionError);
             }
         }];
     }    

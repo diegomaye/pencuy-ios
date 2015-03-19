@@ -32,14 +32,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (self) {
+        [self setProgressBar];
+    }
     self.FBLoginView.delegate= self;
     self.FBLoginView.readPermissions = @[@"public_profile", @"email", @"user_friends"];
-    NSString* dimensions= [Utils dimensionesPantalla];
-    if ([dimensions isEqualToString:@"320x568"]) {
-        dimensions = [NSString stringWithFormat:@"640x1136"];
-    }
-    NSString* pathLocatario = [[NSBundle mainBundle] pathForResource:[@"Dawn-" stringByAppendingString:dimensions] ofType:@"jpg"];
-    _backImage.image = [UIImage imageWithContentsOfFile:pathLocatario];
+    //NSString* dimensions= [Utils dimensionesPantalla];
+//    if ([dimensions isEqualToString:@"320x568"]) {
+//        dimensions = [NSString stringWithFormat:@"640x1136"];
+//    }
+//    NSString* pathLocatario = [[NSBundle mainBundle] pathForResource:[@"Dawn-" stringByAppendingString:dimensions] ofType:@"jpg"];
+//    _backImage.image = [UIImage imageWithContentsOfFile:pathLocatario];
     
     [_txtCorreo setDelegate:self];
     [self agregarEspacioInterno:_txtCorreo];
@@ -53,7 +56,7 @@
 }
 
 - (void)viewDidUnload {
-    [self setFBLoginView:nil];
+    //[self setFBLoginView:nil];
     [super viewDidUnload];
 }
 
@@ -126,64 +129,63 @@
     }];
 }
 
-#pragma mark evento touch en no tiene cuenta en facebook.
-
-- (BOOL)createUser{
-    return YES;
-}
 #pragma mark Facebook delegates
-//- (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
-//        //[self performSegueWithIdentifier: @"StartWithFacebook" sender: self];
-//        //[NSUserDefaults standardUserDefaults] valueForKey:@"LoggedUser"];
-//    if (FBSession.activeSession.isOpen) {
-//        [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
-//            if (!error) {
+- (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
+        //[self performSegueWithIdentifier: @"StartWithFacebook" sender: self];
+        //[NSUserDefaults standardUserDefaults] valueForKey:@"LoggedUser"];
+    [self showProgressBar];
+    if (FBSession.activeSession.isOpen) {
+        [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+            if (!error) {
+                if (![[NSUserDefaults standardUserDefaults] valueForKey:@"USUARIO-PENCA"] ) {
+                    NSString *randomKey = [RandomManager getRandomAphanumeric:10];
+                    Usuario* usuario= [Usuario new];
+                    [usuario setNombreCompleto:user.name];
+                    [usuario setNombre:user.first_name];
+                    [usuario setApellido:user.last_name];
+                    
+                    [usuario setMasculino:[user objectForKey:@"gender"]];
+                    [usuario setFaceID:user.objectID];
+                    NSString *token =  [[[FBSession activeSession] accessTokenData] accessToken];
+                    [usuario setPassword:randomKey];
+                    [usuario setRePassword:randomKey];
+                    [usuario setApnsDeviceToken:[[NSUserDefaults standardUserDefaults] valueForKey:@"DEVICE-TOKEN" ]];
+                    [usuario setLastDevAppleModelUsed:[Utils machineName]];
+                    [usuario setLastDevApple:[Utils isVersion6AndBelow]?@"IOS6orLess":@"IOS7.X"];
+                    [usuario setFacebookToken:token];
+                    [usuario setCuentaFacebook:YES];
+                    NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+                    [usuario setLocale:language];
+                    
+                    _usuarioFacebook = usuario;
+                    if ([user objectForKey:@"email"]) {
+                        [usuario setEmail:[user objectForKey:@"email"]];
+                        [self shootLoginFacebook:usuario];
+                    }
+                    else{
+                        [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
+                        [self pedirCorreo];
+                    }
+                }
+                else{
+                    [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
+                    AppDelegate *delegate= [AppDelegate sharedDelegate];
+                    [delegate selectWhatKindOfSetupWithoutSet];
+                    //[self performSegueWithIdentifier: @"StartWithFacebook" sender:self];
+                }
 //                NSString* username = user.name;
 //                NSString* email = [user objectForKey:@"email"];
 //                NSLog(@"nombre y correo: %@, %@", username, email);
-//            }
-//        }];
-//    }
-//}
+            }
+        }];
+    }
+}
 
     // This method will be called when the user information has been fetched
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView
                             user:(id<FBGraphUser>)user {
     if (FBSession.activeSession.isOpen) {
         
-        
-        if (![[NSUserDefaults standardUserDefaults] valueForKey:@"USUARIO-PENCA"] ) {
-                NSString *randomKey = [RandomManager getRandomAphanumeric:10];
-                Usuario* usuario= [Usuario new];
-                [usuario setNombreCompleto:user.name];
-                [usuario setNombre:user.first_name];
-                [usuario setApellido:user.last_name];
-                
-                [usuario setMasculino:[user objectForKey:@"gender"]];
-                [usuario setFaceID:user.objectID];
-                NSString *token =  [[[FBSession activeSession] accessTokenData] accessToken];
-                [usuario setPassword:randomKey];
-                [usuario setRePassword:randomKey];
-                [usuario setApnsDeviceToken:[[NSUserDefaults standardUserDefaults] valueForKey:@"DEVICE-TOKEN" ]];
-                [usuario setLastDevAppleModelUsed:[Utils machineName]];
-                [usuario setLastDevApple:[Utils isVersion6AndBelow]?@"IOS6orLess":@"IOS7.X"];
-                [usuario setFacebookToken:token];
-                [usuario setCuentaFacebook:YES];
-                NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
-                [usuario setLocale:language];
-                
-                _usuarioFacebook = usuario;
-                if ([user objectForKey:@"email"]) {
-                    [usuario setEmail:[user objectForKey:@"email"]];
-                    [self shootLoginFacebook:usuario];
-                }
-                else{
-                    [self pedirCorreo];
-                }
-        }
-        else{
-            [self performSegueWithIdentifier: @"StartWithFacebook" sender:self];
-        }
     }
 }
 
@@ -212,13 +214,13 @@
     } else if (errorCategory == FBErrorCategoryUserCancelled) {
             // The user has cancelled a login. You can inspect the error
             // for more context. For this sample, we will simply ignore it.
-        NSLog(@"user cancelled login");
+        alertTitle = @"Facebook message";
+        alertMessage = @"User cancelled login.";
     } else {
             // For simplicity, this sample treats other errors blindly, but you should
             // refer to https://developers.facebook.com/docs/technical-guides/iossdk/errors/ for more information.
         alertTitle  = @"Unknown Error";
-        alertMessage = @"Error. Please try again later.";
-        NSLog(@"Unexpected error:%@", error);
+        alertMessage = [NSString stringWithFormat:@"Error. Please try again later. %@",error];
     }
     
     if (alertMessage) {
@@ -242,7 +244,7 @@
     [userDefaults synchronize];
     NSError *conError = nil;
     NSError *jsonError = nil;
-    NSLog(@"valores: %@", jsonData);
+    //NSLog(@"valores: %@", jsonData);
     [PencuyFetcher multiFetcherSyncPublic:[PencuyFetcher URLtoCreateFaceUser]
                                  withHTTP:@"POST"
                                  withData:jsonData
@@ -250,16 +252,20 @@
                              withPassword:usuario.password
                        communicationError:&conError
                    jsonSerializationError:&jsonError];
-    NSLog(@"Connection error: %@", conError);
-    NSLog(@"JsonError : %@", jsonData);
+    //NSLog(@"Connection error: %@", conError);
+    //NSLog(@"JsonError : %@", jsonData);
     
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LoggedUser"];
-    [self performSegueWithIdentifier: @"StartWithFacebook" sender: self];
+    AppDelegate *delegate= [AppDelegate sharedDelegate];
+    [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
+    [delegate selectWhatKindOfSetupWithoutSet];
+    //[self performSegueWithIdentifier: @"StartWithFacebook" sender: self];
 }
 
 -(BOOL) textFieldShouldReturn:(UITextField *)textField{
     BOOL valid = [Validator validateEmail:_txtCorreo.text];
     if (valid) {
+        [self showProgressBar];
         [_usuarioFacebook setEmail:_txtCorreo.text];
         [self shootLoginFacebook:_usuarioFacebook];
     }
@@ -273,6 +279,7 @@
 - (IBAction)btnAceptarTouch:(id)sender {
     BOOL valid = [Validator validateEmail:_txtCorreo.text];
     if (valid) {
+        [self showProgressBar];
         [_usuarioFacebook setEmail:_txtCorreo.text];
         [self shootLoginFacebook:_usuarioFacebook];
     }
@@ -293,7 +300,9 @@
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
     if([identifier isEqualToString:@"StartWithFacebook"]){
-        return YES;
+        AppDelegate *delegate= [AppDelegate sharedDelegate];
+        [delegate selectWhatKindOfSetupWithoutSet];
+        return NO;
     }
     return YES;
 }
@@ -304,7 +313,7 @@
         
         if ([segue.destinationViewController isKindOfClass:[CustomTabBarViewController class]]) {
             AppDelegate *delegate= [AppDelegate sharedDelegate];
-            [delegate selectWhatKindOfSetup];
+            [delegate selectWhatKindOfSetupWithoutSet];
         }
     }
     

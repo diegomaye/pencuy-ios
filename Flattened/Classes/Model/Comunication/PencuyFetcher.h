@@ -37,6 +37,7 @@
 + (NSURL *)URLtoQueryApuestasIdPenca:(NSString *)idPenca andEstado:(NSString *)estado;
 + (NSURL *)URLtoQueryApuestasIdPenca:(NSString *)idPenca andFecha:(NSString *)fecha;
 + (NSURL *)URLtoMakeApuestas;
++ (NSURL *)URLtoQueryApuestasByDay:(NSString *)idPenca andDate:(NSString *)date;
 
 #pragma mark Api Privada para pencas
 + (NSURL *)URLtoQueryPencasActivas;

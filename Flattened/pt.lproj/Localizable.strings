@@ -129,7 +129,7 @@
 "Finishing Processing"="Processamento Finalizado";
 //Estadisticas
 "Select a country"="Selecione um país";
-"WC won"="Copas do Mundo";
+"WC played"="Copas Jogadas";
 "Cups"="Copas";
 "Points"="Pontos";
 "Matchs played"="Partidas jugadas";
@@ -231,3 +231,6 @@
 "You cannot modify the score at the moment, because the status.."="Você não pode modificar o resultao no momento, por o status deste..";
 "Your bet"="A sua apuesta";
 "You win %@ points"="Ganhou %@ pontos";
+"Drawns"="Empates";
+"Didn't win any points"="Não ganho pontos";
+"Today"="Hoje";

@@ -39,7 +39,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    if (self) {
+        [self setProgressBar];
+    }
     [_txtNombre setDelegate:self];
     [_txtCorreo setDelegate:self];
     [_txtPass setDelegate:self];
@@ -115,12 +117,12 @@
     NSMutableURLRequest *request= [NSMutableURLRequest requestWithURL:[PencuyFetcher URLtoCheckUser]];
     NSURLResponse *response= nil;
     NSError *error= nil;
-    NSLog(@"Disparando llamada sincronico");
+    //NSLog(@"Disparando llamada sincronico");
     NSDictionary *eventLocation = [NSDictionary dictionaryWithObjectsAndKeys:self.txtCorreo.text,@"email",self.txtPass.text,@"password", nil];
     NSData *requestData = [NSJSONSerialization dataWithJSONObject:eventLocation
                                                           options:NSJSONWritingPrettyPrinted
                                                             error:&error];
-    NSLog(@"jsonRequest is %@", requestData);
+    //NSLog(@"jsonRequest is %@", requestData);
     [request setHTTPMethod:@"PUT"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -132,10 +134,8 @@
     BOOL correoExiste = [[propertyListResults valueForKey:@"correoExiste"] boolValue];
     BOOL valida = [[propertyListResults valueForKey:@"valida"] boolValue];
     BOOL cuentaFacebook = [[propertyListResults valueForKey:@"cuentaFacebook"] boolValue];
-    if (valida&&correoExiste) {
-        
-    }
-    else if (cuentaFacebook){
+    if (cuentaFacebook){
+        [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
         if (valida) {
             [self showAlert:NSLocalizedString(@"That email already exist", nil) andMessage:NSLocalizedString(@"This email address is already entered in the system press GO BACK and try to login with your account.",nil)];
         }
@@ -145,30 +145,39 @@
         }
     }
     else if (correoExiste){
+        [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
+
             //EL CORREO QUE INGRESO EXISTE PERO NO LE PEGO A LA CLAVE.
         [self showAlert:NSLocalizedString(@"Ups! This email is already in the system", nil) andMessage:NSLocalizedString(@"This email address is already entered in the system press GO BACK and try to login with your account.", nil)];
     }
     else{
+        
+
         if ([self varificacionVacios]) {
             BOOL correoValid = [Validator validateEmail:_txtCorreo.text];
             if (correoValid) {
                 if ([_txtPass.text isEqualToString:_txtRePass.text]) {
                     if (_txtPass.text.length>5) {
                         [self shootUserLoggin];
+                        [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
                         return YES;
                     }
+                    [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
                     [self showAlert:@"Ups!" andMessage:NSLocalizedString(@"The password lenght must be more than 5 digits", nil)];
                 }
                 else{
+                    [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
                     [self showAlert:NSLocalizedString(@"Passwords do not match", nil) andMessage:NSLocalizedString(@"The two passwords you entered must match",nil)];
                 }
             }
             else{
+                [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
                 [self showAlert:NSLocalizedString(@"Invalid E-Mail", nil) andMessage:NSLocalizedString(@"The format of email is not correct", nil) ];
             }
         }
         return NO;
     }
+    [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
     return NO;
 }
 
@@ -222,7 +231,7 @@
     
     NSError *conError = nil;
     NSError *jsonError = nil;
-    NSLog(@"valores: %@", [usuario toDictionary]);
+    //NSLog(@"valores: %@", [usuario toDictionary]);
     
     /*
      error: {
@@ -230,16 +239,13 @@
      status = ERROR;
      }
      */
-    NSDictionary* retorno = [PencuyFetcher multiFetcherSyncPublic:[PencuyFetcher URLtoCreateUser]
+    [PencuyFetcher multiFetcherSyncPublic:[PencuyFetcher URLtoCreateUser]
                                                          withHTTP:@"POST"
                                                          withData:jsonData
                                                      withUserName:usuario.email
                                                      withPassword:usuario.password
                                                communicationError:&conError
                                            jsonSerializationError:&jsonError];
-    NSLog(@"Error: %@", retorno);
-    NSLog(@"Connection error: %@", conError);
-    NSLog(@"JsonError : %@", jsonData);
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LoggedUser"];
 }
 
@@ -248,9 +254,11 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
+    [self showProgressBar];
     if([identifier isEqualToString:@"NewUserRegistered"]){
         return [self validateUserAndPassword];
     }
+    [self performSelector:@selector(setComplete) withObject:nil afterDelay:0.5];
     return YES;
 }
 
