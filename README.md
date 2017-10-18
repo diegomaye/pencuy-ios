@@ -1,3 +1,3 @@
-# pencuy-ios
-Pencuy was an ios mobile application developed for the las FIFA world cup at brasil. The idea of the application was allow users 
-to play and bet.
+# My Prediction
+
+Brazil My Prediction 2014 was a multi platform game application developed with a groups of friends for Brazil Soccer World Cup 2014, it allowed users to create a friends group and place bets on group. The business logic of the application was hosted at digital ocen virtual server that expouse a REST web-services developed with Java EE 1.7 using JPA and EJB allocated in JBoss 6 EAP Application Server. The web application interface was develop in bootstrap and the application had both Android and IOS mobile applications developed natively. Here´s the code for ios version, since in Uruguay the word "penca" is used for "soccer bets" and "uy" is Uruguay internet country code, we use pencuy for the projects name, dash the platform.
